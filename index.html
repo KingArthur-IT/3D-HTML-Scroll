@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        canvas{
+            min-width: 100vw;
+            min-height: 100vh;
+        }
+        .box{
+            display: block;
+            padding: 5%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            background-color: coral;
+            transform-style: preserve-3d;
+            transform: perspective(500px) rotateY(90deg) translateZ(-500px);
+            transition: all;
+            animation: swipe 1s ease 0s;
+        }
+        @keyframes swipe {
+           0% {
+               transform: perspective(500px) rotateY(90deg) translateZ(-500px);
+           } 
+           100% {
+               transform: perspective(500px) rotateY(0deg) translateZ(-500px);
+           }
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        3D Text
+    </div>
+    <canvas id="canvas"></canvas>
+    <!--Main Script-->
+    <script src="./build/bundle.js"></script>
+    <script>
+        document.addEventListener('click', () => {
+            //document.getElementsByClassName('box').style.animation = "swipe 1s ease 0s";         
+            //document.getElementsByClassName('box')[0].style.transform = "perspective(500px) rotateY(0deg) translateZ(-500px)";         
+        })
+    </script>
+</body>
+</html>
