@@ -157,26 +157,30 @@ class App {
 		cube.receiveShadow = true;
 		scene.add(cube);
 		
-		//line
+		//материалы к рельсам
 		railMtl = new LineMaterial({
 			color: params.line.color,
 			linewidth: params.line.width, 
 			resolution: new THREE.Vector2(params.sceneWidth, params.sceneHeight)
 		});
+		//материалы к шпалам
 		betweenRailMtl = new LineMaterial({
 			color: params.line.color,
 			linewidth: 2.0 * params.line.width, 
 			resolution: new THREE.Vector2(params.sceneWidth, params.sceneHeight)
 		});
 
+		//рельсы
 		lineGeometryLeft = new LineGeometry();
 		lineGeometryRight = new LineGeometry();
-		
+		//
 		for (let i = params.cameraProps.startPosition.z; i > 800; i--) {
 			let x = params.line.sinAmplitude * Math.sin(i * params.line.sinPhase);
+			//добавить точки для рельс
 			posArrayLeft.push(x, 0.0, i);
 			posArrayRight.push(x + params.roadWidth, 0.0, i);
 
+			//создать шпалы
 			if (i % params.roadFrequency == 0) {
 				const lineGeometry = new LineGeometry();
 				const pos = [x + 0.05, 0.0, i,
@@ -203,17 +207,24 @@ class App {
 		var mat = new THREE.MeshLambertMaterial({color: 0xcccccc});
 		var terrain = new THREE.Mesh( geometry, mat );
 		terrain.rotation.x = -Math.PI / 2;
+		terrain.position.y = -20.0;
 		scene.add( terrain );
 
 		var perlin = new Perlin();
-		var peak = 60;
+		var peak = 30;
 		var smoothing = 300;
 		var vertices = terrain.geometry.attributes.position.array;
-			for (var i = 0; i <= vertices.length; i += 3) {
-				vertices[i+2] = peak * perlin.noise(
-					(terrain.position.x + vertices[i])/smoothing, 
-					(terrain.position.z + vertices[i+1])/smoothing
-				);
+		for (var i = 0; i <= vertices.length; i += 3) {
+				if (vertices[i] > -60 && vertices[i] < 60)
+				vertices[i+2] = 0.5 * Math.abs(vertices[i]) * perlin.noise(
+						(terrain.position.x + vertices[i])/smoothing, 
+						(terrain.position.z + vertices[i+1])/smoothing
+					);
+				else
+					vertices[i+2] = peak * perlin.noise(
+						(terrain.position.x + vertices[i])/smoothing, 
+						(terrain.position.z + vertices[i+1])/smoothing
+					);
 			}
 			terrain.geometry.attributes.position.needsUpdate = true;
 			terrain.geometry.computeVertexNormals();
