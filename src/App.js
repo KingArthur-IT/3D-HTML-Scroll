@@ -215,13 +215,8 @@ class App {
 		var smoothing = 300;
 		var vertices = terrain.geometry.attributes.position.array;
 		for (var i = 0; i <= vertices.length; i += 3) {
-				if (vertices[i] > -60 && vertices[i] < 60)
-				vertices[i+2] = 0.5 * Math.abs(vertices[i]) * perlin.noise(
-						(terrain.position.x + vertices[i])/smoothing, 
-						(terrain.position.z + vertices[i+1])/smoothing
-					);
-				else
-					vertices[i+2] = peak * perlin.noise(
+				
+					vertices[i+2] =  0.5 * Math.abs(vertices[i]) *perlin.noise(
 						(terrain.position.x + vertices[i])/smoothing, 
 						(terrain.position.z + vertices[i+1])/smoothing
 					);
