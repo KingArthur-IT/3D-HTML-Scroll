@@ -267,14 +267,19 @@ function onScroll(e) {
 		scene.add(curveLeft);
 		scene.add(curveRight);
 
-		if (zPosEnd % params.roadFrequency == 0) {
-			const lineGeometry = new LineGeometry();
-			const pos = [xEnd + 0.05, 0.0, zPosEnd,
+		let lineGeometry = new LineGeometry();
+			let pos = [xEnd + 0.05, 0.0, zPosEnd,
 				xEnd + params.roadWidth - 0.05, 0.0, zPosEnd];
 			lineGeometry.setPositions(pos);
-			const line = new Line2(lineGeometry, betweenRailMtl);
+			let line = new Line2(lineGeometry, betweenRailMtl);
+		scene.add(line);
+
+		lineGeometry = new LineGeometry();
+			pos = [xMiddle + 0.05, 0.0, zPosMiddle,
+				xMiddle + params.roadWidth - 0.05, 0.0, zPosMiddle];
+			lineGeometry.setPositions(pos);
+			line = new Line2(lineGeometry, betweenRailMtl);
 			scene.add(line);
-		}
 	}
 }
 
