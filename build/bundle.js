@@ -42851,7 +42851,11 @@
 		},
 		scrollStep: 0.1,
 		roadWidth: 2.0,
-		roadFrequency: 5
+		roadFrequency: 5,
+		terrain: {
+			color: 0xcccccc,
+			gridColor: 0xffffff
+		}
 	};
 
 	class Perlin {
@@ -43026,24 +43030,35 @@
 
 			// Setup the terrain
 			var geometry = new PlaneGeometry( 2000, 2000, 256, 256 );
-			var mat = new MeshLambertMaterial({color: 0xcccccc});
-			var terrain = new Mesh( geometry, mat );
+			var terainFullMaterial = new MeshLambertMaterial({color: params.terrain.color});
+			var terainGridMaterial = new MeshLambertMaterial({color: params.terrain.gridColor, wireframe: true});
+			var terrain = new Mesh( geometry, terainFullMaterial );
+			var terrainGrid = new Mesh( geometry, terainGridMaterial );
 			terrain.rotation.x = -Math.PI / 2;
-			terrain.position.y = -20.0;
+			terrainGrid.rotation.x = -Math.PI / 2;
+			terrain.position.y = -1.0;
+			terrainGrid.position.y = -1.0;
 			scene.add( terrain );
+			scene.add( terrainGrid );
 
 			var perlin = new Perlin();
 			var smoothing = 300;
 			var vertices = terrain.geometry.attributes.position.array;
-			for (var i = 0; i <= vertices.length; i += 3) {
-					
-						vertices[i+2] =  0.5 * Math.abs(vertices[i]) *perlin.noise(
-							(terrain.position.x + vertices[i])/smoothing, 
-							(terrain.position.z + vertices[i+1])/smoothing
-						);
-				}
-				terrain.geometry.attributes.position.needsUpdate = true;
-				terrain.geometry.computeVertexNormals();
+			var verticesGrid = terrain.geometry.attributes.position.array;
+			for (var i = 0; i <= vertices.length; i += 3) {				
+				verticesGrid[i+2] =  0.5 * Math.abs(verticesGrid[i]) * perlin.noise(
+					(terrainGrid.position.x + verticesGrid[i])/smoothing, 
+					(terrainGrid.position.z + verticesGrid[i+1])/smoothing
+				);
+				vertices[i+2] =  0.5 * Math.abs(vertices[i]) * perlin.noise(
+					(terrain.position.x + vertices[i])/smoothing, 
+					(terrain.position.z + vertices[i+1])/smoothing
+				);
+			}
+			terrain.geometry.attributes.position.needsUpdate = true;
+			terrainGrid.geometry.attributes.position.needsUpdate = true;
+			terrain.geometry.computeVertexNormals();
+			terrainGrid.geometry.computeVertexNormals();
 
 			animate();
 		}
