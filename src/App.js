@@ -13,9 +13,9 @@ let railMtl, betweenRailMtl,
 let params = {
 	sceneWidth: 850,
 	sceneHeight: 450,
-	bgColor: 0xaaaadd,
+	bgColor: 0x537fd8,
 	cameraProps: {
-		visibilityLength: 1000,
+		visibilityLength: 5000,
 		startPosition: new THREE.Vector3(0.0, 10.0, 1000.0),
 		rotationAmplitude: 3.0
 	},
@@ -31,7 +31,19 @@ let params = {
 	roadFrequency: 5,
 	terrain: {
 		color: 0xcccccc,
-		gridColor: 0xffffff
+		gridColor: 0xffffff,
+		width: 2000,
+		height: 2000,
+		segmentsCount: 256,
+		xRotation: -Math.PI / 2,
+		yPosition: -3.0,
+		smoothing: 300
+	},
+	cloud: {
+		src: './assets/img/cloud.png',
+		count: 30,
+		size: 250,
+
 	}
 };
 
@@ -177,7 +189,7 @@ class App {
 		//рельсы
 		lineGeometryLeft = new LineGeometry();
 		lineGeometryRight = new LineGeometry();
-		//
+		//добавить точки к рельсам и шпалы
 		for (let i = params.cameraProps.startPosition.z; i > 800; i--) {
 			let x = params.line.sinAmplitude * Math.sin(i * params.line.sinPhase);
 			//добавить точки для рельс
@@ -194,7 +206,7 @@ class App {
 				scene.add(line);
 			}
 		};
-		
+		//создать рельсы
 		lineGeometryLeft.setPositions(posArrayLeft);
 		lineGeometryRight.setPositions(posArrayRight);
 		curveLeft = new Line2(lineGeometryLeft, railMtl);
@@ -206,29 +218,32 @@ class App {
 		canvas.addEventListener('mousemove', onMouseMove, false);
 		canvas.addEventListener('wheel', onScroll, false);
 
-		// Setup the terrain
-		var geometry = new THREE.PlaneBufferGeometry( 2000, 2000, 256, 256 );
-		var terainFullMaterial = new THREE.MeshLambertMaterial({color: params.terrain.color});
-		var terainGridMaterial = new THREE.MeshLambertMaterial({color: params.terrain.gridColor, wireframe: true});
-		var terrain = new THREE.Mesh( geometry, terainFullMaterial );
-		var terrainGrid = new THREE.Mesh( geometry, terainGridMaterial );
-		terrain.rotation.x = -Math.PI / 2;
-		terrainGrid.rotation.x = -Math.PI / 2;
-		terrain.position.y = -1.0;
-		terrainGrid.position.y = -1.0;
-		scene.add( terrain );
+		// Create plane of the terrain
+		const planeGeometry = new THREE.PlaneBufferGeometry(
+			params.terrain.width, params.terrain.height,
+			params.terrain.segmentsCount, params.terrain.segmentsCount);
+		let terainMaterial = new THREE.MeshLambertMaterial({color: params.terrain.color});
+		let terrain = new THREE.Mesh( planeGeometry, terainMaterial );
+		terrain.rotation.x = params.terrain.xRotation;
+		terrain.position.y = params.terrain.yPosition;
+		scene.add(terrain);
+		// Create grid of the terrain
+		let terainGridMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.gridColor, wireframe: true });
+		let terrainGrid = new THREE.Mesh( planeGeometry, terainGridMaterial );
+		terrainGrid.rotation.x = params.terrain.xRotation;
+		terrainGrid.position.y = params.terrain.yPosition;
 		scene.add( terrainGrid );
-
-		var perlin = new Perlin();
-		var smoothing = 300;
-		var vertices = terrain.geometry.attributes.position.array;
-		var verticesGrid = terrain.geometry.attributes.position.array;
+		//terain transorm
+		let perlin = new Perlin();
+		let smoothing = params.terrain.smoothing;
+		let vertices = terrain.geometry.attributes.position.array;
+		let verticesGrid = terrain.geometry.attributes.position.array;
 		for (var i = 0; i <= vertices.length; i += 3) {				
 			verticesGrid[i+2] =  0.5 * Math.abs(verticesGrid[i]) * perlin.noise(
 				(terrainGrid.position.x + verticesGrid[i])/smoothing, 
 				(terrainGrid.position.z + verticesGrid[i+1])/smoothing
 			);
-			vertices[i+2] =  0.5 * Math.abs(vertices[i]) * perlin.noise(
+			vertices[i+2] =  0.6 * Math.abs(vertices[i]) * perlin.noise(
 				(terrain.position.x + vertices[i])/smoothing, 
 				(terrain.position.z + vertices[i+1])/smoothing
 			);
@@ -238,6 +253,35 @@ class App {
 		terrain.geometry.computeVertexNormals();
 		terrainGrid.geometry.computeVertexNormals();
 
+		//cloud
+		let fog = new THREE.Fog(0xffffff, 100, 1000);		
+		let loader = new THREE.TextureLoader();
+
+		loader.load(params.cloud.src, function (texture) {
+			let material = new THREE.ShaderMaterial( {
+				uniforms: {
+					"map": { type: "t", value: texture },
+					"fogColor" : { type: "c", value: fog.color },
+					"fogNear" : { type: "f", value: fog.near },
+					"fogFar" : { type: "f", value: fog.far },
+				},
+				vertexShader: document.getElementById('vs').textContent,
+				fragmentShader: document.getElementById('fs').textContent,
+				depthWrite: true,
+				depthTest: true,
+				transparent: true
+			});
+			for (let index = 0; index < params.cloud.count; index++) {	
+				let geometry = new THREE.PlaneGeometry(params.cloud.size, params.cloud.size, 10, 10);
+				let mesh = new THREE.Mesh(geometry, material);
+				mesh.position.y = 350;
+				mesh.rotation.x = Math.PI / 6.0;
+				mesh.position.x = Math.random() * 1400 - 700;
+				mesh.position.z = Math.random() * 2000 - 2000;
+				scene.add( mesh );
+			}
+		});						
+	
 		animate();
 	}
 }
