@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { RepeatWrapping } from 'three';
 import { Line2, LineGeometry, LineMaterial } from 'three-fatline';
 
 //scene
@@ -15,18 +16,22 @@ let params = {
 	sceneHeight: 450,
 	bgColor: 0x537fd8,
 	cameraProps: {
-		visibilityLength: 5000,
+		visibilityLength: 6000,
 		startPosition: new THREE.Vector3(0.0, 10.0, 1000.0),
-		rotationAmplitude: 3.0
+		rotationAmplitude: 3.0,
+		isMoving: false,
+		isMovingForward: true,
+		nextPosition: 0
 	},
-	line: {
-		width: 5.0, //px
+	railway: {
+		width: 3.0, //px
 		color: 0xffffff,
 		forwardLength: 200,
 		sinAmplitude: 3.0,
-		sinPhase: 0.01
+		sinPhase: 0.01,
+		middleOffset: 0.05
 	},
-	scrollStep: 0.1,
+	scrollStep: -0.1,
 	roadWidth: 2.0,
 	roadFrequency: 5,
 	terrain: {
@@ -41,7 +46,7 @@ let params = {
 	},
 	cloud: {
 		src: './assets/img/cloud.png',
-		count: 30,
+		count: 40,
 		size: 250,
 
 	}
@@ -175,14 +180,14 @@ class App {
 		
 		//материалы к рельсам
 		railMtl = new LineMaterial({
-			color: params.line.color,
-			linewidth: params.line.width, 
+			color: params.railway.color,
+			linewidth: params.railway.width, 
 			resolution: new THREE.Vector2(params.sceneWidth, params.sceneHeight)
 		});
 		//материалы к шпалам
 		betweenRailMtl = new LineMaterial({
-			color: params.line.color,
-			linewidth: 2.0 * params.line.width, 
+			color: params.railway.color,
+			linewidth: 2.0 * params.railway.width, 
 			resolution: new THREE.Vector2(params.sceneWidth, params.sceneHeight)
 		});
 
@@ -190,8 +195,8 @@ class App {
 		lineGeometryLeft = new LineGeometry();
 		lineGeometryRight = new LineGeometry();
 		//добавить точки к рельсам и шпалы
-		for (let i = params.cameraProps.startPosition.z; i > 800; i--) {
-			let x = params.line.sinAmplitude * Math.sin(i * params.line.sinPhase);
+		for (let i = params.cameraProps.startPosition.z; i >= 850; i--) {
+			let x = params.railway.sinAmplitude * Math.sin(i * params.railway.sinPhase);
 			//добавить точки для рельс
 			posArrayLeft.push(x, 0.0, i);
 			posArrayRight.push(x + params.roadWidth, 0.0, i);
@@ -199,8 +204,8 @@ class App {
 			//создать шпалы
 			if (i % params.roadFrequency == 0) {
 				const lineGeometry = new LineGeometry();
-				const pos = [x + 0.05, 0.0, i,
-					x + params.roadWidth - 0.05, 0.0, i];
+				const pos = [x + params.railway.middleOffset, 0.0, i,
+					x + params.roadWidth - params.railway.middleOffset, 0.0, i];
 				lineGeometry.setPositions(pos);
 				const line = new Line2(lineGeometry, betweenRailMtl);
 				scene.add(line);
@@ -214,74 +219,13 @@ class App {
 		scene.add(curveLeft);
 		scene.add(curveRight);
 
+		createLandspape();
+		createClouds();	
+
 		renderer.render(scene, camera);
 		canvas.addEventListener('mousemove', onMouseMove, false);
 		canvas.addEventListener('wheel', onScroll, false);
 
-		// Create plane of the terrain
-		const planeGeometry = new THREE.PlaneBufferGeometry(
-			params.terrain.width, params.terrain.height,
-			params.terrain.segmentsCount, params.terrain.segmentsCount);
-		let terainMaterial = new THREE.MeshLambertMaterial({color: params.terrain.color});
-		let terrain = new THREE.Mesh( planeGeometry, terainMaterial );
-		terrain.rotation.x = params.terrain.xRotation;
-		terrain.position.y = params.terrain.yPosition;
-		scene.add(terrain);
-		// Create grid of the terrain
-		let terainGridMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.gridColor, wireframe: true });
-		let terrainGrid = new THREE.Mesh( planeGeometry, terainGridMaterial );
-		terrainGrid.rotation.x = params.terrain.xRotation;
-		terrainGrid.position.y = params.terrain.yPosition;
-		scene.add( terrainGrid );
-		//terain transorm
-		let perlin = new Perlin();
-		let smoothing = params.terrain.smoothing;
-		let vertices = terrain.geometry.attributes.position.array;
-		let verticesGrid = terrain.geometry.attributes.position.array;
-		for (var i = 0; i <= vertices.length; i += 3) {				
-			verticesGrid[i+2] =  0.5 * Math.abs(verticesGrid[i]) * perlin.noise(
-				(terrainGrid.position.x + verticesGrid[i])/smoothing, 
-				(terrainGrid.position.z + verticesGrid[i+1])/smoothing
-			);
-			vertices[i+2] =  0.6 * Math.abs(vertices[i]) * perlin.noise(
-				(terrain.position.x + vertices[i])/smoothing, 
-				(terrain.position.z + vertices[i+1])/smoothing
-			);
-		}
-		terrain.geometry.attributes.position.needsUpdate = true;
-		terrainGrid.geometry.attributes.position.needsUpdate = true;
-		terrain.geometry.computeVertexNormals();
-		terrainGrid.geometry.computeVertexNormals();
-
-		//cloud
-		let fog = new THREE.Fog(0xffffff, 100, 1000);		
-		let loader = new THREE.TextureLoader();
-
-		loader.load(params.cloud.src, function (texture) {
-			let material = new THREE.ShaderMaterial( {
-				uniforms: {
-					"map": { type: "t", value: texture },
-					"fogColor" : { type: "c", value: fog.color },
-					"fogNear" : { type: "f", value: fog.near },
-					"fogFar" : { type: "f", value: fog.far },
-				},
-				vertexShader: document.getElementById('vs').textContent,
-				fragmentShader: document.getElementById('fs').textContent,
-				depthWrite: true,
-				depthTest: true,
-				transparent: true
-			});
-			for (let index = 0; index < params.cloud.count; index++) {	
-				let geometry = new THREE.PlaneGeometry(params.cloud.size, params.cloud.size, 10, 10);
-				let mesh = new THREE.Mesh(geometry, material);
-				mesh.position.y = 350;
-				mesh.rotation.x = Math.PI / 6.0;
-				mesh.position.x = Math.random() * 1400 - 700;
-				mesh.position.z = Math.random() * 2000 - 2000;
-				scene.add( mesh );
-			}
-		});						
-	
 		animate();
 	}
 }
@@ -297,51 +241,170 @@ function onMouseMove(e) {
 		camera.position.z - params.cameraProps.visibilityLength);
 }
 function onScroll(e) {
-	if (camera.position.z + e.deltaY * params.scrollStep < params.cameraProps.startPosition.z) {
-		let step = 0.5 * e.deltaY * params.scrollStep;
-		let posMiddle = camera.position.z + step;
-		let posEnd = camera.position.z + 2.0 * step;
-
-		camera.position.z += 2.0 * step;
-
-		scene.remove(curveLeft);
-		scene.remove(curveRight);
-		lineGeometryLeft = new LineGeometry();
-		lineGeometryRight = new LineGeometry();
-		
-		let zPosMiddle 	= posMiddle - params.line.forwardLength;
-		let zPosEnd 	= posEnd - params.line.forwardLength;
-		let xMiddle = params.line.sinAmplitude * Math.sin(zPosMiddle * params.line.sinPhase);
-		let xEnd = params.line.sinAmplitude * Math.sin(zPosEnd * params.line.sinPhase);
-		posArrayLeft.push(xMiddle, 0.0, zPosMiddle);
-		posArrayLeft.push(xEnd, 0.0, zPosEnd);
-		posArrayRight.push(xMiddle + params.roadWidth, 0.0, zPosMiddle);
-		posArrayRight.push(xEnd + params.roadWidth, 0.0, zPosEnd);
-		
-		lineGeometryLeft.setPositions(posArrayLeft);
-		lineGeometryRight.setPositions(posArrayRight);
-		curveLeft = new Line2(lineGeometryLeft, railMtl);
-		curveRight = new Line2(lineGeometryRight, railMtl);
-		scene.add(curveLeft);
-		scene.add(curveRight);
-
-		let lineGeometry = new LineGeometry();
-			let pos = [xEnd + 0.05, 0.0, zPosEnd,
-				xEnd + params.roadWidth - 0.05, 0.0, zPosEnd];
-			lineGeometry.setPositions(pos);
-			let line = new Line2(lineGeometry, betweenRailMtl);
-		scene.add(line);
-
-		lineGeometry = new LineGeometry();
-			pos = [xMiddle + 0.05, 0.0, zPosMiddle,
-				xMiddle + params.roadWidth - 0.05, 0.0, zPosMiddle];
-			lineGeometry.setPositions(pos);
-			line = new Line2(lineGeometry, betweenRailMtl);
-			scene.add(line);
+	let weelStep = Math.sign(e.deltaY) * 1500.0;
+	if (camera.position.z + weelStep * params.scrollStep < params.cameraProps.startPosition.z) {
+		let step = weelStep * params.scrollStep;
+		params.cameraProps.isMoving = true;
+		params.cameraProps.isMovingForward = Math.sign(e.deltaY) > 0 ? true : false;
+		params.cameraProps.nextPosition = camera.position.z + step;
 	}
 }
 
+function createLandspape() {
+	// Create plane of the terrain
+	const planeGeometry = new THREE.PlaneBufferGeometry(
+		params.terrain.width, params.terrain.height,
+		params.terrain.segmentsCount, params.terrain.segmentsCount);
+	//let terainMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.color });
+	
+	const loader = new THREE.TextureLoader();
+	const terainMaterial = new THREE.MeshLambertMaterial({
+		map: loader.load('./assets/img/grid.png', function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+			texture.repeat.set(400, 500),
+			texture.wrapS = texture.wrapT = RepeatWrapping}),
+	});
+
+	let terrain = new THREE.Mesh( planeGeometry, terainMaterial );
+	terrain.rotation.x = params.terrain.xRotation;
+	terrain.position.y = params.terrain.yPosition;
+	scene.add(terrain);
+	// Create grid of the terrain
+	/*
+	let terainGridMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.gridColor, wireframe: true });
+	let terrainGrid = new THREE.Mesh( planeGeometry, terainGridMaterial );
+	terrainGrid.rotation.x = params.terrain.xRotation;
+	terrainGrid.position.y = params.terrain.yPosition;
+	scene.add(terrainGrid);
+	*/
+	//terain transorm
+	let perlin = new Perlin();
+	let smoothing = params.terrain.smoothing;
+	let vertices = terrain.geometry.attributes.position.array;
+	let verticesGrid = terrain.geometry.attributes.position.array;
+
+	for (var i = 0; i <= vertices.length; i += 3) {		
+		vertices[i+2] =  0.3 * Math.abs(vertices[i]) * perlin.noise(
+			(terrain.position.x + vertices[i])/smoothing, 
+			(terrain.position.z + vertices[i+1])/smoothing
+		);
+	}
+	terrain.geometry.attributes.position.needsUpdate = true;
+	//terrainGrid.geometry.attributes.position.needsUpdate = true;
+	terrain.geometry.computeVertexNormals();
+	//terrainGrid.geometry.computeVertexNormals();
+}
+
+function createClouds() {
+	const positions = [{'x': -142.3, 'y': -590.4},
+						{'x': 49.0, 'y': -368.18204414654247},
+						{'x': 31.0, 'y': -937.74},
+						{'x': 283.3, 'y': -1986.4},
+						{'x': -463.5, 'y': -285.0},
+						{'x': -377.6, 'y': -1640.8},
+						{'x': 624.0, 'y': -1379.0},
+						{'x': 34.3, 'y': -1520.0},
+						{'x': -476.0, 'y': -614.1},
+						{'x': -432.9, 'y': -212.0},
+						{'x': 213.3, 'y': -1462.3},
+						{'x': 306.5, 'y': -963.8},
+						{'x': 580.0, 'y': -412.2},
+						{'x': 50.2, 'y': -796.94},
+						{'x': 590.8, 'y': -1577.2 },
+						{ 'x': 302.6, 'y': -792.5 },
+						{'x': 245.3, 'y': -1173.7},
+						{'x': -409.2, 'y': -813.69},
+						{'x': 97.7, 'y': -436.903},
+						{'x': -333.7, 'y':-1991.07},
+						{ 'x': 516.4, 'y': -567.0 },
+						{'x': 39.6, 'y':6 -601.19},
+						{'x': -59.7, 'y': -1426.04},
+						{'x': 384.3, 'y':-129.827},
+						{ 'x': 405.8, 'y': 203.5 },
+						{ 'x': 218.3, 'y': -173.0 },
+						{'x': -612.9, 'y':-1486.41},
+						{'x': 243.6, 'y': -643.58},
+						{'x': -598.6, 'y':-601.0},
+						{'x': 590.9, 'y':-394.5},
+						{'x': -576.9, 'y':-384.3},
+						{'x': 107.5, 'y': -70.4},
+						{'x': 699.2, 'y':-1140.13},
+						{'x': -29.8, 'y':4 -503.47},
+						{'x': 170.3, 'y': -771.7 },
+						{'x': -204.1, 'y': -967.0},
+						{'x': -673.4, 'y': -666.5 },
+						{'x': 220.4, 'y':-63.3303},
+						{'x': -116.8, 'y': -712.14},
+						{'x': -90.1, 'y': -1558.33}]
+	const cloudGometry = new THREE.BoxGeometry(200, 200, 200, 10, 10, 10);
+	const cloudLoader = new THREE.TextureLoader();
+	const nullMaterial = new THREE.MeshBasicMaterial({
+		color: 0xffffff,
+		transparent: true,
+		opacity: 0.0
+	});
+	const cloudMaterial = new THREE.MeshBasicMaterial({
+		map: cloudLoader.load(params.cloud.src, function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+		}),
+		transparent: true,
+		fog: true,
+	});
+
+	for (let index = 0; index < positions.length; index++) {
+		let mesh = new THREE.Mesh(cloudGometry,
+			[nullMaterial, nullMaterial, nullMaterial, nullMaterial, cloudMaterial, nullMaterial]);
+		mesh.position.y = 370;
+		mesh.rotation.x = Math.PI / 6.0;
+		//mesh.position.x = Math.random() * 1400 - 700;
+		mesh.position.x = positions[index].x;
+		//mesh.position.z = Math.random() * 2000 - 2000;
+		mesh.position.z = positions[index].y;
+
+		scene.add(mesh);
+	}
+}
+
+function newRails(scrollStep) {
+	scene.remove(curveLeft);
+	scene.remove(curveRight);
+	lineGeometryLeft = new LineGeometry();
+	lineGeometryRight = new LineGeometry();
+
+	let zPos 	= posArrayLeft[posArrayLeft.length - 1] + params.scrollStep * scrollStep;
+	let x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
+	posArrayLeft.push(x, 0.0, zPos);
+	posArrayRight.push(x + params.roadWidth, 0.0, zPos);
+
+	lineGeometryLeft.setPositions(posArrayLeft);
+	lineGeometryRight.setPositions(posArrayRight);
+	curveLeft = new Line2(lineGeometryLeft, railMtl);
+	curveRight = new Line2(lineGeometryRight, railMtl);
+	scene.add(curveLeft);
+	scene.add(curveRight);
+
+	//шпалы
+	let lineGeometry = new LineGeometry();
+	let pos = [x + params.railway.middleOffset, 0.0, zPos,
+			x + params.roadWidth - params.railway.middleOffset, 0.0, zPos];
+	lineGeometry.setPositions(pos);
+	let line = new Line2(lineGeometry, betweenRailMtl);
+	scene.add(line);
+}
+
 function animate() {
+	if (params.cameraProps.isMoving) {
+		let step = params.cameraProps.isMovingForward ? -2.5 : 2.5;
+			camera.position.z += step;
+		if (params.cameraProps.isMovingForward && camera.position.z % 5 == 0 &&
+			camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength)
+			newRails(50);
+		if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+			(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+		) {
+			params.cameraProps.isMoving = false;
+		}
+	}
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
