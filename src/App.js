@@ -17,7 +17,7 @@ let params = {
 	bgColor: 0x537fd8,
 	cameraProps: {
 		visibilityLength: 6000,
-		startPosition: new THREE.Vector3(0.0, 10.0, 1000.0),
+		startPosition: new THREE.Vector3(0.0, 13.0, 1000.0),
 		maxZPosition: -1000,
 		rotationAmplitude: 3.0,
 		isMoving: false,
@@ -41,7 +41,7 @@ let params = {
 		color: 0xcccccc,
 		gridColor: 0xffffff,
 		width: 2000,
-		height: 2000,
+		height: 2500,
 		segmentsCount: 256,
 		xRotation: -Math.PI / 2,
 		yPosition: -3.0,
@@ -200,14 +200,14 @@ class App {
 		//рельсы
 		lineGeometryLeft = new LineGeometry();
 		lineGeometryRight = new LineGeometry();
-		//добавить точки к рельсам и шпалы
-		for (let i = params.cameraProps.startPosition.z; i >= 850; i--) {
+		//rails and rail sleepers
+		for (let i = params.cameraProps.startPosition.z; i >= 800; i--) {
 			let x = params.railway.sinAmplitude * Math.sin(i * params.railway.sinPhase);
-			//добавить точки для рельс
+			//add points for rails
 			posArrayLeft.push(x, 0.0, i);
 			posArrayRight.push(x + params.railway.roadWidth, 0.0, i);
 
-			//создать шпалы
+			//add rail sleeper
 			if (i % params.railway.railwaySleeperFrequency == 0) {
 				const lineGeometry = new LineGeometry();
 				const pos = [x + params.railway.middleOffset, 0.0, i,
@@ -217,6 +217,15 @@ class App {
 				scene.add(line);
 			}
 		};
+		//extra rail sleeper
+		let i = 800 - params.railway.railwaySleeperFrequency;
+		let x = params.railway.sinAmplitude * Math.sin(i * params.railway.sinPhase);
+		const lineGeometry = new LineGeometry();
+		const pos = [x + params.railway.middleOffset, 0.0, i,
+			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, i];
+		lineGeometry.setPositions(pos);
+		const line = new Line2(lineGeometry, betweenRailMtl);
+		scene.add(line);
 		//создать рельсы
 		lineGeometryLeft.setPositions(posArrayLeft);
 		lineGeometryRight.setPositions(posArrayRight);
@@ -361,7 +370,26 @@ function createClouds() {
 						{'x': -673.4, 'y': -666.5 },
 						{'x': 220.4, 'y':-63.3303},
 						{'x': -116.8, 'y': -712.14},
-						{'x': -90.1, 'y': -1558.33}]
+						{ 'x': -90.1, 'y': -1558.33 },
+						{ 'x': -90.1, 'y': -1750.33 },
+						{ 'x': 0.0, 'y': -1650.0 },
+						{ 'x': 100.0, 'y': -1860.0 },
+						{ 'x': 200.0, 'y': -2200.0 },
+						{ 'x': 0.0, 'y': -2250.0 },
+						{'x': 107.5, 'y': -2500.4},
+						{'x': 699.2, 'y':-2500.13},
+						{'x': -29.8, 'y':4 -2400.47},
+						{'x': 170.3, 'y': -2700.7 },
+						{ 'x': -204.1, 'y': -2600.0 },
+	 					{'x': 516.4, 'y': -567.0 },
+						{'x': 800.6, 'y': -3000.19},
+						{'x': -59.7, 'y': -2800.04},
+						{'x': 384.3, 'y':-2800.827},
+						{ 'x': 405.8, 'y': -2500.5 },
+						{ 'x': 718.3, 'y': -3250.0 },
+						{'x': -612.9, 'y':-2800.41},
+						{'x': 243.6, 'y': -3200.58},
+						{'x': -598.6, 'y':-3200.0}]
 	const cloudGometry = new THREE.BoxGeometry(200, 200, 200, 10, 10, 10);
 	const cloudLoader = new THREE.TextureLoader();
 	const nullMaterial = new THREE.MeshBasicMaterial({
@@ -410,11 +438,22 @@ function newRails(scrollStep) {
 	scene.add(curveRight);
 
 	//шпалы
+	zPos 	= posArrayLeft[posArrayLeft.length - 1];
+	x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
 	let lineGeometry = new LineGeometry();
 	let pos = [x + params.railway.middleOffset, 0.0, zPos,
 			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, zPos];
 	lineGeometry.setPositions(pos);
 	let line = new Line2(lineGeometry, betweenRailMtl);
+	scene.add(line);
+
+	zPos = posArrayLeft[posArrayLeft.length - 1] + 0.5 * scrollStep;
+	x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
+	lineGeometry = new LineGeometry();
+	pos = [x + params.railway.middleOffset, 0.0, zPos,
+			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, zPos];
+	lineGeometry.setPositions(pos);
+	line = new Line2(lineGeometry, betweenRailMtl);
 	scene.add(line);
 }
 
@@ -453,7 +492,7 @@ function animate() {
 		}
 
 
-		let stopStep = (params.cameraProps.maxZPosition + 2.2 * params.railway.forwardLength - params.cameraProps.startPosition.z) / 4.0;
+		let stopStep = (params.cameraProps.maxZPosition + 2.0 * params.railway.forwardLength - params.cameraProps.startPosition.z) / 4.0;
 		for (let stops = 1; stops < 5; stops++){
 			let pos = params.cameraProps.startPosition.z + stops * stopStep;
 			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
