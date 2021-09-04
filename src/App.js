@@ -18,6 +18,7 @@ let params = {
 	cameraProps: {
 		visibilityLength: 6000,
 		startPosition: new THREE.Vector3(0.0, 10.0, 1000.0),
+		maxZPosition: -1000,
 		rotationAmplitude: 3.0,
 		isMoving: false,
 		isMovingForward: true,
@@ -29,11 +30,13 @@ let params = {
 		forwardLength: 200,
 		sinAmplitude: 3.0,
 		sinPhase: 0.01,
-		middleOffset: 0.05
+		middleOffset: 0.05,
+		roadWidth: 2.0,
+		railwaySleeperFrequency: 5,
 	},
-	scrollStep: -0.1,
-	roadWidth: 2.0,
-	roadFrequency: 5,
+	wheelScrollingStep: 3.0,
+	wheelStep: -300.0,
+	isWheelStepEnding: false,
 	terrain: {
 		color: 0xcccccc,
 		gridColor: 0xffffff,
@@ -199,13 +202,13 @@ class App {
 			let x = params.railway.sinAmplitude * Math.sin(i * params.railway.sinPhase);
 			//добавить точки для рельс
 			posArrayLeft.push(x, 0.0, i);
-			posArrayRight.push(x + params.roadWidth, 0.0, i);
+			posArrayRight.push(x + params.railway.roadWidth, 0.0, i);
 
 			//создать шпалы
-			if (i % params.roadFrequency == 0) {
+			if (i % params.railway.railwaySleeperFrequency == 0) {
 				const lineGeometry = new LineGeometry();
 				const pos = [x + params.railway.middleOffset, 0.0, i,
-					x + params.roadWidth - params.railway.middleOffset, 0.0, i];
+					x + params.railway.roadWidth - params.railway.middleOffset, 0.0, i];
 				lineGeometry.setPositions(pos);
 				const line = new Line2(lineGeometry, betweenRailMtl);
 				scene.add(line);
@@ -241,12 +244,12 @@ function onMouseMove(e) {
 		camera.position.z - params.cameraProps.visibilityLength);
 }
 function onScroll(e) {
-	let weelStep = Math.sign(e.deltaY) * 1500.0;
-	if (camera.position.z + weelStep * params.scrollStep < params.cameraProps.startPosition.z) {
-		let step = weelStep * params.scrollStep;
+	let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
+	if (camera.position.z + wheelStep < params.cameraProps.startPosition.z &&
+		camera.position.z + wheelStep > params.cameraProps.maxZPosition + params.railway.forwardLength) {
 		params.cameraProps.isMoving = true;
 		params.cameraProps.isMovingForward = Math.sign(e.deltaY) > 0 ? true : false;
-		params.cameraProps.nextPosition = camera.position.z + step;
+		params.cameraProps.nextPosition = camera.position.z + wheelStep;
 	}
 }
 
@@ -260,9 +263,10 @@ function createLandspape() {
 	const loader = new THREE.TextureLoader();
 	const terainMaterial = new THREE.MeshLambertMaterial({
 		map: loader.load('./assets/img/grid.png', function (texture) {
-			texture.minFilter = THREE.LinearFilter;
-			texture.repeat.set(400, 500),
-			texture.wrapS = texture.wrapT = RepeatWrapping}),
+				texture.minFilter = THREE.LinearFilter;
+				texture.repeat.set(400, 500),
+				texture.wrapS = texture.wrapT = RepeatWrapping
+		}),
 	});
 
 	let terrain = new THREE.Mesh( planeGeometry, terainMaterial );
@@ -281,10 +285,11 @@ function createLandspape() {
 	let perlin = new Perlin();
 	let smoothing = params.terrain.smoothing;
 	let vertices = terrain.geometry.attributes.position.array;
-	let verticesGrid = terrain.geometry.attributes.position.array;
+	//let verticesGrid = terrain.geometry.attributes.position.array;
 
-	for (var i = 0; i <= vertices.length; i += 3) {		
-		vertices[i+2] =  0.3 * Math.abs(vertices[i]) * perlin.noise(
+	for (var i = 0; i <= vertices.length; i += 3) {
+		let peek = Math.abs(vertices[i]);
+		vertices[i+2] =  0.3 * peek * perlin.noise(
 			(terrain.position.x + vertices[i])/smoothing, 
 			(terrain.position.z + vertices[i+1])/smoothing
 		);
@@ -371,10 +376,10 @@ function newRails(scrollStep) {
 	lineGeometryLeft = new LineGeometry();
 	lineGeometryRight = new LineGeometry();
 
-	let zPos 	= posArrayLeft[posArrayLeft.length - 1] + params.scrollStep * scrollStep;
+	let zPos 	= posArrayLeft[posArrayLeft.length - 1] + scrollStep;
 	let x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
 	posArrayLeft.push(x, 0.0, zPos);
-	posArrayRight.push(x + params.roadWidth, 0.0, zPos);
+	posArrayRight.push(x + params.railway.roadWidth, 0.0, zPos);
 
 	lineGeometryLeft.setPositions(posArrayLeft);
 	lineGeometryRight.setPositions(posArrayRight);
@@ -386,7 +391,7 @@ function newRails(scrollStep) {
 	//шпалы
 	let lineGeometry = new LineGeometry();
 	let pos = [x + params.railway.middleOffset, 0.0, zPos,
-			x + params.roadWidth - params.railway.middleOffset, 0.0, zPos];
+			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, zPos];
 	lineGeometry.setPositions(pos);
 	let line = new Line2(lineGeometry, betweenRailMtl);
 	scene.add(line);
@@ -394,15 +399,36 @@ function newRails(scrollStep) {
 
 function animate() {
 	if (params.cameraProps.isMoving) {
-		let step = params.cameraProps.isMovingForward ? -2.5 : 2.5;
+		let oneScroll = params.wheelScrollingStep;
+		//step
+		let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
+		//is ending
+		if ((camera.position.z - 70 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+			(camera.position.z + 70 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+		) params.isWheelStepEnding = true;
+		else
+			params.isWheelStepEnding = false;
+
+		//move cam
+		if (!params.isWheelStepEnding)
 			camera.position.z += step;
-		if (params.cameraProps.isMovingForward && camera.position.z % 5 == 0 &&
-			camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength)
-			newRails(50);
-		if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-			(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+		else {
+			let distToEnd = params.cameraProps.isMovingForward ?
+				camera.position.z - params.cameraProps.nextPosition :
+				params.cameraProps.nextPosition - camera.position.z;
+			camera.position.z += step * distToEnd * 0.01;	
+		}
+		//draw new rails forward
+		if (params.cameraProps.isMovingForward &&
+			camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength &&
+			!params.isWheelStepEnding)
+			newRails(-oneScroll * 2.0);
+		//stop moving?
+		if ((camera.position.z - 25 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+			(camera.position.z - 25 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
 		) {
 			params.cameraProps.isMoving = false;
+			params.isWheelStepEnding = false;
 		}
 	}
 	requestAnimationFrame(animate);
