@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+canvas {
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+.visual-nav {
+  position: absolute;
+  top: 15rem;
+  right: 0;
+  width: 2rem;
+  height: 21rem;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.visual-nav__item {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  position: relative;
+  margin: auto;
+}
+.visual-nav__line {
+  position: relative;
+  width: 0.11rem;
+  height: 3rem;
+  background: rgba(0, 0, 0, 0.5);
+  margin: auto;
+}
+.visual-nav__passed {
+  position: absolute;
+  width: 0.11rem;
+  height: 0%;
+  background: #ED7817;
+}
+
+.mt {
+  margin-top: 0.5rem;
+}/*# sourceMappingURL=style.css.map */

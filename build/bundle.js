@@ -42856,7 +42856,7 @@
 			roadWidth: 2.0,
 			railwaySleeperFrequency: 5,
 		},
-		wheelScrollingStep: 3.0,
+		wheelScrollingStep: 5.0,
 		wheelStep: -300.0,
 		isWheelStepEnding: false,
 		terrain: {
@@ -42873,7 +42873,10 @@
 			src: './assets/img/cloud.png',
 			count: 40,
 			size: 250,
-
+		},
+		styles: {
+			orangeColor: '#ED7817',
+			gray50: 'rgba(0, 0, 0, 0.5)'
 		}
 	};
 
@@ -43046,6 +43049,7 @@
 			createLandspape();
 			createClouds();	
 
+			document.getElementsByClassName('visual-nav__item')[0].style.background = params.styles.orangeColor;
 			renderer.render(scene, camera);
 			canvas.addEventListener('mousemove', onMouseMove, false);
 			canvas.addEventListener('wheel', onScroll, false);
@@ -43067,7 +43071,7 @@
 	function onScroll(e) {
 		let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
 		if (camera.position.z + wheelStep < params.cameraProps.startPosition.z &&
-			camera.position.z + wheelStep > params.cameraProps.maxZPosition + params.railway.forwardLength) {
+			camera.position.z + wheelStep > params.cameraProps.maxZPosition + 0.5 * params.railway.forwardLength) {
 			params.cameraProps.isMoving = true;
 			params.cameraProps.isMovingForward = Math.sign(e.deltaY) > 0 ? true : false;
 			params.cameraProps.nextPosition = camera.position.z + wheelStep;
@@ -43078,16 +43082,19 @@
 		// Create plane of the terrain
 		const planeGeometry = new PlaneGeometry(
 			params.terrain.width, params.terrain.height,
-			params.terrain.segmentsCount, params.terrain.segmentsCount);
+			params.terrain.segmentsCount * 2.0, params.terrain.segmentsCount);
 		//let terainMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.color });
 		
-		const loader = new TextureLoader();
+		//const loader = new THREE.TextureLoader();
 		const terainMaterial = new MeshLambertMaterial({
+			/*
 			map: loader.load('./assets/img/grid.png', function (texture) {
-					texture.minFilter = LinearFilter;
+					texture.minFilter = THREE.LinearFilter;
 					texture.repeat.set(400, 500),
-					texture.wrapS = texture.wrapT = RepeatWrapping;
-			}),
+					texture.wrapS = texture.wrapT = RepeatWrapping
+			}),*/
+			color: params.terrain.color,
+			transparent: true
 		});
 
 		let terrain = new Mesh( planeGeometry, terainMaterial );
@@ -43108,17 +43115,31 @@
 		let vertices = terrain.geometry.attributes.position.array;
 		//let verticesGrid = terrain.geometry.attributes.position.array;
 
+		var geometry = new BufferGeometry();
+		var material = new PointsMaterial({
+			size: 2,
+			color: 0xffffff,
+			sizeAttenuation: false
+		});
+		let pointVertices = [];
+
 		for (var i = 0; i <= vertices.length; i += 3) {
 			let peek = Math.abs(vertices[i]);
 			vertices[i+2] =  0.3 * peek * perlin.noise(
 				(terrain.position.x + vertices[i])/smoothing, 
 				(terrain.position.z + vertices[i+1])/smoothing
 			);
+			if (vertices[i] != undefined )
+				pointVertices.push(vertices[i], vertices[i + 2] + params.terrain.yPosition, -vertices[i + 1]);
 		}
 		terrain.geometry.attributes.position.needsUpdate = true;
 		//terrainGrid.geometry.attributes.position.needsUpdate = true;
 		terrain.geometry.computeVertexNormals();
 		//terrainGrid.geometry.computeVertexNormals();
+
+		geometry.setAttribute( 'position', new BufferAttribute( new Float32Array(pointVertices), 3 ) );
+		let particles = new Points(geometry, material);
+		scene.add(particles);
 	}
 
 	function createClouds() {
@@ -43224,8 +43245,8 @@
 			//step
 			let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
 			//is ending
-			if ((camera.position.z - 70 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-				(camera.position.z + 70 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+			if ((camera.position.z - 80 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+				(camera.position.z + 80 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
 			) params.isWheelStepEnding = true;
 			else
 				params.isWheelStepEnding = false;
@@ -43245,11 +43266,34 @@
 				!params.isWheelStepEnding)
 				newRails(-oneScroll * 2.0);
 			//stop moving?
-			if ((camera.position.z - 25 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-				(camera.position.z - 25 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+			if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+				(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
 			) {
 				params.cameraProps.isMoving = false;
 				params.isWheelStepEnding = false;
+			}
+
+
+			let stopStep = (params.cameraProps.maxZPosition + 2.2 * params.railway.forwardLength - params.cameraProps.startPosition.z) / 4.0;
+			for (let stops = 1; stops < 5; stops++){
+				let pos = params.cameraProps.startPosition.z + stops * stopStep;
+				let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+
+				//for items
+				if (camera.position.z <= pos) {
+					document.getElementsByClassName('visual-nav__item')[stops].style.background = params.styles.orangeColor;
+					document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = '100%';
+				}
+				else {
+					document.getElementsByClassName('visual-nav__item')[stops].style.background = params.styles.gray50;
+					document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = '0%';
+				}			
+				if (camera.position.z < prevPos &&
+					camera.position.z > pos)
+				{
+					let height = Math.abs(100 * (camera.position.z - prevPos) / (prevPos - pos));
+					document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = height + '%';
+				}
 			}
 		}
 		requestAnimationFrame(animate);
