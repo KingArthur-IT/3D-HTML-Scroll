@@ -22,7 +22,9 @@ let params = {
 		rotationAmplitude: 3.0,
 		isMoving: false,
 		isMovingForward: true,
-		nextPosition: 0
+		nextPosition: 0,
+		isSceneActive: true,
+		targetAngle: 0
 	},
 	railway: {
 		width: 3.0, //px
@@ -237,8 +239,11 @@ class App {
 		renderer.render(scene, camera);
 
 		//events
-		canvas.addEventListener('mousemove', onMouseMove, false);
-		canvas.addEventListener('wheel', onScroll, false);
+		window.addEventListener('mousemove', onMouseMove, false);
+		window.addEventListener('wheel', onScroll, false);
+		document.getElementsByClassName('rotateBtn')[0].addEventListener('click', rotateLayout, false);
+		document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false);
+		document.getElementsByClassName('rotateBackBtn')[0].addEventListener('click', rotateBackLayout, false);
 
 		camera.lookAt(0, params.cameraProps.startPosition.y,
 			camera.position.z - params.cameraProps.visibilityLength);
@@ -253,13 +258,12 @@ function onMouseMove(e) {
 	let hk = params.cameraProps.rotationAmplitude * (e.y - h * 0.5) / h;
 	camera.position.x = wk;
 	camera.position.y = params.cameraProps.startPosition.y + hk;
-	camera.lookAt(0, params.cameraProps.startPosition.y,
-		camera.position.z - params.cameraProps.visibilityLength);
 }
 function onScroll(e) {
+	if (!params.cameraProps.isSceneActive) return;
 	let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
 	if (camera.position.z + wheelStep < params.cameraProps.startPosition.z &&
-		camera.position.z + wheelStep > params.cameraProps.maxZPosition + 0.5 * params.railway.forwardLength) {
+		camera.position.z + wheelStep > params.cameraProps.maxZPosition) {
 		params.cameraProps.isMoving = true;
 		params.cameraProps.isMovingForward = Math.sign(e.deltaY) > 0 ? true : false;
 		params.cameraProps.nextPosition = camera.position.z + wheelStep;
@@ -463,23 +467,17 @@ function animate() {
 	if (params.cameraProps.isMoving) {
 		MoveCamera();
 		changeNavMap();
-		console.log(camera.position.z)
-		if (Math.abs(camera.position.z - params.cameraProps.maxZPosition) < 1.1 * params.railway.forwardLength) {
-			document.getElementsByClassName('box')[0].style.opacity = "1.0";  
-			document.getElementsByClassName('box')[0].style.top = "0";  
-			document.getElementsByClassName('box')[1].style.opacity = "1.0";
-			document.getElementsByClassName('box')[1].style.top = "0";
-		}
 	}
+	RotateCamera();
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
 
 function MoveCamera() {
 	let oneScroll = params.wheelScrollingStep;
-	//step
 	let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
-	//is ending
+
+	//is scroll ending
 	if ((camera.position.z - 80 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
 		(camera.position.z + 80 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
 	) params.isWheelStepEnding = true;
@@ -495,11 +493,13 @@ function MoveCamera() {
 			params.cameraProps.nextPosition - camera.position.z;
 		camera.position.z += step * distToEnd * 0.01;	
 	}
+
 	//draw new rails forward
 	if (params.cameraProps.isMovingForward &&
 		camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength &&
 		!params.isWheelStepEnding)
 		newRails(-oneScroll * 2.0);
+	
 	//stop moving?
 	if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
 		(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
@@ -507,6 +507,7 @@ function MoveCamera() {
 		params.cameraProps.isMoving = false;
 		params.isWheelStepEnding = false;
 	}
+
 	//stop cam on stop
 	if (!params.cameraProps.isMovingForward) return;
 	let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
@@ -515,10 +516,13 @@ function MoveCamera() {
 	for (let stops = 1; stops < 5; stops++){
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
-		if (camera.position.z - 80 > pos && camera.position.z < prevPos)
+		if (camera.position.z > pos && camera.position.z < prevPos &&
+			camera.position.z - 80 < pos)
 		{
 			params.isWheelStepEnding = true;
 			params.cameraProps.nextPosition = pos;
+			params.cameraProps.isSceneActive = false;
+			showLayout(stops);
 		}
 		if (Math.abs(camera.position.z - pos) < 1.0 )
 		{
@@ -570,6 +574,40 @@ function changeNavMap() {
 			document.getElementsByClassName('visual-nav__currentPoint')[0].style.top = top + 'rem';
 		}
 	}	
+}
+
+function showLayout() {
+	document.getElementsByClassName('box')[0].style.opacity = "1.0";  
+	document.getElementsByClassName('box')[0].style.top = "0";  
+	document.getElementsByClassName('box')[1].style.opacity = "1.0";
+	document.getElementsByClassName('box')[1].style.top = "0";
+}
+
+function rotateLayout() {
+	document.getElementsByClassName('front')[0].style.transform = "perspective(1000px) rotateY(-130deg) translateZ(-1000px) scale(1.5)";
+	document.getElementsByClassName('left')[0].style.transform = "perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5)";
+	params.cameraProps.targetAngle = Math.PI / 2.0;
+	console.log(camera.rotation.y);
+}
+
+function closeLayout() {
+	document.getElementsByClassName('box')[0].style.opacity = "0.0";  
+	document.getElementsByClassName('box')[0].style.top = "-5rem";  
+	document.getElementsByClassName('box')[1].style.opacity = "0.0";
+	document.getElementsByClassName('box')[1].style.top = "-5rem";
+	params.cameraProps.isSceneActive = true;
+}
+
+function rotateBackLayout() {
+	document.getElementsByClassName('front')[0].style.transform = "perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5)";
+	document.getElementsByClassName('left')[0].style.transform = "perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(1.5)";
+	params.cameraProps.targetAngle = 0.0;
+}
+
+function RotateCamera() {
+	if (Math.abs(params.cameraProps.targetAngle - camera.rotation.y) > 0.1) {
+		camera.rotation.y += 0.052 * Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
+	}
 }
 
 export default App;

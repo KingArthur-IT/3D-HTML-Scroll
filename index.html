@@ -15,27 +15,31 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgb(97, 93, 91);
+            background-color: rgba(97, 93, 91, 0.3);
             transform-style: preserve-3d;  
-            transition: all 1s linear;  
+            transition: all 1s ease-out; 
             opacity: 0.0; 
         }
         .front{
             transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5);
         }
         .left{
-            transform: perspective(1000px) rotateY(110deg) translateZ(-1000px) scale(1.5);
+            transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(1.5);
         }
-        canvas{
-            transform: none;
+        button{
+            padding: 2rem;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div style="position: relative; overflow: hidden;">
         <div class="box front">
+            <button class="rotateBtn">Rotate on left</button>
+            <button class="close">Close</button>
         </div>
         <div class="box left">
+            <button class="rotateBackBtn">Close</button>
         </div>
         <div class="visual-nav">
             <div class="visual-nav__item mt">
@@ -63,11 +67,5 @@
     
     <!--Main Script-->
     <script src="./build/bundle.js"></script>
-    <script>
-        document.addEventListener('click', () => {   
-            document.getElementsByClassName('front')[0].style.transform = "perspective(1000px) rotateY(-110deg) translateZ(-1000px) scale(1.5)";
-            document.getElementsByClassName('left')[0].style.transform = "perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5)";       
-        })
-    </script>
 </body>
 </html>
