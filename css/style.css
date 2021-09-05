@@ -10,10 +10,6 @@ canvas {
   min-height: 100vh;
 }
 
-body {
-  overflow: hidden;
-}
-
 .visual-nav {
   position: absolute;
   top: 15rem;

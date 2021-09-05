@@ -463,6 +463,13 @@ function animate() {
 	if (params.cameraProps.isMoving) {
 		MoveCamera();
 		changeNavMap();
+		console.log(camera.position.z)
+		if (Math.abs(camera.position.z - params.cameraProps.maxZPosition) < 1.1 * params.railway.forwardLength) {
+			document.getElementsByClassName('box')[0].style.opacity = "1.0";  
+			document.getElementsByClassName('box')[0].style.top = "0";  
+			document.getElementsByClassName('box')[1].style.opacity = "1.0";
+			document.getElementsByClassName('box')[1].style.top = "0";
+		}
 	}
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);

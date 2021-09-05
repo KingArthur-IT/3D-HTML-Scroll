@@ -11,58 +11,62 @@
             display: block;
             padding: 5%;
             position: absolute;
-            top: 0;
+            top: -5rem;
             left: 0;
-            width: 400px;
-            height: 400px;
-            background-color: coral;
-            transform-style: preserve-3d;
-            transform: perspective(500px) rotateY(90deg) translateZ(-500px);
-            transition: all 1s linear;
-            
+            width: 100vw;
+            height: 100vh;
+            background-color: rgb(97, 93, 91);
+            transform-style: preserve-3d;  
+            transition: all 1s linear;  
+            opacity: 0.0; 
         }
-        @keyframes swipe {
-           0% {
-               transform: perspective(500px) rotateY(90deg) translateZ(-500px);
-           } 
-           100% {
-               transform: perspective(500px) rotateY(0deg) translateZ(-500px);
-           }
+        .front{
+            transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5);
+        }
+        .left{
+            transform: perspective(1000px) rotateY(110deg) translateZ(-1000px) scale(1.5);
+        }
+        canvas{
+            transform: none;
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        3D Text
+    <div style="position: relative; overflow: hidden;">
+        <div class="box front">
+        </div>
+        <div class="box left">
+        </div>
+        <div class="visual-nav">
+            <div class="visual-nav__item mt">
+                <div class="visual-nav__currentPoint"></div>
+            </div>
+            <div class="visual-nav__line mt">
+                <div class="visual-nav__passed"></div>
+            </div>
+            <div class="visual-nav__item mt"></div>
+            <div class="visual-nav__line mt">
+                <div class="visual-nav__passed"></div>
+            </div>
+            <div class="visual-nav__item mt"></div>
+            <div class="visual-nav__line mt">
+                <div class="visual-nav__passed"></div>
+            </div>
+            <div class="visual-nav__item mt"></div>
+            <div class="visual-nav__line mt">
+                <div class="visual-nav__passed"></div>
+            </div>
+            <div class="visual-nav__item mt"></div>
+        </div>
+        <canvas id="canvas"></canvas>
     </div>
-    <div class="visual-nav">
-        <div class="visual-nav__item mt">
-            <div class="visual-nav__currentPoint"></div>
-        </div>
-        <div class="visual-nav__line mt">
-            <div class="visual-nav__passed"></div>
-        </div>
-        <div class="visual-nav__item mt"></div>
-        <div class="visual-nav__line mt">
-            <div class="visual-nav__passed"></div>
-        </div>
-        <div class="visual-nav__item mt"></div>
-        <div class="visual-nav__line mt">
-            <div class="visual-nav__passed"></div>
-        </div>
-        <div class="visual-nav__item mt"></div>
-        <div class="visual-nav__line mt">
-            <div class="visual-nav__passed"></div>
-        </div>
-        <div class="visual-nav__item mt"></div>
-    </div>
-    <canvas id="canvas"></canvas>
+    
     <!--Main Script-->
     <script src="./build/bundle.js"></script>
     <script>
-        document.addEventListener('click', () => {
-            //document.getElementsByClassName('box').style.animation = "swipe 1s ease 0s";         
-            document.getElementsByClassName('box')[0].style.transform = "perspective(500px) rotateY(0deg) translateZ(-500px)";         
+        document.addEventListener('click', () => {   
+            document.getElementsByClassName('front')[0].style.transform = "perspective(1000px) rotateY(-110deg) translateZ(-1000px) scale(1.5)";
+            document.getElementsByClassName('left')[0].style.transform = "perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5)";       
         })
     </script>
 </body>
