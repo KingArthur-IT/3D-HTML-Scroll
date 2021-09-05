@@ -42997,14 +42997,6 @@
 			renderer = new WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
 			renderer.setClearColor(params.bgColor);
 			renderer.shadowMap.enabled = true;
-
-			const Boxgeometry = new BoxGeometry( 10, 10, 10);
-			const material = new MeshPhysicalMaterial( {color: 0xcccccc} );
-			const cube = new Mesh(Boxgeometry, material);
-			cube.rotation.set(0.3, 0.3, 0.1);
-			cube.position.set(-10.0, params.cameraProps.startPosition.y, 0.0);
-			cube.receiveShadow = true;
-			scene.add(cube);
 			
 			//материалы к рельсам
 			railMtl = new LineMaterial({
@@ -43047,6 +43039,7 @@
 			lineGeometry.setPositions(pos);
 			const line = new Line2(lineGeometry, betweenRailMtl);
 			scene.add(line);
+
 			//создать рельсы
 			lineGeometryLeft.setPositions(posArrayLeft);
 			lineGeometryRight.setPositions(posArrayRight);
@@ -43055,14 +43048,21 @@
 			scene.add(curveLeft);
 			scene.add(curveRight);
 
+			//Create lanscape and clouds
 			createLandspape();
 			createClouds();	
 
+			//visual nav map 
 			document.getElementsByClassName('visual-nav__item')[0].style.background = params.styles.orangeColor;
+			
 			renderer.render(scene, camera);
+
+			//events
 			canvas.addEventListener('mousemove', onMouseMove, false);
 			canvas.addEventListener('wheel', onScroll, false);
 
+			camera.lookAt(0, params.cameraProps.startPosition.y,
+				camera.position.z - params.cameraProps.visibilityLength);
 			animate();
 		}
 	}
@@ -43133,8 +43133,10 @@
 		let pointVertices = [];
 
 		for (var i = 0; i <= vertices.length; i += 3) {
-			let peek = Math.abs(vertices[i]);
-			vertices[i+2] =  0.3 * peek * perlin.noise(
+			let peek = 0.3 * Math.abs(vertices[i]);
+			if (vertices[i + 1] > 0)
+				peek = peek * (1000 - vertices[i + 1]) / 1000;
+			vertices[i+2] =  peek * perlin.noise(
 				(terrain.position.x + vertices[i])/smoothing, 
 				(terrain.position.z + vertices[i+1])/smoothing
 			);
@@ -43280,63 +43282,107 @@
 
 	function animate() {
 		if (params.cameraProps.isMoving) {
-			let oneScroll = params.wheelScrollingStep;
-			//step
-			let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
-			//is ending
-			if ((camera.position.z - 80 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-				(camera.position.z + 80 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
-			) params.isWheelStepEnding = true;
-			else
-				params.isWheelStepEnding = false;
-
-			//move cam
-			if (!params.isWheelStepEnding)
-				camera.position.z += step;
-			else {
-				let distToEnd = params.cameraProps.isMovingForward ?
-					camera.position.z - params.cameraProps.nextPosition :
-					params.cameraProps.nextPosition - camera.position.z;
-				camera.position.z += step * distToEnd * 0.01;	
-			}
-			//draw new rails forward
-			if (params.cameraProps.isMovingForward &&
-				camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength &&
-				!params.isWheelStepEnding)
-				newRails(-oneScroll * 2.0);
-			//stop moving?
-			if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-				(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
-			) {
-				params.cameraProps.isMoving = false;
-				params.isWheelStepEnding = false;
-			}
-
-
-			let stopStep = (params.cameraProps.maxZPosition + 2.0 * params.railway.forwardLength - params.cameraProps.startPosition.z) / 4.0;
-			for (let stops = 1; stops < 5; stops++){
-				let pos = params.cameraProps.startPosition.z + stops * stopStep;
-				let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
-
-				//for items
-				if (camera.position.z <= pos) {
-					document.getElementsByClassName('visual-nav__item')[stops].style.background = params.styles.orangeColor;
-					document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = '100%';
-				}
-				else {
-					document.getElementsByClassName('visual-nav__item')[stops].style.background = params.styles.gray50;
-					document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = '0%';
-				}			
-				if (camera.position.z < prevPos &&
-					camera.position.z > pos)
-				{
-					let height = Math.abs(100 * (camera.position.z - prevPos) / (prevPos - pos));
-					document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = height + '%';
-				}
-			}
+			MoveCamera();
+			changeNavMap();
 		}
 		requestAnimationFrame(animate);
 		renderer.render(scene, camera);
+	}
+
+	function MoveCamera() {
+		let oneScroll = params.wheelScrollingStep;
+		//step
+		let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
+		//is ending
+		if ((camera.position.z - 80 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+			(camera.position.z + 80 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+		) params.isWheelStepEnding = true;
+		else
+			params.isWheelStepEnding = false;
+
+		//move cam
+		if (!params.isWheelStepEnding)
+			camera.position.z += step;
+		else {
+			let distToEnd = params.cameraProps.isMovingForward ?
+				camera.position.z - params.cameraProps.nextPosition :
+				params.cameraProps.nextPosition - camera.position.z;
+			camera.position.z += step * distToEnd * 0.01;	
+		}
+		//draw new rails forward
+		if (params.cameraProps.isMovingForward &&
+			camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength &&
+			!params.isWheelStepEnding)
+			newRails(-oneScroll * 2.0);
+		//stop moving?
+		if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+			(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+		) {
+			params.cameraProps.isMoving = false;
+			params.isWheelStepEnding = false;
+		}
+		//stop cam on stop
+		if (!params.cameraProps.isMovingForward) return;
+		let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
+		//stops
+		let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / 4.0;
+		for (let stops = 1; stops < 5; stops++){
+			let pos = params.cameraProps.startPosition.z + stops * stopStep;
+			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+			if (camera.position.z - 80 > pos && camera.position.z < prevPos)
+			{
+				params.isWheelStepEnding = true;
+				params.cameraProps.nextPosition = pos;
+			}
+			if (Math.abs(camera.position.z - pos) < 1.0 )
+			{
+				params.cameraProps.isMoving = false;
+				params.isWheelStepEnding = false;
+			}
+		}
+	}
+
+	function changeNavMap() {
+		let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
+		//stops
+		let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / 4.0;
+		for (let stops = 1; stops < 5; stops++){
+			let pos = params.cameraProps.startPosition.z + stops * stopStep;
+			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+
+			//for items
+			if (camera.position.z <= pos + 20.0) {
+				document.getElementsByClassName('visual-nav__item')[stops].style.background = params.styles.orangeColor;
+				document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = '100%';
+			}
+			else {
+				document.getElementsByClassName('visual-nav__item')[stops].style.background = params.styles.gray50;
+				document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = '0%';
+			}		
+			if (camera.position.z < prevPos &&
+				camera.position.z > pos)
+			{
+				let height = Math.abs(100 * (camera.position.z - prevPos) / (prevPos - pos));
+				document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = height + '%';
+			}
+		}
+		//moving current point
+		let points = [-0.24, 4.24, 8.75, 13.24, 17.75];
+		//let starTopPos = -0.24; let endTopPos = 17.75;
+		for (let stops = 1; stops < 5; stops++) {
+			let pos = params.cameraProps.startPosition.z + stops * stopStep;
+			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+			
+			if (camera.position.z < prevPos && camera.position.z > pos) {
+				let top = points[stops - 1] + 0.24 + 3.7 * (prevPos - camera.position.z) / (prevPos - pos);
+				document.getElementsByClassName('visual-nav__currentPoint')[0].style.top = top + 'rem';
+				//if (top > endPos) top = endPos;
+			}
+			if (Math.abs(camera.position.z - pos) < 20.0) {
+				let top = points[stops];
+				document.getElementsByClassName('visual-nav__currentPoint')[0].style.top = top + 'rem';
+			}
+		}	
 	}
 
 	const app = new App();

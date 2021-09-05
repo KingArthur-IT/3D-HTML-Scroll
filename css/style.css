@@ -10,10 +10,14 @@ canvas {
   min-height: 100vh;
 }
 
+body {
+  overflow: hidden;
+}
+
 .visual-nav {
   position: absolute;
   top: 15rem;
-  right: 0;
+  right: 1rem;
   width: 2rem;
   height: 21rem;
   -webkit-transform: rotate(180deg);
@@ -38,6 +42,15 @@ canvas {
   width: 0.11rem;
   height: 0%;
   background: #ED7817;
+}
+.visual-nav__currentPoint {
+  position: absolute;
+  border: 0.11rem solid #ED7817;
+  width: 1rem;
+  height: 1rem;
+  background-color: transparent;
+  top: -0.24rem;
+  left: -0.25rem;
 }
 
 .mt {
