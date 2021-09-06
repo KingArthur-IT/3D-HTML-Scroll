@@ -2,6 +2,10 @@ import * as THREE from 'three';
 //import { PropertyBinding, RepeatWrapping } from 'three';
 import { Line2, LineGeometry, LineMaterial } from 'three-fatline';
 
+document.getElementsByClassName('hamburger')[0].addEventListener("click", function () {
+	this.classList.toggle("is-active");	
+})
+
 //scene
 let canvas, camera, scene, light, renderer;
 //for line
@@ -14,7 +18,7 @@ let railMtl, betweenRailMtl,
 let params = {
 	sceneWidth: 850,
 	sceneHeight: 450,
-	bgColor: 0x537fd8,
+	bgColor: 0xdedede,
 	cameraProps: {
 		visibilityLength: 6000,
 		startPosition: new THREE.Vector3(0.0, 13.0, 1000.0),
@@ -27,14 +31,14 @@ let params = {
 		targetAngle: 0
 	},
 	railway: {
-		width: 3.0, //px
-		color: 0xffffff,
+		width: 2.0, //px
+		color: 0xf3f3f3,
 		forwardLength: 200,
 		sinAmplitude: 3.0,
 		sinPhase: 0.01,
-		middleOffset: 0.05,
+		middleOffset: -0.15,
 		roadWidth: 2.0,
-		railwaySleeperFrequency: 5,
+		railwaySleeperFrequency: 2.0,
 	},
 	wheelScrollingStep: 5.0,
 	wheelStep: -300.0,
@@ -195,12 +199,12 @@ class App {
 		lineGeometryLeft = new LineGeometry();
 		lineGeometryRight = new LineGeometry();
 		//rails and rail sleepers
-		for (let i = params.cameraProps.startPosition.z; i >= 800; i--) {
+		for (let i = params.cameraProps.startPosition.z; i >= params.cameraProps.maxZPosition; i--) {
 			let x = params.railway.sinAmplitude * Math.sin(i * params.railway.sinPhase);
 			//add points for rails
 			posArrayLeft.push(x, 0.0, i);
 			posArrayRight.push(x + params.railway.roadWidth, 0.0, i);
-
+			
 			//add rail sleeper
 			if (i % params.railway.railwaySleeperFrequency == 0) {
 				const lineGeometry = new LineGeometry();
@@ -211,15 +215,6 @@ class App {
 				scene.add(line);
 			}
 		};
-		//extra rail sleeper
-		let i = 800 - params.railway.railwaySleeperFrequency;
-		let x = params.railway.sinAmplitude * Math.sin(i * params.railway.sinPhase);
-		const lineGeometry = new LineGeometry();
-		const pos = [x + params.railway.middleOffset, 0.0, i,
-			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, i];
-		lineGeometry.setPositions(pos);
-		const line = new Line2(lineGeometry, betweenRailMtl);
-		scene.add(line);
 
 		//создать рельсы
 		lineGeometryLeft.setPositions(posArrayLeft);
@@ -260,6 +255,25 @@ function onMouseMove(e) {
 	camera.position.y = params.cameraProps.startPosition.y + hk;
 }
 function onScroll(e) {
+	if (window.innerHeight + window.scrollY >= document.body.offsetHeight) 
+	{
+		document.getElementsByClassName('intro')[0].style.opacity = 0.0;
+		document.getElementsByClassName('gradient')[0].style.opacity = 0.0;
+		document.getElementsByClassName('header')[0].style.background = 'transparent';
+		document.body.style.overflowY = 'hidden';
+
+		setTimeout(() => {
+			document.getElementsByClassName('intro')[0].style.display = 'none';
+			document.getElementsByClassName('gradient')[0].style.display = 'none';
+			document.getElementsByClassName('canvas-wrapper')[0].style.display = 'block';
+			document.getElementsByClassName('canvas-wrapper')[0].style.opacity = 1.0;
+			document.getElementById('canvas').style.opacity = 1.0;
+			
+		}, 3000);
+	}
+	
+	if (document.getElementsByClassName('canvas-wrapper')[0].style.display == '')
+		return;
 	if (!params.cameraProps.isSceneActive) return;
 	let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
 	if (camera.position.z + wheelStep < params.cameraProps.startPosition.z &&
@@ -494,12 +508,6 @@ function MoveCamera() {
 		camera.position.z += step * distToEnd * 0.01;	
 	}
 
-	//draw new rails forward
-	if (params.cameraProps.isMovingForward &&
-		camera.position.z - posArrayLeft[posArrayLeft.length - 1] <= params.railway.forwardLength &&
-		!params.isWheelStepEnding)
-		newRails(-oneScroll * 2.0);
-	
 	//stop moving?
 	if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
 		(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
@@ -559,7 +567,7 @@ function changeNavMap() {
 	}
 	//moving current point
 	let points = [-0.24, 4.24, 8.75, 13.24, 17.75];
-	//let starTopPos = -0.24; let endTopPos = 17.75;
+	
 	for (let stops = 1; stops < 5; stops++) {
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;

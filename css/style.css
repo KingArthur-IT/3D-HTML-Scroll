@@ -1,13 +1,74 @@
+/*Base colors */
+/* Fonts */
+@font-face {
+  font-family: "GT Eesti Pro";
+  src: local("GT Eesti Pro Text Book"), local("GT-Eesti-Pro-Text-Book");
+  src: url("../assets/fonts/GTEestiProText-Book.woff2") format("woff2");
+  src: url("../assets/fonts/GTEestiProText-Book.woff") format("woff");
+  src: url("../assets/fonts/GTEestiProText-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GT Eesti Pro";
+  src: local("GT Eesti Pro Text Light"), local("GT-Eesti-Pro-Text-Light");
+  src: url("../assets/fonts/GTEestiProText-Light.woff2") format("woff2");
+  src: url("../assets/fonts/GTEestiProText-Light.woff") format("woff");
+  src: url("../assets/fonts/GTEestiProText-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GT Eesti Pro";
+  src: local("GT Eesti Pro Text Medium"), local("GT-Eesti-Pro-Text-Medium");
+  src: url("../assets/fonts/GTEestiProText-Medium.woff2") format("woff2");
+  src: url("../assets/fonts/GTEestiProText-Medium.woff") format("woff");
+  src: url("../assets/fonts/GTEestiProText-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
 * {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html {
+  font-size: 16px;
+  font-family: "GT Eesti Pro", sans-serif;
 }
 
 canvas {
   min-width: 100vw;
   min-height: 100vh;
+}
+
+.container {
+  max-width: 87rem;
+  margin: auto;
+  padding: 3rem;
+}
+
+.header {
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+  background: #ffffff;
+  -webkit-transition: all 1s ease-in;
+  transition: all 1s ease-in;
+}
+.header__hero {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .visual-nav {
@@ -51,4 +112,146 @@ canvas {
 
 .mt {
   margin-top: 0.5rem;
+}
+
+.intro {
+  padding-top: 8rem;
+  display: block;
+  opacity: 1;
+  -webkit-transition: all 3s ease-in;
+  transition: all 3s ease-in;
+}
+.intro__img {
+  width: 100%;
+  min-height: 22.5rem;
+}
+.intro__title {
+  font-size: 9.75rem;
+  font-weight: normal;
+  line-height: 7.5rem;
+  margin-bottom: 1.625rem;
+  margin-top: -7.15rem;
+}
+.intro__subtitle {
+  font-size: 2.06rem;
+  font-weight: normal;
+  line-height: 3rem;
+}
+
+.gradient {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(23%, #ffffff), to(#DEDEDE));
+  background: linear-gradient(180deg, #ffffff 23%, #DEDEDE 100%);
+  display: block;
+  opacity: 1;
+  -webkit-transition: all 3s ease-in;
+  transition: all 3s ease-in;
+}
+
+.about-us {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.about-us__hero {
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.about-us__design {
+  height: 4.5rem;
+  margin-bottom: 2rem;
+}
+.about-us__main {
+  margin-bottom: 4.3rem;
+}
+.about-us__title {
+  font-weight: 500;
+  font-size: 2.06rem;
+  line-height: 2.25rem;
+  margin-bottom: 1rem;
+}
+.about-us__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.about-us__text {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+}
+.about-us__road {
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.about-us__items {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.item {
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  margin-bottom: 3.375rem;
+}
+.item__title {
+  height: 3.375rem;
+  margin-bottom: 0.25rem;
+}
+.item__text {
+  font-size: 0.81rem;
+  line-height: 0.94rem;
+}
+
+.road__template {
+  width: 80%;
+  height: auto;
+}
+
+.canvas-wrapper {
+  position: fixed;
+  display: none;
+  opacity: 0;
+  -webkit-transition: all 5s ease-in;
+  transition: all 5s ease-in;
+}
+
+#canvas {
+  opacity: 0;
+  -webkit-transition: all 5s ease-in;
+  transition: all 5s ease-in;
 }/*# sourceMappingURL=style.css.map */
