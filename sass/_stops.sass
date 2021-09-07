@@ -1,0 +1,139 @@
+.stop-section
+    display: flex
+    justify-content: space-between
+    align-items: flex-start
+    background-color: transparent
+    &__hero
+        flex-basis: 45%
+        height: 100%
+        width: 28.5rem
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+    &__title
+        font-weight: 500
+        font-size: 2.06rem
+        line-height: 2.25rem
+        margin-bottom: 1.18rem
+    &__text
+        font-size: 1.06rem
+        line-height: 1.31rem
+        margin-bottom: 1.0rem
+.model-wrapper
+    align-self: stretch
+    background: rgba(204,204,204,0.5)
+    position: relative
+    flex-basis: 45%
+    display: flex
+    transition: all 0.5s ease-in
+    opacity: 1.0
+    &__design
+        position: absolute
+        top: 0
+        left: 0
+        width: 1.5rem
+        height: 1.5rem
+        background: $yellow
+    &__model
+        width: 100%
+        display: block
+        margin: auto
+    &__btn
+        position: absolute
+        bottom: 0
+        left: 0
+        padding: 0
+        background: #fff
+        font-size: 1.06rem
+        line-height: 1.31rem
+        display: flex
+        justify-content: space-between
+        align-items: center
+    &__btn-text
+        font-size: 1.06rem
+        line-height: 1.31rem
+        padding: 0 1.31rem
+.button-design
+    height: 3rem
+.person-item
+    background: #fff
+    min-height: 6rem
+    display: flex
+    justify-content: flex-start
+    margin-top: 1.5rem
+    width: 100%
+    &__img
+        height: 6rem
+        margin-right: 1.5rem
+    &__wrapper
+        padding-top: 1.5rem
+        padding-left: 1.5rem
+    &__name
+        font-weight: 500
+        font-size: 1.625rem
+        line-height: 1.875rem
+    &__profession
+        font-size: 1.06rem
+        line-height: 1.31rem
+.stop-info
+    flex-basis: 45%
+    display: none
+    flex-direction: column
+    justify-content: space-between
+    background: #ffffff
+    transition: all 0.5s ease-in
+    opacity: 0.0
+    &__img
+        flex-basis: 45%
+        position: relative
+    &__main-img
+        width: 100%
+    &__hero
+        padding: 3rem
+        position: relative
+    &__title
+        font-weight: 500
+        font-size: 1.625rem
+        line-height: 1.875rem
+        margin-bottom: 1rem
+    &__text-wrapper
+        display: flex
+        flex-wrap: wrap
+        justify-content: space-between
+    &__text
+        font-size: 0.81rem
+        line-height: 0.94rem
+        flex-basis: 45%
+    &__img-design
+        width: 1.5rem
+        height: 1.5rem
+        position: absolute
+        top: 0
+        left: 0
+        background: $yellow
+    &__close
+        width: 1.5rem
+        height: 1.5rem
+        position: absolute
+        top: 0.75rem
+        right: 0.75rem
+    &__hero-orange
+        width: 1.5rem
+        height: 1.5rem
+        position: absolute
+        bottom: 1.5rem
+        right: 1.5rem
+        background: $yellow
+    &__hero-red
+        width: 1.5rem
+        height: 1.5rem
+        position: absolute
+        bottom: 0
+        right: 0
+        background: $red
+    &__btn
+        position: absolute
+        bottom: 0
+        background: #fff
+        padding: 0.84rem 1.3rem
+        right: 0

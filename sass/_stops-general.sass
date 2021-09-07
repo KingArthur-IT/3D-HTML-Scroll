@@ -1,0 +1,14 @@
+.threeD-layout
+    position: absolute
+    top: 50%
+    left: 50%
+    width: 100vw
+    transform-style: preserve-3d
+    transition: all 1s ease-out
+    opacity: 0.0
+    max-height: 33rem
+    max-width: 74rem
+.frontFace
+    transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(2.0) translateY(-50%) translateX(-50%)
+.leftFace
+    transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(2.0) translateY(-50%) translateX(-50%)

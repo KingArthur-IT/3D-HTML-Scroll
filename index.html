@@ -7,31 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/hamburgers.min.css">
     <title>Document</title>
-    <style>        
-        .box{ 
-            display: block;
-            padding: 5%;
-            position: absolute;
-            top: -5rem;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(97, 93, 91, 0.3);
-            transform-style: preserve-3d;  
-            transition: all 1s ease-out; 
-            opacity: 0.0; 
-        }
-        .front{
-            transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5);
-        }
-        .left{
-            transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(1.5);
-        }
-        button{
-            padding: 2rem;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     <header class="header">
@@ -105,13 +80,78 @@
             </div>
         </section>
         <section class="canvas-wrapper">
-            <div class="box front">
-                <button class="rotateBtn">Rotate on left</button>
-                <button class="close">Close</button>
+            <!--Front face-->
+            <div class="stop-section threeD-layout frontFace">
+                <div class="model-wrapper">
+                    <div class="model-wrapper__design"></div>
+                    <img src="./assets/layout-img/mining/career.png" alt="career" class="model-wrapper__model">
+                    <button class="model-wrapper__btn">
+                        <span class="model-wrapper__btn-text">Информация об объекте</span>
+                        <img src="./assets/layout-img/design-items/two-vertical.png" alt="" class="button-design">
+                    </button>
+                </div>
+                <div class="stop-info">
+                    <div class="stop-info__img">
+                        <div class="stop-info__img-design"></div>
+                        <img src="./assets/layout-img/design-items/close.png" alt="" class="stop-info__close">
+                        <img src="./assets/layout-img/mining/mining-galary/1 (2).png" alt="" class="stop-info__main-img">
+                        <button class="stop-info__btn rotateBtn">
+                            Смотреть галерею
+                        </button>
+                    </div>
+                    <div class="stop-info__hero">
+                        <h3 class="stop-info__title">Таштагольский рудник, Северный карьер</h3>
+                        <div class="stop-info__text-wrapper">
+                            <p class="stop-info__text close">
+                                Качканарский горно-обогатительный комбинат (ЕРАЗ КГОК) входит 
+                                в пятерку крупнейших российских горнорудных предприятий.
+                            </p>
+                            <p class="stop-info__text rotateBtn">
+                                Это единственный отечественный производитель ванадийсодержащей 
+                                железной руды и высококачественного железнорудного сырья из руды 
+                                с низким содержанием железа.
+                            </p>
+                        </div>
+                        <div class="stop-info__hero-orange"></div>
+                        <div class="stop-info__hero-red"></div>
+                    </div>
+                </div>
+                <div class="stop-section__hero close">
+                    <h3 class="stop-section__title">С места в карьер</h3>
+                    <p class="stop-section__text">
+                        На рудных предприятиях ЕВРАЗа добыча ведется из карьеров и шахт.
+                        Чтобы получить готовый продукт - измельченный концентрат - железную
+                        руду перерабатывают и обогащают. Работники комбинатов - герои первого звена
+                        металлургического производства.
+                    </p>
+                    <div class="person-item">
+                        <img src="./assets/layout-img/mining/evgeniy-mini.png" alt="evgeniy" class="person-item__img">
+                        <div class="person-item__wrapper">
+                            <h4 class="person-item__name">Евгений Автушко</h4>
+                            <p class="person-item__profession">Водитель грузовика в карьере</p>
+                        </div>
+                    </div>
+                    <div class="person-item">
+                        <img src="./assets/layout-img/mining/sergey-mini.png" alt="evgeniy" class="person-item__img">
+                        <div class="person-item__wrapper">
+                            <h4 class="person-item__name">Сергей Козлов</h4>
+                            <p class="person-item__profession">Бурильщик шпуров в шахте</p>
+                        </div>
+                    </div>
+                    <div class="person-item">
+                        <img src="./assets/layout-img/mining/alex-mini.png" alt="evgeniy" class="person-item__img">
+                        <div class="person-item__wrapper">
+                            <h4 class="person-item__name">Александр Блюденов</h4>
+                            <p class="person-item__profession">Начальник обогатительной фабрики</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="box left">
+            <div class="threeD-layout leftFace">
                 <button class="rotateBackBtn">Close</button>
             </div>
+            
+            <canvas id="canvas"></canvas>
             <div class="visual-nav">
                 <div class="visual-nav__item mt">
                     <div class="visual-nav__currentPoint"></div>
@@ -133,7 +173,6 @@
                 </div>
                 <div class="visual-nav__item mt"></div>
             </div>
-            <canvas id="canvas"s></canvas>
         </section>
     </main>    
     <!--Main Script-->

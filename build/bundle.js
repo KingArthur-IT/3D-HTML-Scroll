@@ -43060,6 +43060,9 @@
 			document.getElementsByClassName('rotateBtn')[0].addEventListener('click', rotateLayout, false);
 			document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false);
 			document.getElementsByClassName('rotateBackBtn')[0].addEventListener('click', rotateBackLayout, false);
+			
+			document.getElementsByClassName('model-wrapper__btn')[0].addEventListener('click', infoAboutObject, false);
+			document.getElementsByClassName('stop-info__close')[0].addEventListener('click', closeInfoAboutObject, false);
 
 			camera.lookAt(0, params.cameraProps.startPosition.y,
 				camera.position.z - params.cameraProps.visibilityLength);
@@ -43080,16 +43083,21 @@
 		{
 			document.getElementsByClassName('intro')[0].style.opacity = 0.0;
 			document.getElementsByClassName('gradient')[0].style.opacity = 0.0;
-			document.getElementsByClassName('header')[0].style.background = 'transparent';
 			document.body.style.overflowY = 'hidden';
 
 			setTimeout(() => {
+				document.getElementsByClassName('header__hero')[0].style.height = '100vh';
+
 				document.getElementsByClassName('intro')[0].style.display = 'none';
 				document.getElementsByClassName('gradient')[0].style.display = 'none';
 				document.getElementsByClassName('canvas-wrapper')[0].style.display = 'block';
 				document.getElementsByClassName('canvas-wrapper')[0].style.opacity = 1.0;
 				document.getElementById('canvas').style.opacity = 1.0;
+				document.getElementsByClassName('header')[0].style.background = 'transparent';	
 				
+				setTimeout(()=>{
+					document.getElementsByClassName('header__hero')[0].style.height = 'auto';
+				}, 3000);
 			}, 3000);
 		}
 		
@@ -43367,30 +43375,28 @@
 	}
 
 	function showLayout() {
-		document.getElementsByClassName('box')[0].style.opacity = "1.0";  
-		document.getElementsByClassName('box')[0].style.top = "0";  
-		document.getElementsByClassName('box')[1].style.opacity = "1.0";
-		document.getElementsByClassName('box')[1].style.top = "0";
+		document.getElementsByClassName('threeD-layout')[0].style.opacity = "1.0"; 
+		document.getElementsByClassName('threeD-layout')[1].style.opacity = "1.0";
 	}
 
 	function rotateLayout() {
-		document.getElementsByClassName('front')[0].style.transform = "perspective(1000px) rotateY(-130deg) translateZ(-1000px) scale(1.5)";
-		document.getElementsByClassName('left')[0].style.transform = "perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5)";
+		document.getElementsByClassName('frontFace')[0].style.transform = getTransformStyle(-130);
+		document.getElementsByClassName('leftFace')[0].style.transform = getTransformStyle(0);
 		params.cameraProps.targetAngle = Math.PI / 2.0;
 		console.log(camera.rotation.y);
 	}
 
 	function closeLayout() {
-		document.getElementsByClassName('box')[0].style.opacity = "0.0";  
-		document.getElementsByClassName('box')[0].style.top = "-5rem";  
-		document.getElementsByClassName('box')[1].style.opacity = "0.0";
-		document.getElementsByClassName('box')[1].style.top = "-5rem";
+		document.getElementsByClassName('threeD-layout')[0].style.opacity = "0.0";  
+		document.getElementsByClassName('threeD-layout')[0].style.top = "-5rem";  
+		document.getElementsByClassName('threeD-layout')[1].style.opacity = "0.0";
+		document.getElementsByClassName('threeD-layout')[1].style.top = "-5rem";
 		params.cameraProps.isSceneActive = true;
 	}
 
 	function rotateBackLayout() {
-		document.getElementsByClassName('front')[0].style.transform = "perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(1.5)";
-		document.getElementsByClassName('left')[0].style.transform = "perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(1.5)";
+		document.getElementsByClassName('frontFace')[0].style.transform = getTransformStyle(0);
+		document.getElementsByClassName('leftFace')[0].style.transform = getTransformStyle(130);
 		params.cameraProps.targetAngle = 0.0;
 	}
 
@@ -43398,6 +43404,28 @@
 		if (Math.abs(params.cameraProps.targetAngle - camera.rotation.y) > 0.1) {
 			camera.rotation.y += 0.052 * Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
 		}
+	}
+
+	function getTransformStyle(angleY) {
+		return 'perspective(1000px) rotateY(' + angleY + 'deg) translateZ(-1000px) scale(2.0) translateY(-50%) translateX(-50%)'
+	}
+
+	function infoAboutObject() {
+		document.getElementsByClassName('model-wrapper')[0].style.opacity = '0.0';
+		setTimeout(() => {
+			document.getElementsByClassName('model-wrapper')[0].style.display = 'none';
+			document.getElementsByClassName('stop-info')[0].style.display = 'flex';
+			document.getElementsByClassName('stop-info')[0].style.opacity = '1.0';		
+		}, 500);
+	}
+
+	function closeInfoAboutObject() {
+		document.getElementsByClassName('stop-info')[0].style.opacity = '0.0';
+		setTimeout(() => {
+			document.getElementsByClassName('stop-info')[0].style.display = 'none';
+			document.getElementsByClassName('model-wrapper')[0].style.display = 'flex';
+			document.getElementsByClassName('model-wrapper')[0].style.opacity = '1.0';
+		}, 500);
 	}
 
 	const app = new App();

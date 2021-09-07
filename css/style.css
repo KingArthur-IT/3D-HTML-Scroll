@@ -51,13 +51,22 @@ canvas {
   padding: 3rem;
 }
 
+button {
+  margin: 0;
+  padding: 0;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+}
+
 .header {
   position: fixed;
   z-index: 2;
   width: 100%;
   background: #ffffff;
-  -webkit-transition: all 1s ease-in;
-  transition: all 1s ease-in;
+  -webkit-transition: all 3s ease-out;
+  transition: all 3s ease-out;
 }
 .header__hero {
   display: -webkit-box;
@@ -66,9 +75,9 @@ canvas {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
 }
 
 .visual-nav {
@@ -254,4 +263,242 @@ canvas {
   opacity: 0;
   -webkit-transition: all 5s ease-in;
   transition: all 5s ease-in;
+}
+
+.stop-section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  background-color: transparent;
+}
+.stop-section__hero {
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  height: 100%;
+  width: 28.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.stop-section__title {
+  font-weight: 500;
+  font-size: 2.06rem;
+  line-height: 2.25rem;
+  margin-bottom: 1.18rem;
+}
+.stop-section__text {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+  margin-bottom: 1rem;
+}
+
+.model-wrapper {
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
+  background: rgba(204, 204, 204, 0.5);
+  position: relative;
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  opacity: 1;
+}
+.model-wrapper__design {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #FAB82E;
+}
+.model-wrapper__model {
+  width: 100%;
+  display: block;
+  margin: auto;
+}
+.model-wrapper__btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  background: #fff;
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.model-wrapper__btn-text {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+  padding: 0 1.31rem;
+}
+
+.button-design {
+  height: 3rem;
+}
+
+.person-item {
+  background: #fff;
+  min-height: 6rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+.person-item__img {
+  height: 6rem;
+  margin-right: 1.5rem;
+}
+.person-item__wrapper {
+  padding-top: 1.5rem;
+  padding-left: 1.5rem;
+}
+.person-item__name {
+  font-weight: 500;
+  font-size: 1.625rem;
+  line-height: 1.875rem;
+}
+.person-item__profession {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+}
+
+.stop-info {
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: #ffffff;
+  -webkit-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  opacity: 0;
+}
+.stop-info__img {
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  position: relative;
+}
+.stop-info__main-img {
+  width: 100%;
+}
+.stop-info__hero {
+  padding: 3rem;
+  position: relative;
+}
+.stop-info__title {
+  font-weight: 500;
+  font-size: 1.625rem;
+  line-height: 1.875rem;
+  margin-bottom: 1rem;
+}
+.stop-info__text-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.stop-info__text {
+  font-size: 0.81rem;
+  line-height: 0.94rem;
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+}
+.stop-info__img-design {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #FAB82E;
+}
+.stop-info__close {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+.stop-info__hero-orange {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: #FAB82E;
+}
+.stop-info__hero-red {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #E32112;
+}
+.stop-info__btn {
+  position: absolute;
+  bottom: 0;
+  background: #fff;
+  padding: 0.84rem 1.3rem;
+  right: 0;
+}
+
+.threeD-layout {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-transition: all 1s ease-out;
+  transition: all 1s ease-out;
+  opacity: 0;
+  max-height: 33rem;
+  max-width: 74rem;
+}
+
+.frontFace {
+  -webkit-transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(2) translateY(-50%) translateX(-50%);
+          transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(2) translateY(-50%) translateX(-50%);
+}
+
+.leftFace {
+  -webkit-transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(2) translateY(-50%) translateX(-50%);
+          transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(2) translateY(-50%) translateX(-50%);
 }/*# sourceMappingURL=style.css.map */
