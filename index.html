@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/hamburgers.min.css">
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/slick-theme.css">
     <title>Document</title>
 </head>
 <body>
@@ -96,6 +98,7 @@
                         <img src="./assets/layout-img/design-items/close.png" alt="" class="stop-info__close">
                         <img src="./assets/layout-img/mining/mining-galary/1 (2).png" alt="" class="stop-info__main-img">
                         <button class="stop-info__btn rotateBtn">
+                            <img src="./assets/layout-img/design-items/triangle.svg" alt="" class="triangle">
                             Смотреть галерею
                         </button>
                     </div>
@@ -147,8 +150,62 @@
                     </div>
                 </div>
             </div>
-            <div class="threeD-layout leftFace">
-                <button class="rotateBackBtn">Close</button>
+            <!--Slider-->
+            <div class="threeD-layout leftFace slider-section">
+                <div class="slider">
+                    <div class="slider__item">
+                        <img src="./assets/layout-img/mining/mining-galary/1.png" alt="mining" class="slider__img">
+                        <div class="slider__caption">
+                            <img src="./assets/layout-img/design-items/three-square.png" alt="" class="slider__design">
+                            <p class="slider__text">
+                                Северный карьер Качканарского горно-обогатительного рудника
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <img src="./assets/layout-img/mining/mining-galary/2.png" alt="mining" class="slider__img">
+                        <div class="slider__caption">
+                            <img src="./assets/layout-img/design-items/three-square.png" alt="" class="slider__design">
+                            <p class="slider__text">
+                                Большой карьерный самосвал БелАЗ грузоподъемностью 240 тонн
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <img src="./assets/layout-img/mining/mining-galary/3.png" alt="mining" class="slider__img">
+                        <div class="slider__caption">
+                            <img src="./assets/layout-img/design-items/three-square.png" alt="" class="slider__design">
+                            <p class="slider__text">
+                                Большой карьерный самосвал БелАЗ грузоподъемностью 240 тонн
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <img src="./assets/layout-img/mining/mining-galary/4.png" alt="mining" class="slider__img">
+                        <div class="slider__caption">
+                            <img src="./assets/layout-img/design-items/three-square.png" alt="" class="slider__design">
+                            <p class="slider__text">
+                                Большой карьерный самосвал БелАЗ грузоподъемностью 240 тонн
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <img src="./assets/layout-img/mining/mining-galary/5.png" alt="mining" class="slider__img">
+                        <div class="slider__caption">
+                            <img src="./assets/layout-img/design-items/three-square.png" alt="" class="slider__design">
+                            <p class="slider__text">
+                                Большой карьерный самосвал БелАЗ грузоподъемностью 240 тонн
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <img src="./assets/layout-img/design-items/close.png" alt="" class="slider__close rotateBackBtn">
+                <div class="slider__arrow-wrapper arrow-left">
+                    <img src="./assets/layout-img/design-items/left-arrow.png" alt="" class="slider__arrow">
+                </div>
+                <div class="slider__arrow-wrapper arrow-right">
+                    <img src="./assets/layout-img/design-items/right-arrow.png" alt="" class="slider__arrow">
+                </div>
             </div>
             
             <canvas id="canvas"></canvas>
@@ -177,5 +234,8 @@
     </main>    
     <!--Main Script-->
     <script src="./build/bundle.js"></script>
+    <script src="./build/jquery.slim.min.js"></script>
+    <script src="./build/slick.min.js"></script>
+    <script src="./build/script.js"></script>
 </body>
 </html>

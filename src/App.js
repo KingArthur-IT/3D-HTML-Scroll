@@ -601,7 +601,16 @@ function rotateLayout() {
 	document.getElementsByClassName('frontFace')[0].style.transform = getTransformStyle(-130);
 	document.getElementsByClassName('leftFace')[0].style.transform = getTransformStyle(0);
 	params.cameraProps.targetAngle = Math.PI / 2.0;
-	console.log(camera.rotation.y);
+	
+	$('.slider').slick('unslick').slick('reinit').slick({
+        dots: true,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: $('.arrow-right'),
+        prevArrow: $('.arrow-left'),
+    });
 }
 
 function closeLayout() {

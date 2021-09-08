@@ -52,12 +52,14 @@ canvas {
 }
 
 button {
+  font-family: "GT Eesti Pro", sans-serif;
   margin: 0;
   padding: 0;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
   border: none;
+  cursor: pointer;
 }
 
 .header {
@@ -454,6 +456,7 @@ button {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
+  cursor: pointer;
 }
 .stop-info__hero-orange {
   width: 1.5rem;
@@ -477,6 +480,14 @@ button {
   background: #fff;
   padding: 0.84rem 1.3rem;
   right: 0;
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+}
+
+.triangle {
+  height: 0.81rem;
+  width: 0.81rem;
+  margin-right: 0.625rem;
 }
 
 .threeD-layout {
@@ -501,4 +512,92 @@ button {
 .leftFace {
   -webkit-transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(2) translateY(-50%) translateX(-50%);
           transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(2) translateY(-50%) translateX(-50%);
+}
+
+.slider__item {
+  position: relative;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.slider__caption {
+  height: 3rem;
+  background: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.slider__design {
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1.5rem;
+}
+.slider__text {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+}
+.slider__close {
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  right: 2.25rem;
+  top: 2.25rem;
+  cursor: pointer;
+}
+.slider__arrow-wrapper {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  background: rgba(0, 0, 0, 0.35);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  top: 50%;
+  cursor: pointer;
+}
+.slider__arrow {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.arrow-left {
+  left: 1.5rem;
+}
+
+.arrow-right {
+  right: 1.5rem;
+}
+
+.slick-dots {
+  bottom: 6rem !important;
+}
+
+.slick-dots li button {
+  background: #fff !important;
+  margin-right: 1rem !important;
+  display: block !important;
+  width: 0.5rem !important;
+  height: 0.5rem !important;
+}
+
+.slick-dots li.slick-active button {
+  background: #ED7817 !important;
+}
+
+.slick-dots li button:before {
+  content: "" !important;
 }/*# sourceMappingURL=style.css.map */
