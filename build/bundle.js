@@ -43361,13 +43361,21 @@
 	document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false);
 
 	function closeLayout() {
+		//front face
 		document.getElementsByClassName('threeD-layout')[0].style.opacity = "0.0";  
-		document.getElementsByClassName('threeD-layout')[0].style.top = "-5rem";  
+		document.getElementsByClassName('frontFace')[0].style.top = "-5rem";
+		//left face
 		document.getElementsByClassName('threeD-layout')[1].style.opacity = "0.0";
-		document.getElementsByClassName('threeD-layout')[1].style.top = "-5rem";
+		document.getElementsByClassName('leftFace')[0].style.top = "-5rem";
+		//right face
 		document.getElementsByClassName('threeD-layout')[2].style.opacity = "0.0";
-		document.getElementsByClassName('threeD-layout')[2].style.top = "-5rem";
+		document.getElementsByClassName('rightFace')[0].style.top = "-5rem";
 		params.cameraProps.isSceneActive = true;
+		setTimeout(() => {
+			document.getElementsByClassName('frontFace')[0].style.top = "9.0rem";
+			document.getElementsByClassName('leftFace')[0].style.top = "6.5rem";
+			document.getElementsByClassName('rightFace')[0].style.top = "9.0rem";
+		}, 1000);
 	}
 	//left
 	document.getElementsByClassName('rotateToLeftBtn')[0].addEventListener('click', rotateToLeftLayout, false);
