@@ -43057,12 +43057,6 @@
 			//events
 			window.addEventListener('mousemove', onMouseMove, false);
 			window.addEventListener('wheel', onScroll, false);
-			document.getElementsByClassName('rotateBtn')[0].addEventListener('click', rotateLayout, false);
-			document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false);
-			document.getElementsByClassName('rotateBackBtn')[0].addEventListener('click', rotateBackLayout, false);
-			
-			document.getElementsByClassName('model-wrapper__btn')[0].addEventListener('click', infoAboutObject, false);
-			document.getElementsByClassName('stop-info__close')[0].addEventListener('click', closeInfoAboutObject, false);
 
 			camera.lookAt(0, params.cameraProps.startPosition.y,
 				camera.position.z - params.cameraProps.visibilityLength);
@@ -43079,29 +43073,12 @@
 		camera.position.y = params.cameraProps.startPosition.y + hk;
 	}
 	function onScroll(e) {
-		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) 
-		{
-			document.getElementsByClassName('intro')[0].style.opacity = 0.0;
-			document.getElementsByClassName('gradient')[0].style.opacity = 0.0;
-			document.body.style.overflowY = 'hidden';
-
-			setTimeout(() => {
-				document.getElementsByClassName('header__hero')[0].style.height = '100vh';
-
-				document.getElementsByClassName('intro')[0].style.display = 'none';
-				document.getElementsByClassName('gradient')[0].style.display = 'none';
-				document.getElementsByClassName('canvas-wrapper')[0].style.display = 'block';
-				document.getElementsByClassName('canvas-wrapper')[0].style.opacity = 1.0;
-				document.getElementById('canvas').style.opacity = 1.0;
-				document.getElementsByClassName('header')[0].style.background = 'transparent';	
-				
-				setTimeout(()=>{
-					document.getElementsByClassName('header__hero')[0].style.height = 'auto';
-				}, 3000);
-			}, 3000);
+		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+			scrollToSecondScreen(e.deltaY);
 		}
 		
-		if (document.getElementsByClassName('canvas-wrapper')[0].style.display == '')
+		if (document.getElementsByClassName('canvas-wrapper')[0].style.display == '' || 
+			document.getElementsByClassName('transition')[0].style.display == '')
 			return;
 		if (!params.cameraProps.isSceneActive) return;
 		let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
@@ -43321,7 +43298,7 @@
 				params.isWheelStepEnding = true;
 				params.cameraProps.nextPosition = pos;
 				params.cameraProps.isSceneActive = false;
-				showLayout();
+				showLayout(stops);
 			}
 			if (Math.abs(camera.position.z - pos) < 1.0 )
 			{
@@ -43374,19 +43351,36 @@
 		}	
 	}
 
-	function showLayout() {
-		document.getElementsByClassName('threeD-layout')[0].style.opacity = "1.0"; 
-		document.getElementsByClassName('threeD-layout')[1].style.opacity = "1.0";
+	function RotateCamera() {
+		if (Math.abs(params.cameraProps.targetAngle - camera.rotation.y) > 0.1) {
+			camera.rotation.y += 0.06 * Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
+		}
 	}
 
-	function rotateLayout() {
-		document.getElementsByClassName('frontFace')[0].style.transform = getTransformStyle(-130);
-		document.getElementsByClassName('leftFace')[0].style.transform = getTransformStyle(0);
+	//3d layout behavior
+	document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false);
+
+	function closeLayout() {
+		document.getElementsByClassName('threeD-layout')[0].style.opacity = "0.0";  
+		document.getElementsByClassName('threeD-layout')[0].style.top = "-5rem";  
+		document.getElementsByClassName('threeD-layout')[1].style.opacity = "0.0";
+		document.getElementsByClassName('threeD-layout')[1].style.top = "-5rem";
+		document.getElementsByClassName('threeD-layout')[2].style.opacity = "0.0";
+		document.getElementsByClassName('threeD-layout')[2].style.top = "-5rem";
+		params.cameraProps.isSceneActive = true;
+	}
+	//left
+	document.getElementsByClassName('rotateToLeftBtn')[0].addEventListener('click', rotateToLeftLayout, false);
+	document.getElementsByClassName('rotateLeftToBackBtn')[0].addEventListener('click', rotateLeftToBackLayout, false);
+
+	function rotateToLeftLayout() {
+		document.getElementsByClassName('frontFace')[0].style.transform = getTransformFrontStyle(-130);
+		document.getElementsByClassName('leftFace')[0].style.transform = getTransformLeftStyle(0);
 		params.cameraProps.targetAngle = Math.PI / 2.0;
 		
 		$('.slider').slick('unslick').slick('reinit').slick({
 	        dots: true,
-	        infinite: false,
+	        infinite: true,
 	        speed: 300,
 	        slidesToShow: 1,
 	        slidesToScroll: 1,
@@ -43395,46 +43389,45 @@
 	    });
 	}
 
-	function closeLayout() {
-		document.getElementsByClassName('threeD-layout')[0].style.opacity = "0.0";  
-		document.getElementsByClassName('threeD-layout')[0].style.top = "-5rem";  
-		document.getElementsByClassName('threeD-layout')[1].style.opacity = "0.0";
-		document.getElementsByClassName('threeD-layout')[1].style.top = "-5rem";
-		params.cameraProps.isSceneActive = true;
-	}
-
-	function rotateBackLayout() {
-		document.getElementsByClassName('frontFace')[0].style.transform = getTransformStyle(0);
-		document.getElementsByClassName('leftFace')[0].style.transform = getTransformStyle(130);
+	function rotateLeftToBackLayout() {
+		document.getElementsByClassName('frontFace')[0].style.transform = getTransformLeftStyle(0);
+		document.getElementsByClassName('leftFace')[0].style.transform = getTransformFrontStyle(130);
 		params.cameraProps.targetAngle = 0.0;
 	}
 
-	function RotateCamera() {
-		if (Math.abs(params.cameraProps.targetAngle - camera.rotation.y) > 0.1) {
-			camera.rotation.y += 0.052 * Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
-		}
+	//right
+	for (let index = 0; index < document.getElementsByClassName('rotateToRightBtn').length; index++) {
+		document.getElementsByClassName('rotateToRightBtn')[index].addEventListener('click', rotateToRightLayout, false);
+		document.getElementsByClassName('rotateRightToBackBtn')[index].addEventListener('click', rotateRightToBackLayout, false);
 	}
 
-	function getTransformStyle(angleY) {
-		return 'perspective(1000px) rotateY(' + angleY + 'deg) translateZ(-1000px) scale(2.0) translateY(-50%) translateX(-50%)'
+	function rotateToRightLayout() {
+		document.getElementsByClassName('frontFace')[0].style.transform = getTransformFrontStyle(130);
+		document.getElementsByClassName('rightFace')[0].style.transform = getTransformRightStyle(0);
+		document.getElementsByClassName('rightFace')[1].style.transform = getTransformRightStyle(0);
+		document.getElementsByClassName('rightFace')[2].style.transform = getTransformRightStyle(0);
+		params.cameraProps.targetAngle = -Math.PI / 2.0;
 	}
 
-	function infoAboutObject() {
-		document.getElementsByClassName('model-wrapper')[0].style.opacity = '0.0';
-		setTimeout(() => {
-			document.getElementsByClassName('model-wrapper')[0].style.display = 'none';
-			document.getElementsByClassName('stop-info')[0].style.display = 'flex';
-			document.getElementsByClassName('stop-info')[0].style.opacity = '1.0';		
-		}, 500);
+	function rotateRightToBackLayout() {
+		document.getElementsByClassName('frontFace')[0].style.transform = getTransformLeftStyle(0);
+		document.getElementsByClassName('rightFace')[0].style.transform = getTransformRightStyle(-130);
+		document.getElementsByClassName('rightFace')[1].style.transform = getTransformRightStyle(-130);
+		document.getElementsByClassName('rightFace')[2].style.transform = getTransformRightStyle(-130);
+		params.cameraProps.targetAngle = 0.0;
+		document.getElementsByClassName('first-person-description')[0].style.display = 'flex';
+	    document.getElementsByClassName('second-person-description')[0].style.display = 'flex';
+	    document.getElementsByClassName('third-person-description')[0].style.display = 'flex';
 	}
 
-	function closeInfoAboutObject() {
-		document.getElementsByClassName('stop-info')[0].style.opacity = '0.0';
-		setTimeout(() => {
-			document.getElementsByClassName('stop-info')[0].style.display = 'none';
-			document.getElementsByClassName('model-wrapper')[0].style.display = 'flex';
-			document.getElementsByClassName('model-wrapper')[0].style.opacity = '1.0';
-		}, 500);
+	function getTransformFrontStyle(angleY) {
+		return 'perspective(1000px) rotateY(' + angleY + 'deg) translateZ(-1000px) scale(2.2)'// translateY(-40%) translateX(-50%)'
+	}
+	function getTransformLeftStyle(angleY) {
+		return 'perspective(1000px) rotateY(' + angleY + 'deg) translateZ(-1000px) scale(1.8)'// translateY(-50%) translateX(-55%)'
+	}
+	function getTransformRightStyle(angleY) {
+		return 'perspective(1000px) rotateY(' + angleY + 'deg) translateZ(-1000px) scale(2.0)'// translateY(-45%) translateX(-55%)'
 	}
 
 	const app = new App();

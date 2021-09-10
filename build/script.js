@@ -9,3 +9,4 @@ $(window).on('load', function () {
         prevArrow: $('.arrow-left'),
     });
 })
+

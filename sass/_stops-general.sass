@@ -4,11 +4,26 @@
     left: 50%
     width: 100vw
     transform-style: preserve-3d
-    transition: all 1s ease-out
-    opacity: 0.0
+    transition: all 1s ease-in-out
     max-height: 33rem
     max-width: 74rem
+    opacity: 0.0
 .frontFace
-    transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(2.0) translateY(-50%) translateX(-50%)
+    transform: perspective(1000px) rotateY(0deg) translateZ(-1000px) scale(2.2) //translateY(-40%) translateX(-50%)
+    top: 9rem
+    left: 7rem
 .leftFace
-    transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(2.0) translateY(-50%) translateX(-50%)
+    transform: perspective(1000px) rotateY(130deg) translateZ(-1000px) scale(1.8) //translateY(-50%) translateX(-60%)
+    top: 6.5rem
+    left: 5rem
+.rightFace
+    transform: perspective(1000px) rotateY(-130deg) translateZ(-1000px) scale(2.0) //translateY(-45%) translateX(-60%)
+    top: 9rem
+    left: 5rem
+.close-icon
+    position: absolute
+    width: 1.5rem
+    height: 1.5rem
+    right: 2.25rem
+    top: 2.25rem
+    cursor: pointer

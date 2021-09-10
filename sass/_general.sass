@@ -3,6 +3,7 @@ $yellow: #FAB82E
 $orange: #ED7817
 $red: #E32112
 $gray50: rgba(0, 0, 0, 0.5)
+$bgColor: #c4c4c4
 
 /* Fonts */
 @font-face
@@ -34,17 +35,19 @@ $gray50: rgba(0, 0, 0, 0.5)
     margin: 0
     padding: 0
     box-sizing: border-box
-    scroll-behavior: smooth
 html
-    font-size: 16px
+    font-size: 18px
     font-family: "GT Eesti Pro", sans-serif
+body
+    overflow: hidden
+    background: radial-gradient(#fff 0%, $bgColor 100%)
 canvas
     min-width: 100vw
     min-height: 100vh
 .container
-    max-width: 87rem
     margin: auto
     padding: 3rem
+    padding-bottom: 0
 button
     font-family: "GT Eesti Pro", sans-serif
     margin: 0
@@ -52,3 +55,14 @@ button
     appearance: none
     border: none
     cursor: pointer
+.section
+    width: 100vw
+    height: 100vh
+.design-square
+    position: absolute
+    width: 1.5rem
+    height: 1.5rem
+.design-square-red
+    background: $red
+.design-square-yellow
+    background: $yellow

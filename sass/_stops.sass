@@ -1,6 +1,6 @@
 .stop-section
     display: flex
-    justify-content: space-between
+    justify-content: flex-start
     align-items: flex-start
     background-color: transparent
     &__hero
@@ -25,7 +25,9 @@
     position: relative
     flex-basis: 45%
     display: flex
-    transition: all 0.5s ease-in
+    margin-right: 4rem
+    transition: opacity 1.0s ease-out
+    transform: scale(1.0)
     opacity: 1.0
     &__design
         position: absolute
@@ -62,6 +64,7 @@
     justify-content: flex-start
     margin-top: 1.5rem
     width: 100%
+    cursor: pointer
     &__img
         height: 6rem
         margin-right: 1.5rem
@@ -77,12 +80,14 @@
         line-height: 1.31rem
 .stop-info
     flex-basis: 45%
-    display: none
+    position: absolute
     flex-direction: column
     justify-content: space-between
     background: #ffffff
-    transition: all 0.5s ease-in
+    transition: opacity 1.0s ease-out
+    transform: scale(0.0)
     opacity: 0.0
+    margin-right: 4rem
     &__img
         flex-basis: 45%
         position: relative
@@ -134,7 +139,7 @@
         background: $red
     &__btn
         position: absolute
-        bottom: 0
+        bottom: 0.75rem
         background: #fff
         padding: 0.84rem 1.3rem
         right: 0

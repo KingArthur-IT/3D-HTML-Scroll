@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/hamburgers.min.css">
     <link rel="stylesheet" href="css/slick.css">
     <link rel="stylesheet" href="css/slick-theme.css">
-    <title>Document</title>
+    <title>ЕВРАЗ</title>
 </head>
 <body>
     <header class="header">
@@ -22,94 +22,66 @@
         </div>
     </header>
     <main>
-        <section class="container intro">
-            <img src="./assets/layout-img/main.png" alt="main" class="intro__img">
-            <h1 class="intro__title">Мой труд до горизонта</h1>
-            <h2 class="intro__subtitle">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Adipisci odit non.</h2>
-        </section>
-        <section class="gradient">
-            <div class="container about-us">
-                <div class="about-us__hero">
-                    <img src="./assets/layout-img/design-items/three-vertical.svg" alt="" class="about-us__design">
-                    <div class="about-us__main">
-                        <h2 class="about-us__title">Заголовок</h2>
-                        <div class="about-us__wrapper">
-                            <div class="about-us__text">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam blanditiis tempore esse facere alias,
-                                adipisci,
-                                doloribus culpa suscipit sit laborum voluptatum repudiandae officia animi itaque necessitatibus? Eveniet
-                                mollitia
-                                eos odio!
-                            </div>
-                            <div class="about-us__text">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, dicta incidunt sunt impedit tempora
-                                laudantium
-                                excepturi amet, obcaecati ex laboriosam nesciunt doloribus commodi ipsa dolore quis, iure vitae autem
-                                sint.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="about-us__items">
-                        <div class="item">
-                            <img class="item__title" src="./assets/layout-img/number.png">
-                            <p class="item__text">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil quaerat amet accusamus.
-                            </p>
-                        </div>
-                        <div class="item">
-                            <img class="item__title" src="./assets/layout-img/time.svg">
-                            <p class="item__text">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil quaerat amet accusamus.
-                            </p>
-                        </div>
-                        <div class="item">
-                            <img class="item__title" src="./assets/layout-img/diagram.png">
-                            <p class="item__text">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil quaerat amet accusamus.
-                            </p>
-                        </div>
-                        <div class="item">
-                            <img class="item__title" src="./assets/layout-img/graph.png">
-                            <p class="item__text">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil quaerat amet accusamus.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-us__road">
-                    <img src="./assets/layout-img/rails-full.svg" alt="" class="road__template">
-                </div>
+        <!--First-second screen-->
+        <section class="section container intro"> 
+            <div class="intro__wrapper">
+                <h1 class="intro__title first-title">Мой труд <br> до горизонта</h1>
+                <h2 class="intro__title second-title">Трудовой путь</h2>
+                <div class="intro__orange-line"></div>
+                <p class="intro__text first-subtitle">
+                    Каково это - работать на крупнейших и ведущих 
+                    металлургических предприятиях
+                </p>
+                <p class="intro__text second-subtitle">
+                    Отправляйтесь в путь, чтобы увидеть как труд сотрудников ЕВРАЗа преобразует горную породу в стальной хребет современного
+                    мира: железные дороги, мосты и каркасы зданий.
+                </p>
             </div>
+            <img src="./assets/layout-img/first-screens/factory.png" alt="Factory" class="intro__bg-image">
+            <img src="./assets/layout-img/first-screens/rails.png" alt="Rails" class="rails-bg-wrapper rails-bg">
+            <img src="./assets/layout-img/design-items/scroll-down.png" alt="Down" class="intro__scroll-down">
+            <div class="second-screen-info">
+                <img src="./assets/layout-img/first-screens/intro-icon.png" alt="" class="second-screen-info__img">
+                <p class="second-screen-info__text">
+                    Как меняется производство и как перемены отражаются на людях – расскажут герои проекта.
+                </p>
+            </div>
+            <div class="design-square design-square-red intro__red"></div>
+            <div class="design-square design-square-yellow intro__yellow"></div>
         </section>
+        <!--3D scene-->
         <section class="canvas-wrapper">
+            <div class="transition"></div>
             <!--Front face-->
             <div class="stop-section threeD-layout frontFace">
+                <!--div with obj imgage-->
                 <div class="model-wrapper">
                     <div class="model-wrapper__design"></div>
                     <img src="./assets/layout-img/mining/career.png" alt="career" class="model-wrapper__model">
                     <button class="model-wrapper__btn">
                         <span class="model-wrapper__btn-text">Информация об объекте</span>
-                        <img src="./assets/layout-img/design-items/two-vertical.png" alt="" class="button-design">
+                        <img src="./assets/layout-img/design-items/two-vertical.png" class="button-design">
                     </button>
                 </div>
+                <!-- to galary-->
                 <div class="stop-info">
                     <div class="stop-info__img">
                         <div class="stop-info__img-design"></div>
-                        <img src="./assets/layout-img/design-items/close.png" alt="" class="stop-info__close">
+                        <img src="./assets/layout-img/design-items/close.png" alt="close" class="stop-info__close close">
                         <img src="./assets/layout-img/mining/mining-galary/1 (2).png" alt="" class="stop-info__main-img">
-                        <button class="stop-info__btn rotateBtn">
-                            <img src="./assets/layout-img/design-items/triangle.svg" alt="" class="triangle">
+                        <button class="stop-info__btn rotateToLeftBtn">
+                            <img src="./assets/layout-img/design-items/triangle.svg" class="triangle">
                             Смотреть галерею
                         </button>
                     </div>
                     <div class="stop-info__hero">
                         <h3 class="stop-info__title">Таштагольский рудник, Северный карьер</h3>
                         <div class="stop-info__text-wrapper">
-                            <p class="stop-info__text close">
+                            <p class="stop-info__text">
                                 Качканарский горно-обогатительный комбинат (ЕРАЗ КГОК) входит 
                                 в пятерку крупнейших российских горнорудных предприятий.
                             </p>
-                            <p class="stop-info__text rotateBtn">
+                            <p class="stop-info__text">
                                 Это единственный отечественный производитель ванадийсодержащей 
                                 железной руды и высококачественного железнорудного сырья из руды 
                                 с низким содержанием железа.
@@ -119,6 +91,7 @@
                         <div class="stop-info__hero-red"></div>
                     </div>
                 </div>
+                <!--person info-->
                 <div class="stop-section__hero close">
                     <h3 class="stop-section__title">С места в карьер</h3>
                     <p class="stop-section__text">
@@ -127,21 +100,21 @@
                         руду перерабатывают и обогащают. Работники комбинатов - герои первого звена
                         металлургического производства.
                     </p>
-                    <div class="person-item">
+                    <div class="person-item rotateToRightBtn setPersonDescription-first">
                         <img src="./assets/layout-img/mining/evgeniy-mini.png" alt="evgeniy" class="person-item__img">
                         <div class="person-item__wrapper">
                             <h4 class="person-item__name">Евгений Автушко</h4>
                             <p class="person-item__profession">Водитель грузовика в карьере</p>
                         </div>
                     </div>
-                    <div class="person-item">
+                    <div class="person-item rotateToRightBtn setPersonDescription-second">
                         <img src="./assets/layout-img/mining/sergey-mini.png" alt="evgeniy" class="person-item__img">
                         <div class="person-item__wrapper">
                             <h4 class="person-item__name">Сергей Козлов</h4>
                             <p class="person-item__profession">Бурильщик шпуров в шахте</p>
                         </div>
                     </div>
-                    <div class="person-item">
+                    <div class="person-item rotateToRightBtn setPersonDescription-third">
                         <img src="./assets/layout-img/mining/alex-mini.png" alt="evgeniy" class="person-item__img">
                         <div class="person-item__wrapper">
                             <h4 class="person-item__name">Александр Блюденов</h4>
@@ -199,16 +172,266 @@
                         </div>
                     </div>
                 </div>
-                <img src="./assets/layout-img/design-items/close.png" alt="" class="slider__close rotateBackBtn">
+                <img src="./assets/layout-img/design-items/close.png" alt="" class="close-icon rotateLeftToBackBtn">
                 <div class="slider__arrow-wrapper arrow-left">
-                    <img src="./assets/layout-img/design-items/left-arrow.png" alt="" class="slider__arrow">
+                    <img src="./assets/layout-img/design-items/left-arrow.png" alt="left" class="slider__arrow">
                 </div>
                 <div class="slider__arrow-wrapper arrow-right">
-                    <img src="./assets/layout-img/design-items/right-arrow.png" alt="" class="slider__arrow">
+                    <img src="./assets/layout-img/design-items/right-arrow.png" alt="right" class="slider__arrow">
                 </div>
             </div>
-            
+            <!--Right-->
+            <div class="threeD-layout rightFace person-description first-person-description">
+                <div class="person-description__photo">
+                    <img src="./assets/layout-img/mining/evgeniy.png" alt="evgeniy-photo" class="person-description__img">
+                    <div class="person-label">
+                        <img src="./assets/layout-img/design-items/three-vertical.svg" alt="evgeniy" class="person-label__img">
+                        <div class="person-label__wrapper">
+                            <h4 class="person-label__name">Евгений Автушко</h4>
+                            <p class="person-label__profession">Водитель грузовика в карьере</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-description__hero">
+                    <div class="person-description__title-wrapper">
+                        <h3 class="person-description__title">
+                            - На чем работаешь? - На БелАЗе, - и сразу все понятно
+                        </h3>
+                        <img src="./assets/layout-img/design-items/mark-left.png" class="person-description__title-mark mark-left">
+                        <img src="./assets/layout-img/design-items/mark-right.png"
+                            class="person-description__title-mark mark-right">
+                    </div>
+                    <p class="person-description__subtitle">
+                        Евгений Автушко, водитель автотракторного цеха ЕВРАЗ КГОК,
+                        обладатель почетного звания «Ветеран труда» комбината.
+                    </p>
+                    <p class="person-description__text">
+                        «Пришел на комбинат в 1991 году после училища, начинал работать на 30-тонном БелАЗе. Это, конечно, была
+                        техника не такая
+                        как сейчас: кабина крохотная, от выхлопных газов дышать нечем, а пол так нагревался, что подошвы прилипали:
+                        кабина на
+                        двигателе стояла.
+                    </p>
+                    <p class="person-description__text">
+                        Сейчас в самосвале два полноценных сиденья – одно водительское, другое для стажера – есть кондиционер,
+                        система отопления
+                        и моторы более совершенные стоят. Совсем другие условия уже. Грузоподъемность здорово увеличились: теперь
+                        БелАЗы
+                        240-тонные. Сравните – 30 и 240 тонн.
+                    </p>
+                    <p class="person-description__text">
+                        Объемы так выросли, потому что комбинат развивается и производство меняется: раньше самосвалами
+                        отрабатывались только
+                        новые горизонты и железнодорожные тупики, а сейчас полностью вывозим горную массу на перевалочные пункты
+                        снизу карьера.
+                    </p>
+                    <p class="person-description__text">
+                        Сложно сообразить, сколько за 30 лет я породу вывез: раньше на 40-тонных самосвалах мы вывозили порядка 9
+                        000 тонн в
+                        месяц, а сейчас объемы другие и напряженность трудового процесса сильно увеличилась. Главное, стаж у меня
+                        безаварийный:
+                        техника безопасности и охрана труда всегда на первом месте. Не зря говорят, что это все кровью написано.
+                        Ведь у кого
+                        бывают несчастные случаи – думаете у молодежи? Нет, как раз у тех, кто уже поработал, кто уверен в себе. Он
+                        раз что-то
+                        нарушил, два раза – и все: «я так уже делал, все получалось», а потом раз – и столкновение или хуже: падение
+                        с
+                        перевалочного пункта.
+                    </p>
+                    <p class="person-description__text">
+                        Молодежь по-прежнему стремится на комбинат. Конечно, тут напряженный труд, но и зарплата достойная. Ну и
+                        работать
+                        водителем технологического транспорта – это о многом говорит: «На чем работаешь?» – «На БелАЗе», и сразу все
+                        понятно.
+                        Такие специалисты ценятся. Кстати, раньше было сложнее попасть на БелАЗ, потому что экипажи принимали
+                        решение, сейчас
+                        по-другому. Так что у нас много молодежи, обучаем.
+                    </p>
+                    <p class="person-description__text">
+                        Как поменялись люди за 30 лет? Не знаю: работаю с молодежью – это такие же ребята, как были мы в их
+                        возрасте. Кто-то
+                        настроен серьезно и стремится, чтобы техсостояние транспорта было нормальное, а кто-то склонен филонить.
+                        Люди всегда
+                        разные. Может быть, в прежние времена были более сплоченными, что ли. Но у нас с этим проблем нет: вот мы –
+                        четыре
+                        бригадира в технологической цепочке, периодически у нас проходят собрания с руководителем цеха, и к нам
+                        прислушиваются.
+                        Мы напрямую работаем с механиками, начальниками колонн – озвучиваем свои проблемы и предложения. Так что
+                        пусть человек
+                        много моложе, главное, чтобы он был готов прислушиваться к другим».
+                    </p>
+                </div>
+                <img src="./assets/layout-img/design-items/close.png" alt="" class="close-icon right-close-icon rotateRightToBackBtn">
+            </div>
+            <div class="threeD-layout rightFace person-description second-person-description">
+                <div class="person-description__photo">
+                    <img src="./assets/layout-img/mining/evgeniy.png" alt="evgeniy-photo" class="person-description__img">
+                    <div class="person-label">
+                        <img src="./assets/layout-img/design-items/three-vertical.svg" alt="evgeniy" class="person-label__img">
+                        <div class="person-label__wrapper">
+                            <h4 class="person-label__name">Евгений Автушко</h4>
+                            <p class="person-label__profession">Водитель грузовика в карьере</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-description__hero">
+                    <div class="person-description__title-wrapper">
+                        <h3 class="person-description__title">
+                            - На чем работаешь? - На БелАЗе, - и сразу все понятно
+                        </h3>
+                        <img src="./assets/layout-img/design-items/mark-left.png" class="person-description__title-mark mark-left">
+                        <img src="./assets/layout-img/design-items/mark-right.png"
+                            class="person-description__title-mark mark-right">
+                    </div>
+                    <p class="person-description__subtitle">
+                        Евгений Автушко, водитель автотракторного цеха ЕВРАЗ КГОК,
+                        обладатель почетного звания «Ветеран труда» комбината.
+                    </p>
+                    <p class="person-description__text">
+                        «Пришел на комбинат в 1991 году после училища, начинал работать на 30-тонном БелАЗе. Это, конечно, была
+                        техника не такая
+                        как сейчас: кабина крохотная, от выхлопных газов дышать нечем, а пол так нагревался, что подошвы прилипали:
+                        кабина на
+                        двигателе стояла.
+                    </p>
+                    <p class="person-description__text">
+                        Сейчас в самосвале два полноценных сиденья – одно водительское, другое для стажера – есть кондиционер,
+                        система отопления
+                        и моторы более совершенные стоят. Совсем другие условия уже. Грузоподъемность здорово увеличились: теперь
+                        БелАЗы
+                        240-тонные. Сравните – 30 и 240 тонн.
+                    </p>
+                    <p class="person-description__text">
+                        Объемы так выросли, потому что комбинат развивается и производство меняется: раньше самосвалами
+                        отрабатывались только
+                        новые горизонты и железнодорожные тупики, а сейчас полностью вывозим горную массу на перевалочные пункты
+                        снизу карьера.
+                    </p>
+                    <p class="person-description__text">
+                        Сложно сообразить, сколько за 30 лет я породу вывез: раньше на 40-тонных самосвалах мы вывозили порядка 9
+                        000 тонн в
+                        месяц, а сейчас объемы другие и напряженность трудового процесса сильно увеличилась. Главное, стаж у меня
+                        безаварийный:
+                        техника безопасности и охрана труда всегда на первом месте. Не зря говорят, что это все кровью написано.
+                        Ведь у кого
+                        бывают несчастные случаи – думаете у молодежи? Нет, как раз у тех, кто уже поработал, кто уверен в себе. Он
+                        раз что-то
+                        нарушил, два раза – и все: «я так уже делал, все получалось», а потом раз – и столкновение или хуже: падение
+                        с
+                        перевалочного пункта.
+                    </p>
+                    <p class="person-description__text">
+                        Молодежь по-прежнему стремится на комбинат. Конечно, тут напряженный труд, но и зарплата достойная. Ну и
+                        работать
+                        водителем технологического транспорта – это о многом говорит: «На чем работаешь?» – «На БелАЗе», и сразу все
+                        понятно.
+                        Такие специалисты ценятся. Кстати, раньше было сложнее попасть на БелАЗ, потому что экипажи принимали
+                        решение, сейчас
+                        по-другому. Так что у нас много молодежи, обучаем.
+                    </p>
+                    <p class="person-description__text">
+                        Как поменялись люди за 30 лет? Не знаю: работаю с молодежью – это такие же ребята, как были мы в их
+                        возрасте. Кто-то
+                        настроен серьезно и стремится, чтобы техсостояние транспорта было нормальное, а кто-то склонен филонить.
+                        Люди всегда
+                        разные. Может быть, в прежние времена были более сплоченными, что ли. Но у нас с этим проблем нет: вот мы –
+                        четыре
+                        бригадира в технологической цепочке, периодически у нас проходят собрания с руководителем цеха, и к нам
+                        прислушиваются.
+                        Мы напрямую работаем с механиками, начальниками колонн – озвучиваем свои проблемы и предложения. Так что
+                        пусть человек
+                        много моложе, главное, чтобы он был готов прислушиваться к другим».
+                    </p>
+                </div>
+                <img src="./assets/layout-img/design-items/close.png" alt=""
+                    class="close-icon right-close-icon rotateRightToBackBtn">
+            </div>
+            <div class="threeD-layout rightFace person-description third-person-description">
+                <div class="person-description__photo">
+                    <img src="./assets/layout-img/mining/evgeniy.png" alt="evgeniy-photo" class="person-description__img">
+                    <div class="person-label">
+                        <img src="./assets/layout-img/design-items/three-vertical.svg" alt="evgeniy" class="person-label__img">
+                        <div class="person-label__wrapper">
+                            <h4 class="person-label__name">Евгений Автушко</h4>
+                            <p class="person-label__profession">Водитель грузовика в карьере</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-description__hero">
+                    <div class="person-description__title-wrapper">
+                        <h3 class="person-description__title">
+                            - На чем работаешь? - На БелАЗе, - и сразу все понятно
+                        </h3>
+                        <img src="./assets/layout-img/design-items/mark-left.png" class="person-description__title-mark mark-left">
+                        <img src="./assets/layout-img/design-items/mark-right.png"
+                            class="person-description__title-mark mark-right">
+                    </div>
+                    <p class="person-description__subtitle">
+                        Евгений Автушко, водитель автотракторного цеха ЕВРАЗ КГОК,
+                        обладатель почетного звания «Ветеран труда» комбината.
+                    </p>
+                    <p class="person-description__text">
+                        «Пришел на комбинат в 1991 году после училища, начинал работать на 30-тонном БелАЗе. Это, конечно, была
+                        техника не такая
+                        как сейчас: кабина крохотная, от выхлопных газов дышать нечем, а пол так нагревался, что подошвы прилипали:
+                        кабина на
+                        двигателе стояла.
+                    </p>
+                    <p class="person-description__text">
+                        Сейчас в самосвале два полноценных сиденья – одно водительское, другое для стажера – есть кондиционер,
+                        система отопления
+                        и моторы более совершенные стоят. Совсем другие условия уже. Грузоподъемность здорово увеличились: теперь
+                        БелАЗы
+                        240-тонные. Сравните – 30 и 240 тонн.
+                    </p>
+                    <p class="person-description__text">
+                        Объемы так выросли, потому что комбинат развивается и производство меняется: раньше самосвалами
+                        отрабатывались только
+                        новые горизонты и железнодорожные тупики, а сейчас полностью вывозим горную массу на перевалочные пункты
+                        снизу карьера.
+                    </p>
+                    <p class="person-description__text">
+                        Сложно сообразить, сколько за 30 лет я породу вывез: раньше на 40-тонных самосвалах мы вывозили порядка 9
+                        000 тонн в
+                        месяц, а сейчас объемы другие и напряженность трудового процесса сильно увеличилась. Главное, стаж у меня
+                        безаварийный:
+                        техника безопасности и охрана труда всегда на первом месте. Не зря говорят, что это все кровью написано.
+                        Ведь у кого
+                        бывают несчастные случаи – думаете у молодежи? Нет, как раз у тех, кто уже поработал, кто уверен в себе. Он
+                        раз что-то
+                        нарушил, два раза – и все: «я так уже делал, все получалось», а потом раз – и столкновение или хуже: падение
+                        с
+                        перевалочного пункта.
+                    </p>
+                    <p class="person-description__text">
+                        Молодежь по-прежнему стремится на комбинат. Конечно, тут напряженный труд, но и зарплата достойная. Ну и
+                        работать
+                        водителем технологического транспорта – это о многом говорит: «На чем работаешь?» – «На БелАЗе», и сразу все
+                        понятно.
+                        Такие специалисты ценятся. Кстати, раньше было сложнее попасть на БелАЗ, потому что экипажи принимали
+                        решение, сейчас
+                        по-другому. Так что у нас много молодежи, обучаем.
+                    </p>
+                    <p class="person-description__text">
+                        Как поменялись люди за 30 лет? Не знаю: работаю с молодежью – это такие же ребята, как были мы в их
+                        возрасте. Кто-то
+                        настроен серьезно и стремится, чтобы техсостояние транспорта было нормальное, а кто-то склонен филонить.
+                        Люди всегда
+                        разные. Может быть, в прежние времена были более сплоченными, что ли. Но у нас с этим проблем нет: вот мы –
+                        четыре
+                        бригадира в технологической цепочке, периодически у нас проходят собрания с руководителем цеха, и к нам
+                        прислушиваются.
+                        Мы напрямую работаем с механиками, начальниками колонн – озвучиваем свои проблемы и предложения. Так что
+                        пусть человек
+                        много моложе, главное, чтобы он был готов прислушиваться к другим».
+                    </p>
+                </div>
+                <img src="./assets/layout-img/design-items/close.png" alt=""
+                    class="close-icon right-close-icon rotateRightToBackBtn">
+            </div>
+            <!--3d scene canvas-->
             <canvas id="canvas"></canvas>
+            <!--visual nav map-->
             <div class="visual-nav">
                 <div class="visual-nav__item mt">
                     <div class="visual-nav__currentPoint"></div>
@@ -233,6 +456,7 @@
         </section>
     </main>    
     <!--Main Script-->
+    <script src="./build/elementsBehavior.js"></script>
     <script src="./build/bundle.js"></script>
     <script src="./build/jquery.slim.min.js"></script>
     <script src="./build/slick.min.js"></script>
