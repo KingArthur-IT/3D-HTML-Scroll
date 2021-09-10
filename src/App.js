@@ -61,7 +61,8 @@ let params = {
 	styles: {
 		orangeColor: '#ED7817',
 		gray50: 'rgba(0, 0, 0, 0.5)'
-	}
+	},
+	stopsCount: 6
 };
 
 class Perlin {
@@ -505,8 +506,8 @@ function MoveCamera() {
 	if (!params.cameraProps.isMovingForward) return;
 	let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
 	//stops
-	let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / 4.0;
-	for (let stops = 1; stops < 5; stops++){
+	let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
+	for (let stops = 1; stops < params.stopsCount; stops++){
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
 		if (camera.position.z > pos && camera.position.z < prevPos &&
@@ -528,8 +529,8 @@ function MoveCamera() {
 function changeNavMap() {
 	let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
 	//stops
-	let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / 4.0;
-	for (let stops = 1; stops < 5; stops++){
+	let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
+	for (let stops = 1; stops < params.stopsCount; stops++){
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
 
@@ -551,9 +552,9 @@ function changeNavMap() {
 		}
 	}
 	//moving current point
-	let points = [-0.24, 4.24, 8.75, 13.24, 17.75];
+	let points = [-0.24, 4.24, 8.75, 13.24, 17.75, 22.24];
 	
-	for (let stops = 1; stops < 5; stops++) {
+	for (let stops = 1; stops < params.stopsCount; stops++) {
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
 		
