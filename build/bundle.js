@@ -43396,28 +43396,24 @@
 	}
 
 	//right
-	for (let index = 0; index < document.getElementsByClassName('rotateToRightBtn').length; index++) {
-		document.getElementsByClassName('rotateToRightBtn')[index].addEventListener('click', rotateToRightLayout, false);
-		document.getElementsByClassName('rotateRightToBackBtn')[index].addEventListener('click', rotateRightToBackLayout, false);
-	}
+	document.getElementsByClassName('rotateToRightBtn')[0].addEventListener('click', rotateToRightLayout, false);
+	document.getElementsByClassName('rotateToRightBtn')[1].addEventListener('click', rotateToRightLayout, false);
+	document.getElementsByClassName('rotateToRightBtn')[2].addEventListener('click', rotateToRightLayout, false);
+	document.getElementsByClassName('rotateRightToBackBtn')[0].addEventListener('click', rotateRightToBackLayout, false);
 
 	function rotateToRightLayout() {
 		document.getElementsByClassName('frontFace')[0].style.transform = getTransformFrontStyle(130);
 		document.getElementsByClassName('rightFace')[0].style.transform = getTransformRightStyle(0);
-		document.getElementsByClassName('rightFace')[1].style.transform = getTransformRightStyle(0);
-		document.getElementsByClassName('rightFace')[2].style.transform = getTransformRightStyle(0);
 		params.cameraProps.targetAngle = -Math.PI / 2.0;
 	}
 
 	function rotateRightToBackLayout() {
 		document.getElementsByClassName('frontFace')[0].style.transform = getTransformLeftStyle(0);
 		document.getElementsByClassName('rightFace')[0].style.transform = getTransformRightStyle(-130);
-		document.getElementsByClassName('rightFace')[1].style.transform = getTransformRightStyle(-130);
-		document.getElementsByClassName('rightFace')[2].style.transform = getTransformRightStyle(-130);
 		params.cameraProps.targetAngle = 0.0;
-		document.getElementsByClassName('first-person-description')[0].style.display = 'flex';
-	    document.getElementsByClassName('second-person-description')[0].style.display = 'flex';
-	    document.getElementsByClassName('third-person-description')[0].style.display = 'flex';
+		document.getElementsByClassName('first-person-description')[0].style.opacity = '1.0';
+	    document.getElementsByClassName('second-person-description')[0].style.opacity = '1.0';
+	    document.getElementsByClassName('third-person-description')[0].style.opacity = '1.0';
 	}
 
 	function getTransformFrontStyle(angleY) {

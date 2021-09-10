@@ -118,21 +118,75 @@ function closeInfoAboutObject() {
 
 //change person description
 document.getElementsByClassName('setPersonDescription-first')[0].addEventListener('click', setPersonDescriptionFirst, false);
+document.getElementsByClassName('setPersonDescription-first')[1].addEventListener('click', setPersonDescriptionFirst, false);
+document.getElementsByClassName('setPersonDescription-first')[2].addEventListener('click', setPersonDescriptionFirst, false);
 document.getElementsByClassName('setPersonDescription-second')[0].addEventListener('click', setPersonDescriptionSecond, false);
+document.getElementsByClassName('setPersonDescription-second')[1].addEventListener('click', setPersonDescriptionSecond, false);
+document.getElementsByClassName('setPersonDescription-second')[2].addEventListener('click', setPersonDescriptionSecond, false);
 document.getElementsByClassName('setPersonDescription-third')[0].addEventListener('click', setPersonDescriptionThird, false);
+document.getElementsByClassName('setPersonDescription-third')[1].addEventListener('click', setPersonDescriptionThird, false);
+document.getElementsByClassName('setPersonDescription-third')[2].addEventListener('click', setPersonDescriptionThird, false);
 
 function setPersonDescriptionFirst() {
-    document.getElementsByClassName('first-person-description')[0].style.display = 'flex';
-    document.getElementsByClassName('second-person-description')[0].style.display = 'none';
-    document.getElementsByClassName('third-person-description')[0].style.display = 'none';
+    document.getElementsByClassName('first-person-description')[0].style.transform = 'scale(1.0)';
+    document.getElementsByClassName('first-person-description')[0].style.opacity = '1.0';
+    document.getElementsByClassName('first-person-description')[0].style.position = 'relative';
+    document.getElementsByClassName('second-person-description')[0].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('second-person-description')[0].style.opacity = '0.0';
+    document.getElementsByClassName('second-person-description')[0].style.position = 'absolute';
+    document.getElementsByClassName('third-person-description')[0].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('third-person-description')[0].style.opacity = '0.0';
+    document.getElementsByClassName('third-person-description')[0].style.position = 'absolute';
+
+    document.getElementsByClassName('first-person-description')[1].style.transform = 'scale(1.0)';
+    document.getElementsByClassName('first-person-description')[1].style.opacity = '1.0';
+    document.getElementsByClassName('first-person-description')[1].style.position = 'relative';
+    document.getElementsByClassName('second-person-description')[1].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('second-person-description')[1].style.opacity = '0.0';
+    document.getElementsByClassName('second-person-description')[1].style.position = 'absolute';
+    document.getElementsByClassName('third-person-description')[1].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('third-person-description')[1].style.opacity = '0.0';
+    document.getElementsByClassName('third-person-description')[1].style.position = 'absolute';
 }
 function setPersonDescriptionSecond() {
-    document.getElementsByClassName('first-person-description')[0].style.display = 'none';
-    document.getElementsByClassName('second-person-description')[0].style.display = 'flex';
-    document.getElementsByClassName('third-person-description')[0].style.display = 'none';
+    document.getElementsByClassName('first-person-description')[0].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('first-person-description')[0].style.opacity = '0.0';
+    document.getElementsByClassName('first-person-description')[0].style.position = 'absolute';
+    document.getElementsByClassName('second-person-description')[0].style.transform = 'scale(1.0)';
+    document.getElementsByClassName('second-person-description')[0].style.opacity = '1.0';
+    document.getElementsByClassName('second-person-description')[0].style.position = 'relative';
+    document.getElementsByClassName('third-person-description')[0].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('third-person-description')[0].style.opacity = '0.0';
+    document.getElementsByClassName('third-person-description')[0].style.position = 'absolute';
+
+    document.getElementsByClassName('first-person-description')[1].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('first-person-description')[1].style.opacity = '0.0';
+    document.getElementsByClassName('first-person-description')[1].style.position = 'absolute';
+    document.getElementsByClassName('second-person-description')[1].style.transform = 'scale(1.0)';
+    document.getElementsByClassName('second-person-description')[1].style.opacity = '1.0';
+    document.getElementsByClassName('second-person-description')[1].style.position = 'relative';
+    document.getElementsByClassName('third-person-description')[1].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('third-person-description')[1].style.opacity = '0.0';
+    document.getElementsByClassName('third-person-description')[1].style.position = 'absolute';
 }
 function setPersonDescriptionThird() {
-    document.getElementsByClassName('first-person-description')[0].style.display = 'none';
-    document.getElementsByClassName('second-person-description')[0].style.display = 'none';
-    document.getElementsByClassName('third-person-description')[0].style.display = 'flex';
+    document.getElementsByClassName('first-person-description')[0].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('first-person-description')[0].style.opacity = '0.0';
+    document.getElementsByClassName('first-person-description')[0].style.position = 'absolute';
+    document.getElementsByClassName('second-person-description')[0].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('second-person-description')[0].style.opacity = '0.0';
+    document.getElementsByClassName('second-person-description')[0].style.position = 'absolute';
+    document.getElementsByClassName('third-person-description')[0].style.transform = 'scale(1.0)';
+    document.getElementsByClassName('third-person-description')[0].style.opacity = '1.0';
+    document.getElementsByClassName('third-person-description')[0].style.position = 'relative';
+
+    document.getElementsByClassName('first-person-description')[1].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('first-person-description')[1].style.opacity = '0.0';
+    document.getElementsByClassName('first-person-description')[1].style.position = 'absolute';
+    document.getElementsByClassName('second-person-description')[1].style.transform = 'scale(0.0)';
+    document.getElementsByClassName('second-person-description')[1].style.opacity = '0.0';
+    document.getElementsByClassName('second-person-description')[1].style.position = 'absolute';
+    document.getElementsByClassName('third-person-description')[1].style.transform = 'scale(1.0)';
+    document.getElementsByClassName('third-person-description')[1].style.opacity = '1.0';
+    document.getElementsByClassName('third-person-description')[1].style.position = 'relative';
 }

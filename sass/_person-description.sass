@@ -80,8 +80,42 @@
     z-index: 5
 
 .first-person-description
-    display: flex
+    opacity: 1.0
+    transition: opacity 0.5s ease-in
 .second-person-description
-    display: flex
+    opacity: 1.0
+    transition: opacity 0.5s ease-in
 .third-person-description
+    opacity: 1.0
+    transition: opacity 0.5s ease-in
+
+.person-description__more
+    font-size: 1.06rem
+    line-height: 1.31rem
+    margin-top: 3.0rem
+    margin-bottom: 1rem
+.more-wrapper
     display: flex
+    flex-direction: column
+    justify-content: flex-start
+    /*align-items: center
+.more-item
+    border: 1ps solid rgba(0,0,0,0.3)
+    display: flex
+    justify-content: flex-start
+    align-items: center
+    margin-bottom: 1rem
+    cursor: pointer
+    &__img
+        height: 6rem
+        width: 6rem
+        margin-right: 1.5rem
+    &__text
+        font-size: 1.06rem
+        line-height: 1.31rem
+    &__title
+        font-size: 1.06rem
+        line-height: 1.31rem
+    &profession
+        font-size: 0.81rem
+        line-height: 0.94rem
