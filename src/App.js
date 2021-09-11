@@ -624,7 +624,6 @@ function showLayout() {
 document.getElementsByClassName('model-wrapper__btn')[0].addEventListener('click', infoAboutObject, false);
 document.getElementsByClassName('model-wrapper__btn')[1].addEventListener('click', infoAboutObject, false);
 document.getElementsByClassName('model-wrapper__btn')[2].addEventListener('click', infoAboutObject, false);
-document.getElementsByClassName('model-wrapper__btn')[3].addEventListener('click', infoAboutObject, false);
 
 function infoAboutObject() {
 	document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.opacity = '0';
@@ -661,7 +660,6 @@ function closeInfoAboutObject() {
 document.getElementsByClassName('rotateToLeftBtn')[0].addEventListener('click', rotateToLeftLayout, false); //for stop 1
 document.getElementsByClassName('rotateToLeftBtn')[1].addEventListener('click', rotateToLeftLayout, false); //for stop 2
 document.getElementsByClassName('rotateToLeftBtn')[2].addEventListener('click', rotateToLeftLayout, false); //for stop 3
-document.getElementsByClassName('rotateToLeftBtn')[3].addEventListener('click', rotateToLeftLayout, false); //for stop 4
 
 function rotateToLeftLayout() {
 	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(-130);
@@ -682,7 +680,6 @@ function rotateToLeftLayout() {
 document.getElementsByClassName('rotateLeftToBackBtn')[0].addEventListener('click', rotateLeftToBackLayout, false); //for stop 1
 document.getElementsByClassName('rotateLeftToBackBtn')[1].addEventListener('click', rotateLeftToBackLayout, false); //for stop 2
 document.getElementsByClassName('rotateLeftToBackBtn')[2].addEventListener('click', rotateLeftToBackLayout, false); //for stop 3
-document.getElementsByClassName('rotateLeftToBackBtn')[3].addEventListener('click', rotateLeftToBackLayout, false); //for stop 4
 
 function rotateLeftToBackLayout() {
 	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);

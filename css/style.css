@@ -85,6 +85,10 @@ button {
   background: #FAB82E;
 }
 
+.none {
+  display: none;
+}
+
 .header {
   position: fixed;
   z-index: 2;
