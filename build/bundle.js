@@ -42884,7 +42884,8 @@
 			orangeColor: '#ED7817',
 			gray50: 'rgba(0, 0, 0, 0.5)'
 		},
-		stopsCount: 6
+		stopsCount: 6,
+		currentStop: 1
 	};
 
 	class Perlin {
@@ -43299,7 +43300,7 @@
 				params.isWheelStepEnding = true;
 				params.cameraProps.nextPosition = pos;
 				params.cameraProps.isSceneActive = false;
-				showLayout(stops);
+				showLayout();
 			}
 			if (Math.abs(camera.position.z - pos) < 1.0 )
 			{
@@ -43331,6 +43332,7 @@
 			{
 				let height = Math.abs(100 * (camera.position.z - prevPos) / (prevPos - pos));
 				document.getElementsByClassName('visual-nav__passed')[stops - 1].style.height = height + '%';
+				params.currentStop = stops;
 			}
 		}
 		//moving current point
@@ -43358,33 +43360,94 @@
 		}
 	}
 
-	//3d layout behavior
-	document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false);
+	//---3d layout behavior---
+	//1. for closing
+	document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false); //for stop 1
+	document.getElementsByClassName('close')[1].addEventListener('click', closeLayout, false); //for stop 2
+	document.getElementsByClassName('close')[2].addEventListener('click', closeLayout, false); //for stop 3
+	document.getElementsByClassName('close')[3].addEventListener('click', closeLayout, false); //for stop 4
 
 	function closeLayout() {
+		let stop = params.currentStop - 1;
 		//front face
-		document.getElementsByClassName('threeD-layout')[0].style.opacity = "0.0";  
-		document.getElementsByClassName('frontFace')[0].style.top = "-5rem";
+		document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "0.0";  
+		document.getElementsByClassName('threeD-layout')[3 * stop].style.zIndex = "0";  
+		document.getElementsByClassName('frontFace')[stop].style.top = "-5rem";
 		//left face
-		document.getElementsByClassName('threeD-layout')[1].style.opacity = "0.0";
-		document.getElementsByClassName('leftFace')[0].style.top = "-5rem";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.opacity = "0.0";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "0";  
+		document.getElementsByClassName('leftFace')[stop].style.top = "-5rem";
 		//right face
-		document.getElementsByClassName('threeD-layout')[2].style.opacity = "0.0";
-		document.getElementsByClassName('rightFace')[0].style.top = "-5rem";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "0.0";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "0";  
+		document.getElementsByClassName('rightFace')[stop].style.top = "-5rem";
 		params.cameraProps.isSceneActive = true;
 		setTimeout(() => {
-			document.getElementsByClassName('frontFace')[0].style.top = "9.0rem";
-			document.getElementsByClassName('leftFace')[0].style.top = "6.5rem";
-			document.getElementsByClassName('rightFace')[0].style.top = "9.0rem";
+			document.getElementsByClassName('frontFace')[stop].style.top = "9.0rem";
+			document.getElementsByClassName('leftFace')[stop].style.top = "6.5rem";
+			document.getElementsByClassName('rightFace')[stop].style.top = "9.0rem";
 		}, 1000);
 	}
-	//left
-	document.getElementsByClassName('rotateToLeftBtn')[0].addEventListener('click', rotateToLeftLayout, false);
-	document.getElementsByClassName('rotateLeftToBackBtn')[0].addEventListener('click', rotateLeftToBackLayout, false);
+
+	//2. show
+	function showLayout() {
+		let stop = params.currentStop - 1;
+		if (document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity > 0.0)
+			return;
+		document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "1.0";
+		document.getElementsByClassName('threeD-layout')[3 * stop].style.zIndex = "10";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.opacity = "1.0";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "10";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "1.0";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "10";
+	}
+
+	//3. from model to info
+	document.getElementsByClassName('model-wrapper__btn')[0].addEventListener('click', infoAboutObject, false);
+	document.getElementsByClassName('model-wrapper__btn')[1].addEventListener('click', infoAboutObject, false);
+	document.getElementsByClassName('model-wrapper__btn')[2].addEventListener('click', infoAboutObject, false);
+	document.getElementsByClassName('model-wrapper__btn')[3].addEventListener('click', infoAboutObject, false);
+
+	function infoAboutObject() {
+		document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.opacity = '0';
+		setTimeout(() => {
+			document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.position = 'absolute';
+			
+	        document.getElementsByClassName('stop-info')[params.currentStop - 1].style.opacity = '1.0';
+	        document.getElementsByClassName('stop-info')[params.currentStop - 1].style.transform = 'scale(1.0)';
+	        document.getElementsByClassName('stop-info')[params.currentStop - 1].style.position = 'relative';
+		}, 600);
+	}
+	// --???
+	/*
+	document.getElementsByClassName('stop-info__close')[0].addEventListener('click', closeInfoAboutObject, false);
+	document.getElementsByClassName('stop-info__close')[1].addEventListener('click', closeInfoAboutObject, false);
+	document.getElementsByClassName('stop-info__close')[2].addEventListener('click', closeInfoAboutObject, false);
+	document.getElementsByClassName('stop-info__close')[3].addEventListener('click', closeInfoAboutObject, false);
+
+	function closeInfoAboutObject() {
+		document.getElementsByClassName('stop-info')[params.currentStop - 1].style.opacity = '0.0';
+	    setTimeout(() => {
+	        document.getElementsByClassName('stop-info')[params.currentStop - 1].style.transform = 'scale(0.0)';
+	        document.getElementsByClassName('stop-info')[params.currentStop - 1].style.position = 'absolute';
+	        
+	        document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.opacity = '1.0';
+	        document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.transform = 'scale(1.0)';
+	        document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.position = 'relative';
+		}, 600);
+	}
+	*/
+
+	//4.left
+	document.getElementsByClassName('rotateToLeftBtn')[0].addEventListener('click', rotateToLeftLayout, false); //for stop 1
+	document.getElementsByClassName('rotateToLeftBtn')[1].addEventListener('click', rotateToLeftLayout, false); //for stop 2
+	document.getElementsByClassName('rotateToLeftBtn')[2].addEventListener('click', rotateToLeftLayout, false); //for stop 3
+	document.getElementsByClassName('rotateToLeftBtn')[3].addEventListener('click', rotateToLeftLayout, false); //for stop 4
 
 	function rotateToLeftLayout() {
-		document.getElementsByClassName('frontFace')[0].style.transform = getTransformFrontStyle(-130);
-		document.getElementsByClassName('leftFace')[0].style.transform = getTransformLeftStyle(0);
+		document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(-130);
+		document.getElementsByClassName('leftFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);
 		params.cameraProps.targetAngle = Math.PI / 2.0;
 		
 		$('.slider').slick('unslick').slick('reinit').slick({
@@ -43398,31 +43461,39 @@
 	    });
 	}
 
+	document.getElementsByClassName('rotateLeftToBackBtn')[0].addEventListener('click', rotateLeftToBackLayout, false); //for stop 1
+	document.getElementsByClassName('rotateLeftToBackBtn')[1].addEventListener('click', rotateLeftToBackLayout, false); //for stop 2
+	document.getElementsByClassName('rotateLeftToBackBtn')[2].addEventListener('click', rotateLeftToBackLayout, false); //for stop 3
+	document.getElementsByClassName('rotateLeftToBackBtn')[3].addEventListener('click', rotateLeftToBackLayout, false); //for stop 4
+
 	function rotateLeftToBackLayout() {
-		document.getElementsByClassName('frontFace')[0].style.transform = getTransformLeftStyle(0);
-		document.getElementsByClassName('leftFace')[0].style.transform = getTransformFrontStyle(130);
+		document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);
+		document.getElementsByClassName('leftFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(130);
 		params.cameraProps.targetAngle = 0.0;
 	}
 
-	//right
-	document.getElementsByClassName('rotateToRightBtn')[0].addEventListener('click', rotateToRightLayout, false);
-	document.getElementsByClassName('rotateToRightBtn')[1].addEventListener('click', rotateToRightLayout, false);
-	document.getElementsByClassName('rotateToRightBtn')[2].addEventListener('click', rotateToRightLayout, false);
-	document.getElementsByClassName('rotateRightToBackBtn')[0].addEventListener('click', rotateRightToBackLayout, false);
-
+	//5. right
+	for (let index = 0; index < 3 * 4; index++) {
+		document.getElementsByClassName('rotateToRightBtn')[index].addEventListener('click', rotateToRightLayout, false);	
+	}
 	function rotateToRightLayout() {
-		document.getElementsByClassName('frontFace')[0].style.transform = getTransformFrontStyle(130);
-		document.getElementsByClassName('rightFace')[0].style.transform = getTransformRightStyle(0);
+		document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(130);
+		document.getElementsByClassName('rightFace')[params.currentStop - 1].style.transform = getTransformRightStyle(0);
 		params.cameraProps.targetAngle = -Math.PI / 2.0;
 	}
 
+	document.getElementsByClassName('rotateRightToBackBtn')[0].addEventListener('click', rotateRightToBackLayout, false);
+	document.getElementsByClassName('rotateRightToBackBtn')[1].addEventListener('click', rotateRightToBackLayout, false);
+	document.getElementsByClassName('rotateRightToBackBtn')[2].addEventListener('click', rotateRightToBackLayout, false);
+	document.getElementsByClassName('rotateRightToBackBtn')[3].addEventListener('click', rotateRightToBackLayout, false);
+
 	function rotateRightToBackLayout() {
-		document.getElementsByClassName('frontFace')[0].style.transform = getTransformLeftStyle(0);
-		document.getElementsByClassName('rightFace')[0].style.transform = getTransformRightStyle(-130);
+		document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);
+		document.getElementsByClassName('rightFace')[params.currentStop - 1].style.transform = getTransformRightStyle(-130);
 		params.cameraProps.targetAngle = 0.0;
-		document.getElementsByClassName('first-person-description')[0].style.opacity = '1.0';
-	    document.getElementsByClassName('second-person-description')[0].style.opacity = '1.0';
-	    document.getElementsByClassName('third-person-description')[0].style.opacity = '1.0';
+		document.getElementsByClassName('first-person-description')[params.currentStop - 1].style.opacity = '1.0';
+	    document.getElementsByClassName('second-person-description')[params.currentStop - 1].style.opacity = '1.0';
+	    document.getElementsByClassName('third-person-description')[params.currentStop - 1].style.opacity = '1.0';
 	}
 
 	function getTransformFrontStyle(angleY) {
@@ -43433,6 +43504,56 @@
 	}
 	function getTransformRightStyle(angleY) {
 		return 'perspective(1000px) rotateY(' + angleY + 'deg) translateZ(-1000px) scale(2.0)'// translateY(-45%) translateX(-55%)'
+	}
+
+	//change person description
+	for (let index = 0; index < 3 * 4; index++) {
+		document.getElementsByClassName('setPersonDescription-first')[index].addEventListener('click', setPersonDescriptionFirst, false);
+		document.getElementsByClassName('setPersonDescription-second')[index].addEventListener('click', setPersonDescriptionSecond, false);
+		document.getElementsByClassName('setPersonDescription-third')[index].addEventListener('click', setPersonDescriptionThird, false);
+	}
+
+	function setPersonDescriptionFirst() {
+		let stop = (params.currentStop - 1) * 2;
+	    for (let index = 0; index < 2; index++) {
+			document.getElementsByClassName('first-person-description')[stop + index].style.transform = 'scale(1.0)';
+			document.getElementsByClassName('first-person-description')[stop + index].style.opacity = '1.0';
+			document.getElementsByClassName('first-person-description')[stop + index].style.position = 'relative';
+			document.getElementsByClassName('second-person-description')[stop + index].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('second-person-description')[stop + index].style.opacity = '0.0';
+			document.getElementsByClassName('second-person-description')[stop + index].style.position = 'absolute';
+			document.getElementsByClassName('third-person-description')[stop + index].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('third-person-description')[stop + index].style.opacity = '0.0';
+			document.getElementsByClassName('third-person-description')[stop + index].style.position = 'absolute';		
+		}
+	}
+	function setPersonDescriptionSecond() {
+	    let stop = (params.currentStop - 1) * 2;
+	    for (let index = 0; index < 2; index++) {
+			document.getElementsByClassName('first-person-description')[stop + index].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('first-person-description')[stop + index].style.opacity = '0.0';
+			document.getElementsByClassName('first-person-description')[stop + index].style.position = 'absolute';
+			document.getElementsByClassName('second-person-description')[stop + index].style.transform = 'scale(1.0)';
+			document.getElementsByClassName('second-person-description')[stop + index].style.opacity = '1.0';
+			document.getElementsByClassName('second-person-description')[stop + index].style.position = 'relative';
+			document.getElementsByClassName('third-person-description')[stop + index].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('third-person-description')[stop + index].style.opacity = '0.0';
+			document.getElementsByClassName('third-person-description')[stop + index].style.position = 'absolute';		
+		}
+	}
+	function setPersonDescriptionThird() {
+	    let stop = (params.currentStop - 1) * 2;
+	    for (let index = 0; index < 2; index++) {
+			document.getElementsByClassName('first-person-description')[stop + index].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('first-person-description')[stop + index].style.opacity = '0.0';
+			document.getElementsByClassName('first-person-description')[stop + index].style.position = 'absolute';
+			document.getElementsByClassName('second-person-description')[stop + index].style.transform = 'scale(0.0)';
+			document.getElementsByClassName('second-person-description')[stop + index].style.opacity = '0.0';
+			document.getElementsByClassName('second-person-description')[stop + index].style.position = 'absolute';
+			document.getElementsByClassName('third-person-description')[stop + index].style.transform = 'scale(1.0)';
+			document.getElementsByClassName('third-person-description')[stop + index].style.opacity = '1.0';
+			document.getElementsByClassName('third-person-description')[stop + index].style.position = 'relative';		
+		}
 	}
 
 	const app = new App();
