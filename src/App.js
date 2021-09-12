@@ -574,16 +574,29 @@ function changeNavMap() {
 
 function RotateCamera() {
 	if (Math.abs(params.cameraProps.targetAngle - camera.rotation.y) > 0.1) {
-		camera.rotation.y += 0.06 * Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
+		let length = Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
+		camera.rotation.y += 0.08 * Math.sin(length);
 	}
 }
 
 //---3d layout behavior---
-//1. for closing
-document.getElementsByClassName('close')[0].addEventListener('click', closeLayout, false); //for stop 1
-document.getElementsByClassName('close')[1].addEventListener('click', closeLayout, false); //for stop 2
-document.getElementsByClassName('close')[2].addEventListener('click', closeLayout, false); //for stop 3
-document.getElementsByClassName('close')[3].addEventListener('click', closeLayout, false); //for stop 4
+//1. close
+document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
+    let classNames = ["model-wrapper", "stop-info", "stop-section__", "person-item", "hamburger"];
+    let classList = e.target.className;
+    let isClickOnEmptySpace = true;
+    for (let i = 0; i < classNames.length; i++){
+        if (classList.includes(classNames[i]))
+        {
+            isClickOnEmptySpace = false;
+        }
+	}
+	if (isClickOnEmptySpace && //if click in empty space
+		!params.cameraProps.isSceneActive && //scene is not active
+		Math.abs(camera.rotation.y) < 0.15 //front face 
+	)
+		closeLayout();
+})
 
 function closeLayout() {
 	let stop = params.currentStop - 1;
@@ -636,12 +649,10 @@ function infoAboutObject() {
         document.getElementsByClassName('stop-info')[params.currentStop - 1].style.position = 'relative';
 	}, 600);
 }
-// --???
-/*
-document.getElementsByClassName('stop-info__close')[0].addEventListener('click', closeInfoAboutObject, false);
-document.getElementsByClassName('stop-info__close')[1].addEventListener('click', closeInfoAboutObject, false);
-document.getElementsByClassName('stop-info__close')[2].addEventListener('click', closeInfoAboutObject, false);
-document.getElementsByClassName('stop-info__close')[3].addEventListener('click', closeInfoAboutObject, false);
+
+document.getElementsByClassName('close')[0].addEventListener('click', closeInfoAboutObject, false);
+document.getElementsByClassName('close')[1].addEventListener('click', closeInfoAboutObject, false);
+document.getElementsByClassName('close')[2].addEventListener('click', closeInfoAboutObject, false);
 
 function closeInfoAboutObject() {
 	document.getElementsByClassName('stop-info')[params.currentStop - 1].style.opacity = '0.0';
@@ -654,7 +665,7 @@ function closeInfoAboutObject() {
         document.getElementsByClassName('model-wrapper')[params.currentStop - 1].style.position = 'relative';
 	}, 600);
 }
-*/
+
 
 //4.left
 document.getElementsByClassName('rotateToLeftBtn')[0].addEventListener('click', rotateToLeftLayout, false); //for stop 1
@@ -664,17 +675,10 @@ document.getElementsByClassName('rotateToLeftBtn')[2].addEventListener('click', 
 function rotateToLeftLayout() {
 	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(-130);
 	document.getElementsByClassName('leftFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);
+
 	params.cameraProps.targetAngle = Math.PI / 2.0;
-	
-	$('.slider').slick('unslick').slick('reinit').slick({
-        dots: true,
-        infinite: true,
-        speed: 300,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        nextArrow: $('.arrow-right'),
-        prevArrow: $('.arrow-left'),
-    });
+
+	InitSliders();
 }
 
 document.getElementsByClassName('rotateLeftToBackBtn')[0].addEventListener('click', rotateLeftToBackLayout, false); //for stop 1
@@ -682,7 +686,7 @@ document.getElementsByClassName('rotateLeftToBackBtn')[1].addEventListener('clic
 document.getElementsByClassName('rotateLeftToBackBtn')[2].addEventListener('click', rotateLeftToBackLayout, false); //for stop 3
 
 function rotateLeftToBackLayout() {
-	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);
+	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(0);
 	document.getElementsByClassName('leftFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(130);
 	params.cameraProps.targetAngle = 0.0;
 }
@@ -704,7 +708,7 @@ document.getElementsByClassName('rotateRightToBackBtn')[2].addEventListener('cli
 document.getElementsByClassName('rotateRightToBackBtn')[3].addEventListener('click', rotateRightToBackLayout, false);
 
 function rotateRightToBackLayout() {
-	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformLeftStyle(0);
+	document.getElementsByClassName('frontFace')[params.currentStop - 1].style.transform = getTransformFrontStyle(0);
 	document.getElementsByClassName('rightFace')[params.currentStop - 1].style.transform = getTransformRightStyle(-130);
 	params.cameraProps.targetAngle = 0.0;
 	document.getElementsByClassName('first-person-description')[params.currentStop - 1].style.opacity = '1.0';

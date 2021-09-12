@@ -86,7 +86,7 @@ button {
 }
 
 .none {
-  display: none;
+  display: none !important;
 }
 
 .header {
@@ -340,8 +340,8 @@ button {
   background: radial-gradient(#fff 0%, #c4c4c4 100%);
   opacity: 1;
   display: block;
-  -webkit-transition: all 5s ease-in;
-  transition: all 5s ease-in;
+  -webkit-transition: all 3s ease-in-out;
+  transition: all 3s ease-in-out;
 }
 
 .stop-section {
@@ -581,8 +581,8 @@ button {
   width: 100vw;
   -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d;
-  -webkit-transition: all 1s ease-in-out;
-  transition: all 1s ease-in-out;
+  -webkit-transition: all 1s ease-in;
+  transition: all 1s ease-in;
   max-height: 33rem;
   max-width: 74rem;
   opacity: 0;
