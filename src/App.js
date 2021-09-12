@@ -21,8 +21,8 @@ let params = {
 	bgColor: 0xdedede,
 	cameraProps: {
 		visibilityLength: 6000,
-		startPosition: new THREE.Vector3(0.0, 13.0, 1000.0),
-		maxZPosition: -1000,
+		startPosition: new THREE.Vector3(0.0, 13.0, 2000.0),
+		maxZPosition: -2000.0,
 		rotationAmplitude: 3.0,
 		isMoving: false,
 		isMovingForward: true,
@@ -41,13 +41,14 @@ let params = {
 		railwaySleeperFrequency: 2.0,
 	},
 	wheelScrollingStep: 5.0,
+	currentWheelScrollingStep: 5.0,
 	wheelStep: -300.0,
 	isWheelStepEnding: false,
 	terrain: {
 		color: 0xcccccc,
 		gridColor: 0xffffff,
 		width: 2000,
-		height: 2500,
+		height: 4500,
 		segmentsCount: 256,
 		xRotation: -Math.PI / 2,
 		yPosition: -3.0,
@@ -65,6 +66,7 @@ let params = {
 	stopsCount: 6,
 	currentStop: 1
 };
+let intermidiateObjects = []
 
 class Perlin {
     constructor() {
@@ -228,7 +230,9 @@ class App {
 
 		//Create lanscape and clouds
 		createLandspape();
-		createClouds();	
+		createClouds();
+		
+		createIntermidiateElements();
 
 		//visual nav map 
 		document.getElementsByClassName('visual-nav__item')[0].style.background = params.styles.orangeColor;
@@ -261,6 +265,7 @@ function onScroll(e) {
 	if (document.getElementsByClassName('canvas-wrapper')[0].style.display == '' || 
 		document.getElementsByClassName('transition')[0].style.display == '')
 		return;
+	
 	if (!params.cameraProps.isSceneActive) return;
 	let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
 	if (camera.position.z + wheelStep < params.cameraProps.startPosition.z &&
@@ -268,6 +273,10 @@ function onScroll(e) {
 		params.cameraProps.isMoving = true;
 		params.cameraProps.isMovingForward = Math.sign(e.deltaY) > 0 ? true : false;
 		params.cameraProps.nextPosition = camera.position.z + wheelStep;
+		if (params.currentStop == 1.0)
+			params.currentWheelScrollingStep = 1.25 * params.wheelScrollingStep;
+		else
+			params.currentWheelScrollingStep = params.wheelScrollingStep;
 	}
 }
 
@@ -319,7 +328,7 @@ function createLandspape() {
 	for (var i = 0; i <= vertices.length; i += 3) {
 		let peek = 0.3 * Math.abs(vertices[i]);
 		if (vertices[i + 1] > 0)
-			peek = peek * (1000 - vertices[i + 1]) / 1000;
+			peek = peek * (2000 - vertices[i + 1]) / 2000;
 		vertices[i+2] =  peek * perlin.noise(
 			(terrain.position.x + vertices[i])/smoothing, 
 			(terrain.position.z + vertices[i+1])/smoothing
@@ -464,6 +473,80 @@ function newRails(scrollStep) {
 	scene.add(line);
 }
 
+function createIntermidiateElements() {
+	let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
+	let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
+	/*
+	for (let stops = 1; stops < params.stopsCount; stops++){
+		let pos = params.cameraProps.startPosition.z + stops * stopStep;
+		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+	}*/
+	let prevPos = params.cameraProps.startPosition.z + 1.0 * stopStep;
+	let pos = params.cameraProps.startPosition.z + 2.0 * stopStep;
+	let length = prevPos - pos;
+
+	const billboardPlane = new THREE.PlaneGeometry(40.0, 20.0, 10.0);
+	let loader = new THREE.TextureLoader();
+	let billboardMaterial;
+	
+	//cit1
+	billboardMaterial = new THREE.MeshBasicMaterial({
+		map: loader.load('./assets/layout-img/mining/after/cit-1.png', function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+		}),
+		transparent: true,
+		opacity: 0.0
+	});
+	intermidiateObjects.push(new THREE.Mesh(billboardPlane, billboardMaterial));
+	intermidiateObjects[0].position.z = prevPos - length * 0.4;
+	intermidiateObjects[0].position.x = 30.0;
+	intermidiateObjects[0].position.y = 15.0;
+	intermidiateObjects[0].rotation.y = -0.5;
+	scene.add(intermidiateObjects[0]);
+	//cit2
+	billboardMaterial = new THREE.MeshBasicMaterial({
+		map: loader.load('./assets/layout-img/mining/after/cit-2.png', function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+		}),
+		transparent: true,
+		opacity: 0.0
+	});
+	intermidiateObjects.push(new THREE.Mesh(billboardPlane, billboardMaterial));
+	intermidiateObjects[1].position.z = prevPos - length * 0.4;
+	intermidiateObjects[1].position.x = -30.0;
+	intermidiateObjects[1].position.y = 15.0;
+	intermidiateObjects[1].rotation.y = 0.5;
+	scene.add(intermidiateObjects[1]);
+	//galary1
+	billboardMaterial = new THREE.MeshBasicMaterial({
+		map: loader.load('./assets/layout-img/mining/after/gallery/1.png', function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+		}),
+		transparent: true,
+		opacity: 0.0
+	});
+	intermidiateObjects.push(new THREE.Mesh(billboardPlane, billboardMaterial));
+	intermidiateObjects[2].position.z = prevPos - length * 0.55;
+	intermidiateObjects[2].position.x = 30.0;
+	intermidiateObjects[2].position.y = 15.0;
+	intermidiateObjects[2].rotation.y = -0.5;
+	scene.add(intermidiateObjects[2]);
+	//galary2
+	billboardMaterial = new THREE.MeshBasicMaterial({
+		map: loader.load('./assets/layout-img/mining/after/gallery/2.png', function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+		}),
+		transparent: true,
+		opacity: 0.0
+	});
+	intermidiateObjects.push(new THREE.Mesh(billboardPlane, billboardMaterial));
+	intermidiateObjects[3].position.z = prevPos - length * 0.75;
+	intermidiateObjects[3].position.x = -30.0;
+	intermidiateObjects[3].position.y = 15.0;
+	intermidiateObjects[3].rotation.y = 0.5;
+	scene.add(intermidiateObjects[3]);	
+}
+
 function animate() {
 	if (params.cameraProps.isMoving) {
 		MoveCamera();
@@ -475,12 +558,35 @@ function animate() {
 }
 
 function MoveCamera() {
-	let oneScroll = params.wheelScrollingStep;
-	let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
+	if (params.isWheelStepEnding) {
+		let distToEnd = params.cameraProps.isMovingForward ?
+			camera.position.z - params.cameraProps.nextPosition :
+			params.cameraProps.nextPosition - camera.position.z;
+		camera.position.z -= distToEnd * 0.05;
+	}
+	else {
+		let oneScroll = params.currentWheelScrollingStep;
+		if (params.currentWheelScrollingStep > 0.1 && 
+			params.currentStop != 1.0)
+			params.currentWheelScrollingStep -= 0.1;
+		let step = params.cameraProps.isMovingForward ? -oneScroll : oneScroll;
+		camera.position.z += step;
+	}
 
+	let visibilityRadius = 300.0;
+	//for intermid objs opacity
+	for (let index = 0; index < intermidiateObjects.length; index++) {
+		const element = intermidiateObjects[index];
+		let distance = Math.abs(camera.position.z - element.position.z);
+		if (distance < visibilityRadius)
+			element.material.opacity = 1.0 - distance / visibilityRadius;
+		else element.material.opacity = 0.0;
+	}
+
+	/*
 	//is scroll ending
-	if ((camera.position.z - 80 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-		(camera.position.z + 80 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
+	if ((camera.position.z - 50 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
+		(camera.position.z + 50 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
 	) params.isWheelStepEnding = true;
 	else
 		params.isWheelStepEnding = false;
@@ -494,14 +600,17 @@ function MoveCamera() {
 			params.cameraProps.nextPosition - camera.position.z;
 		camera.position.z += step * distToEnd * 0.01;	
 	}
+*/
+	
 
+	/*
 	//stop moving?
 	if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
 		(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
 	) {
 		params.cameraProps.isMoving = false;
 		params.isWheelStepEnding = false;
-	}
+	}*/
 
 	//stop cam on stop
 	if (!params.cameraProps.isMovingForward) return;
@@ -512,7 +621,7 @@ function MoveCamera() {
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
 		if (camera.position.z > pos && camera.position.z < prevPos &&
-			camera.position.z - 80 < pos)
+			camera.position.z - 10 < pos)
 		{
 			params.isWheelStepEnding = true;
 			params.cameraProps.nextPosition = pos;
@@ -626,6 +735,7 @@ function closeLayout() {
 //2. show
 function showLayout() {
 	let stop = params.currentStop - 1;
+	if (stop == 4) return; //for last stop
 	if (document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity > 0.0)
 		return;
 	document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "flex";
@@ -639,9 +749,7 @@ function showLayout() {
 		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "10";
 		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "1.0";
 		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "10";
-	}, 100);
-
-	
+	}, 100);	
 }
 
 //3. from model to info
