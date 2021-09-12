@@ -43357,7 +43357,7 @@
 	function RotateCamera() {
 		if (Math.abs(params.cameraProps.targetAngle - camera.rotation.y) > 0.1) {
 			let length = Math.sign(params.cameraProps.targetAngle - camera.rotation.y);
-			camera.rotation.y += 0.08 * Math.sin(length);
+			camera.rotation.y += 0.16 * Math.sin(length);
 		}
 	}
 
@@ -43399,6 +43399,9 @@
 			document.getElementsByClassName('frontFace')[stop].style.top = "9.0rem";
 			document.getElementsByClassName('leftFace')[stop].style.top = "6.5rem";
 			document.getElementsByClassName('rightFace')[stop].style.top = "9.0rem";
+			document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "none";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "none";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "none";
 		}, 1000);
 	}
 
@@ -43407,12 +43410,20 @@
 		let stop = params.currentStop - 1;
 		if (document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity > 0.0)
 			return;
-		document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "1.0";
-		document.getElementsByClassName('threeD-layout')[3 * stop].style.zIndex = "10";
-		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.opacity = "1.0";
-		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "10";
-		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "1.0";
-		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "10";
+		document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "flex";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "block";
+		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "flex";
+
+		setTimeout(() => {
+			document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "1.0";
+			document.getElementsByClassName('threeD-layout')[3 * stop].style.zIndex = "10";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.opacity = "1.0";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "10";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "1.0";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "10";
+		}, 100);
+
+		
 	}
 
 	//3. from model to info
@@ -43460,7 +43471,7 @@
 
 		params.cameraProps.targetAngle = Math.PI / 2.0;
 
-		InitSliders();
+		InitSliders(params.currentStop);
 	}
 
 	document.getElementsByClassName('rotateLeftToBackBtn')[0].addEventListener('click', rotateLeftToBackLayout, false); //for stop 1

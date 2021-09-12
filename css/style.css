@@ -89,6 +89,26 @@ button {
   display: none !important;
 }
 
+@media screen and (max-width: 1700px) {
+  html {
+    font-size: 17px;
+  }
+}
+@media screen and (max-width: 1600px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 1400px) {
+  html {
+    font-size: 15px;
+  }
+}
+@media screen and (max-width: 1300px) {
+  html {
+    font-size: 14px;
+  }
+}
 .header {
   position: fixed;
   z-index: 2;
@@ -105,6 +125,9 @@ button {
   -webkit-box-align: baseline;
       -ms-flex-align: baseline;
           align-items: baseline;
+}
+.header__hero img {
+  height: 1.5rem;
 }
 
 .hamburger-inner, .hamburger-inner:after, .hamburger-inner:before {
@@ -203,7 +226,7 @@ button {
   opacity: 1;
 }
 .intro__text {
-  font-size: 2.0625rem;
+  font-size: 2rem;
   line-height: 2.25rem;
   margin-top: 2.125rem;
   -webkit-transition: all 0.5s ease-in;
@@ -581,11 +604,12 @@ button {
   width: 100vw;
   -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d;
-  -webkit-transition: all 1s ease-in;
-  transition: all 1s ease-in;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
   max-height: 33rem;
   max-width: 74rem;
   opacity: 0;
+  display: none;
 }
 
 .frontFace {
@@ -820,7 +844,7 @@ button {
 
 .right-close-icon {
   top: 0rem;
-  right: 2rem;
+  right: 36px;
   z-index: 5;
 }
 
