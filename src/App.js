@@ -257,6 +257,7 @@ function onMouseMove(e) {
 	camera.position.x = wk;
 	camera.position.y = params.cameraProps.startPosition.y + hk;
 }
+
 function onScroll(e) {
 	if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
 		scrollToSecondScreen(e.deltaY);
@@ -615,13 +616,15 @@ function MoveCamera() {
 	//stop cam on stop
 	if (!params.cameraProps.isMovingForward) return;
 	let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
+
 	//stops
 	let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
 	for (let stops = 1; stops < params.stopsCount; stops++){
 		let pos = params.cameraProps.startPosition.z + stops * stopStep;
 		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+		//for stop
 		if (camera.position.z > pos && camera.position.z < prevPos &&
-			camera.position.z - 10 < pos)
+			camera.position.z - 50.0 < pos)
 		{
 			params.isWheelStepEnding = true;
 			params.cameraProps.nextPosition = pos;
@@ -633,6 +636,17 @@ function MoveCamera() {
 			params.cameraProps.isMoving = false;
 			params.isWheelStepEnding = false;
 		}
+
+		//for intermediate
+		if (camera.position.z > pos && camera.position.z < prevPos &&
+			camera.position.z < pos + 200.0 && camera.position.z > pos + 160.0 &&
+			stops != 1)
+		{
+			params.isWheelStepEnding = true;
+			params.cameraProps.nextPosition = pos + 150.0;
+			params.cameraProps.isSceneActive = false;
+			showIntermediateLayout();
+		}		
 	}
 }
 
@@ -691,7 +705,7 @@ function RotateCamera() {
 //---3d layout behavior---
 //1. close
 document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
-    let classNames = ["model-wrapper", "stop-info", "stop-section__", "person-item", "hamburger"];
+    let classNames = ["model-wrapper", "stop-info", "stop-section__", "person-item", "hamburger", "intermediate__"];
     let classList = e.target.className;
     let isClickOnEmptySpace = true;
     for (let i = 0; i < classNames.length; i++){
@@ -721,6 +735,11 @@ function closeLayout() {
 	document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "0.0";
 	document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "0";  
 	document.getElementsByClassName('rightFace')[stop].style.top = "-5rem";
+	//intermediate
+	document.getElementsByClassName('intermediate')[0].style.opacity = "0.0";
+	document.getElementsByClassName('intermediate')[0].style.zIndex = "0";
+	document.getElementsByClassName('intermediate')[0].style.paddingTop = "0";
+
 	params.cameraProps.isSceneActive = true;
 	setTimeout(() => {
 		document.getElementsByClassName('frontFace')[stop].style.top = "9.0rem";
@@ -729,6 +748,9 @@ function closeLayout() {
 		document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "none";
 		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "none";
 		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "none";
+
+		document.getElementsByClassName('intermediate')[0].style.paddingTop = "8rem";
+		document.getElementsByClassName('intermediate')[0].style.display = "none";
 	}, 1000);
 }
 
@@ -893,6 +915,21 @@ function setPersonDescriptionThird() {
 		document.getElementsByClassName('third-person-description')[stop + index].style.opacity = '1.0';
 		document.getElementsByClassName('third-person-description')[stop + index].style.position = 'relative';		
 	}
+}
+
+//for intermediate
+//1. show
+function showIntermediateLayout() {
+	//let stop = params.currentStop - 1;
+	
+	if (document.getElementsByClassName('intermediate')[0].style.opacity > 0.0)
+		return;
+	document.getElementsByClassName('intermediate')[0].style.display = "flex";
+
+	setTimeout(() => {
+		document.getElementsByClassName('intermediate')[0].style.opacity = "1.0";
+		document.getElementsByClassName('intermediate')[0].style.zIndex = "10";
+	}, 100);	
 }
 
 

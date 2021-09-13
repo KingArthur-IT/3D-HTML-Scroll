@@ -85,6 +85,10 @@ button {
   background: #FAB82E;
 }
 
+.design-square-orange {
+  background: #ED7817;
+}
+
 .none {
   display: none !important;
 }
@@ -917,4 +921,90 @@ button {
 .more-itemprofession {
   font-size: 0.81rem;
   line-height: 0.94rem;
+}
+
+.intermediate {
+  display: none;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  padding: 8rem 5rem 0rem 3rem;
+  opacity: 0;
+  -webkit-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  position: absolute;
+  top: 0;
+}
+.intermediate__texts {
+  padding: 3rem;
+  background: #fff;
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  position: relative;
+}
+.intermediate__title {
+  font-size: 2.06rem;
+  line-height: 2.25rem;
+  margin-bottom: 1rem;
+}
+.intermediate__subtitle {
+  font-size: 1.63rem;
+  line-height: 1.88rem;
+  margin-bottom: 1rem;
+}
+.intermediate__text {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+  margin-bottom: 1rem;
+}
+.intermediate__images {
+  padding: 3rem;
+  background: #fff;
+  -ms-flex-preferred-size: 45%;
+      flex-basis: 45%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.intermediate__second-title {
+  font-size: 1.88rem;
+  line-height: 2.06rem;
+  font-weight: normal;
+  margin-bottom: 2.5rem;
+}
+.intermediate__item {
+  margin-bottom: 2rem;
+}
+.intermediate__img {
+  margin-bottom: 0.5rem;
+  height: 5rem;
+}
+.intermediate__item-text {
+  font-size: 0.81rem;
+  line-height: 0.75rem;
+}
+.intermediate__design1 {
+  right: -1.5rem;
+  top: 0;
+}
+.intermediate__design2 {
+  right: -1.5rem;
+  top: 1.5rem;
+}
+.intermediate__design3 {
+  right: -1.5rem;
+  top: 3rem;
 }/*# sourceMappingURL=style.css.map */
