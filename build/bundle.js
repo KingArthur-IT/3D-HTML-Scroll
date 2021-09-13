@@ -42842,9 +42842,9 @@
 		sceneHeight: 450,
 		bgColor: 0xdedede,
 		cameraProps: {
-			visibilityLength: 6000,
-			startPosition: new Vector3(0.0, 13.0, 3000.0),
-			maxZPosition: -3000.0,
+			visibilityLength: 4000,
+			startPosition: new Vector3(0.0, 13.0, 2000.0),
+			maxZPosition: -2000.0,
 			rotationAmplitude: 3.0,
 			isMoving: false,
 			isMovingForward: true,
@@ -42870,7 +42870,7 @@
 			color: 0xcccccc,
 			gridColor: 0xffffff,
 			width: 1500,
-			height: 6000,
+			height: 5000,
 			segmentsCount: 400,
 			xRotation: -Math.PI / 2,
 			yPosition: -3.0,
@@ -42887,13 +42887,13 @@
 		},
 		stopsCount: 6,
 		currentStop: 1,
-		stopsZPositionArray: [3000, 2800, 1700, -100, -1500, -2800],
+		stopsZPositionArray: [2000, 1800, 800, -200, -1500, -1700],
 		billboard: {
 			width: 40.0,
 			height: 20.0,
 			yPosition: 15.0,
 			xPosition: 30.0,
-			yAngle: 0.5
+			yAngle: 0.25
 		}
 	};
 	let intermidiateObjects = [];
@@ -43151,11 +43151,12 @@
 			sizeAttenuation: false
 		});
 		let pointVertices = [];
+		let length = params.terrain.height / 2.0;
 
 		for (var i = 0; i <= vertices.length; i += 3) {
 			let peek = 0.3 * Math.abs(vertices[i]);
 			if (vertices[i + 1] > 0)
-				peek = peek * (3000 - vertices[i + 1]) / 3000;
+				peek = peek * (length - vertices[i + 1]) / length;
 			vertices[i+2] =  peek * perlin.noise(
 				(terrain.position.x + vertices[i])/smoothing, 
 				(terrain.position.z + vertices[i+1])/smoothing
@@ -43268,23 +43269,75 @@
 			let pos = params.cameraProps.startPosition.z + stops * stopStep;
 			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
 		}*/
+		//after 1st stop
 		let pos = params.stopsZPositionArray[2];
 		let prevPos = params.stopsZPositionArray[1];
 
 		addIntermediateObject('./assets/layout-img/mining/after/cit-1.png',
-			prevPos, pos, 0.2, 1.0);
+			prevPos, pos, 0.22, 1.0);
 		addIntermediateObject('./assets/layout-img/mining/after/cit-2.png',
-			prevPos, pos, 0.2, -1.0);
+			prevPos, pos, 0.22, -1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/cit-3.png',
+			prevPos, pos, 0.38, 1.0);
 		addIntermediateObject('./assets/layout-img/mining/after/gallery/1.png',
-			prevPos, pos, 0.3, 1.0);
+			prevPos, pos, 0.4, -1.0);
 		addIntermediateObject('./assets/layout-img/mining/after/gallery/2.png',
-			prevPos, pos, 0.45, -1.0);
+			prevPos, pos, 0.5, 1.0);
 		addIntermediateObject('./assets/layout-img/mining/after/gallery/3.png',
-			prevPos, pos, 0.6, 1.0);
+			prevPos, pos, 0.6, -1.0);
 		addIntermediateObject('./assets/layout-img/mining/after/gallery/4.png',
-			prevPos, pos, 0.7, -1.0);
+			prevPos, pos, 0.7, 1.0);
 		addIntermediateObject('./assets/layout-img/mining/after/gallery/5.png',
-			prevPos, pos, 0.8, 1.0);
+			prevPos, pos, 0.8, -1.0);
+		
+		//after 2nd stop
+		pos = params.stopsZPositionArray[3];
+		prevPos = params.stopsZPositionArray[2];
+
+		addIntermediateObject('./assets/layout-img/fire-river/after/cit-1.png',
+			prevPos, pos, 0.22, 1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/cit-2.png',
+			prevPos, pos, 0.22, -1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/1.png',
+			prevPos, pos, 0.3, 1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/2.png',
+			prevPos, pos, 0.4, -1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/3.png',
+			prevPos, pos, 0.5, 1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/4.png',
+			prevPos, pos, 0.6, -1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/5.png',
+			prevPos, pos, 0.7, 1.0);
+		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/6.png',
+			prevPos, pos, 0.8, -1.0);
+		
+		//after 3rd stop
+		pos = params.stopsZPositionArray[4];
+		prevPos = params.stopsZPositionArray[3];
+
+		addIntermediateObject('./assets/layout-img/steel/after/gallery/1.png',
+			prevPos, pos, 0.2, 1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/cit-2.png',
+			prevPos, pos, 0.3, -1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/cit-3.png',
+			prevPos, pos, 0.3, 1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/gallery/4.png',
+			prevPos, pos, 0.4, -1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/cit-5.png',
+			prevPos, pos, 0.5, 1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/cit-6.png',
+			prevPos, pos, 0.5, -1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/gallery/7.png',
+			prevPos, pos, 0.6, 1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/gallery/8.png',
+			prevPos, pos, 0.7, -1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/gallery/9.png',
+			prevPos, pos, 0.75, 1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/cit-10.png',
+			prevPos, pos, 0.8, -1.0);
+		addIntermediateObject('./assets/layout-img/steel/after/gallery/11.png',
+			prevPos, pos, 0.85, 1.0);
+		
 	}
 
 	function addIntermediateObject(picSrc, prevPos, nextPos, place, side) {
@@ -43393,7 +43446,8 @@
 				params.cameraProps.isSceneActive = false;
 				showLayout();
 			}
-			if (Math.abs(camera.position.z - pos) < 1.0 )
+			if (Math.abs(camera.position.z - pos) < 1.0 || 
+				Math.abs(camera.position.z - params.cameraProps.nextPosition) < 1.0)
 			{
 				params.cameraProps.isMoving = false;
 				params.isWheelStepEnding = false;
@@ -43474,7 +43528,8 @@
 		}
 		if (isClickOnEmptySpace && //if click in empty space
 			!params.cameraProps.isSceneActive && //scene is not active
-			Math.abs(camera.rotation.y) < 0.15 //front face 
+			Math.abs(camera.rotation.y) < 0.15 && //front face 
+			!params.cameraProps.isMoving //cam is not moving
 		)
 			closeLayout();
 	});
@@ -43494,9 +43549,11 @@
 		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "0";  
 		document.getElementsByClassName('rightFace')[stop].style.top = "-5rem";
 		//intermediate
-		document.getElementsByClassName('intermediate')[0].style.opacity = "0.0";
-		document.getElementsByClassName('intermediate')[0].style.zIndex = "0";
-		document.getElementsByClassName('intermediate')[0].style.paddingTop = "0";
+		if (stop > 0 && stop < 5) {
+			document.getElementsByClassName('intermediate')[stop - 1].style.opacity = "0.0";
+			document.getElementsByClassName('intermediate')[stop - 1].style.zIndex = "0";
+			document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "0";
+		}
 
 		params.cameraProps.isSceneActive = true;
 		setTimeout(() => {
@@ -43507,8 +43564,10 @@
 			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "none";
 			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "none";
 
-			document.getElementsByClassName('intermediate')[0].style.paddingTop = "8rem";
-			document.getElementsByClassName('intermediate')[0].style.display = "none";
+			if (stop > 0 && stop < 5) {
+				document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "8rem";
+				document.getElementsByClassName('intermediate')[stop - 1].style.display = "none";
+			}
 		}, 1000);
 	}
 
@@ -43677,15 +43736,16 @@
 	//for intermediate
 	//1. show
 	function showIntermediateLayout() {
-		//let stop = params.currentStop - 1;
+		let stop = params.currentStop - 2;
+		if (stop > 3) return;
 		
-		if (document.getElementsByClassName('intermediate')[0].style.opacity > 0.0)
+		if (document.getElementsByClassName('intermediate')[stop].style.opacity > 0.0)
 			return;
-		document.getElementsByClassName('intermediate')[0].style.display = "flex";
+		document.getElementsByClassName('intermediate')[stop].style.display = "flex";
 
 		setTimeout(() => {
-			document.getElementsByClassName('intermediate')[0].style.opacity = "1.0";
-			document.getElementsByClassName('intermediate')[0].style.zIndex = "10";
+			document.getElementsByClassName('intermediate')[stop].style.opacity = "1.0";
+			document.getElementsByClassName('intermediate')[stop].style.zIndex = "10";
 		}, 100);	
 	}
 
