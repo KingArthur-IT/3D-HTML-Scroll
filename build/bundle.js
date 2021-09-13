@@ -42887,13 +42887,13 @@
 		},
 		stopsCount: 6,
 		currentStop: 1,
-		stopsZPositionArray: [2000, 1800, 800, -200, -1500, -1700],
+		stopsZPositionArray: [2000, 1800, 800, -100, -1100, -1700],
 		billboard: {
 			width: 40.0,
 			height: 20.0,
 			yPosition: 15.0,
 			xPosition: 30.0,
-			yAngle: 0.25
+			yAngle: 0.15
 		}
 	};
 	let intermidiateObjects = [];
@@ -43295,11 +43295,11 @@
 		prevPos = params.stopsZPositionArray[2];
 
 		addIntermediateObject('./assets/layout-img/fire-river/after/cit-1.png',
-			prevPos, pos, 0.22, 1.0);
+			prevPos, pos, 0.24, 1.0);
 		addIntermediateObject('./assets/layout-img/fire-river/after/cit-2.png',
-			prevPos, pos, 0.22, -1.0);
+			prevPos, pos, 0.24, -1.0);
 		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/1.png',
-			prevPos, pos, 0.3, 1.0);
+			prevPos, pos, 0.33, 1.0);
 		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/2.png',
 			prevPos, pos, 0.4, -1.0);
 		addIntermediateObject('./assets/layout-img/fire-river/after/gallery/3.png',
@@ -43458,6 +43458,7 @@
 				camera.position.z < pos + 250.0 && camera.position.z > pos + 200.0 &&
 				stops != 1)
 			{
+				console.log('show');
 				params.isWheelStepEnding = true;
 				params.cameraProps.nextPosition = pos + 190.0;
 				params.cameraProps.isSceneActive = false;
@@ -43536,38 +43537,43 @@
 
 	function closeLayout() {
 		let stop = params.currentStop - 1;
-		//front face
-		document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "0.0";  
-		document.getElementsByClassName('threeD-layout')[3 * stop].style.zIndex = "0";  
-		document.getElementsByClassName('frontFace')[stop].style.top = "-5rem";
-		//left face
-		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.opacity = "0.0";
-		document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "0";  
-		document.getElementsByClassName('leftFace')[stop].style.top = "-5rem";
-		//right face
-		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "0.0";
-		document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "0";  
-		document.getElementsByClassName('rightFace')[stop].style.top = "-5rem";
+		if (stop < 4)
+		{
+			//front face
+			document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "0.0";  
+			document.getElementsByClassName('threeD-layout')[3 * stop].style.zIndex = "0";  
+			document.getElementsByClassName('frontFace')[stop].style.top = "-5rem";
+			//left face
+			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.opacity = "0.0";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.zIndex = "0";  
+			document.getElementsByClassName('leftFace')[stop].style.top = "-5rem";
+			//right face
+			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.opacity = "0.0";
+			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.zIndex = "0";  
+			document.getElementsByClassName('rightFace')[stop].style.top = "-5rem";
+		}
 		//intermediate
 		if (stop > 0 && stop < 5) {
 			document.getElementsByClassName('intermediate')[stop - 1].style.opacity = "0.0";
 			document.getElementsByClassName('intermediate')[stop - 1].style.zIndex = "0";
 			document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "0";
 		}
+		
 
 		params.cameraProps.isSceneActive = true;
 		setTimeout(() => {
-			document.getElementsByClassName('frontFace')[stop].style.top = "9.0rem";
-			document.getElementsByClassName('leftFace')[stop].style.top = "6.5rem";
-			document.getElementsByClassName('rightFace')[stop].style.top = "9.0rem";
-			document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "none";
-			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "none";
-			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "none";
-
-			if (stop > 0 && stop < 5) {
-				document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "8rem";
-				document.getElementsByClassName('intermediate')[stop - 1].style.display = "none";
+			if (stop < 4) {
+				document.getElementsByClassName('frontFace')[stop].style.top = "9.0rem";
+				document.getElementsByClassName('leftFace')[stop].style.top = "6.5rem";
+				document.getElementsByClassName('rightFace')[stop].style.top = "9.0rem";
+				document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "none";
+				document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "none";
+				document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "none";
 			}
+			if (stop > 0 && stop < 5) {
+					document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "8rem";
+					document.getElementsByClassName('intermediate')[stop - 1].style.display = "none";
+				}
 		}, 1000);
 	}
 
@@ -43737,7 +43743,7 @@
 	//1. show
 	function showIntermediateLayout() {
 		let stop = params.currentStop - 2;
-		if (stop > 3) return;
+		if (stop > 4) return;
 		
 		if (document.getElementsByClassName('intermediate')[stop].style.opacity > 0.0)
 			return;
