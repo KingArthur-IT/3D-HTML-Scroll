@@ -42843,8 +42843,8 @@
 		bgColor: 0xdedede,
 		cameraProps: {
 			visibilityLength: 6000,
-			startPosition: new Vector3(0.0, 13.0, 2000.0),
-			maxZPosition: -2000.0,
+			startPosition: new Vector3(0.0, 13.0, 3000.0),
+			maxZPosition: -3000.0,
 			rotationAmplitude: 3.0,
 			isMoving: false,
 			isMovingForward: true,
@@ -42869,9 +42869,9 @@
 		terrain: {
 			color: 0xcccccc,
 			gridColor: 0xffffff,
-			width: 2000,
-			height: 4500,
-			segmentsCount: 256,
+			width: 1500,
+			height: 6000,
+			segmentsCount: 400,
 			xRotation: -Math.PI / 2,
 			yPosition: -3.0,
 			smoothing: 300
@@ -42886,7 +42886,15 @@
 			gray50: 'rgba(0, 0, 0, 0.5)'
 		},
 		stopsCount: 6,
-		currentStop: 1
+		currentStop: 1,
+		stopsZPositionArray: [3000, 2800, 1700, -100, -1500, -2800],
+		billboard: {
+			width: 40.0,
+			height: 20.0,
+			yPosition: 15.0,
+			xPosition: 30.0,
+			yAngle: 0.5
+		}
 	};
 	let intermidiateObjects = [];
 
@@ -43095,10 +43103,7 @@
 			params.cameraProps.isMoving = true;
 			params.cameraProps.isMovingForward = Math.sign(e.deltaY) > 0 ? true : false;
 			params.cameraProps.nextPosition = camera.position.z + wheelStep;
-			if (params.currentStop == 1.0)
-				params.currentWheelScrollingStep = 1.25 * params.wheelScrollingStep;
-			else
-				params.currentWheelScrollingStep = params.wheelScrollingStep;
+			params.currentWheelScrollingStep = params.wheelScrollingStep;
 		}
 	}
 
@@ -43150,7 +43155,7 @@
 		for (var i = 0; i <= vertices.length; i += 3) {
 			let peek = 0.3 * Math.abs(vertices[i]);
 			if (vertices[i + 1] > 0)
-				peek = peek * (2000 - vertices[i + 1]) / 2000;
+				peek = peek * (3000 - vertices[i + 1]) / 3000;
 			vertices[i+2] =  peek * perlin.noise(
 				(terrain.position.x + vertices[i])/smoothing, 
 				(terrain.position.z + vertices[i+1])/smoothing
@@ -43258,77 +43263,50 @@
 	}
 
 	function createIntermidiateElements() {
-		let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
-		let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
 		/*
 		for (let stops = 1; stops < params.stopsCount; stops++){
 			let pos = params.cameraProps.startPosition.z + stops * stopStep;
 			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
 		}*/
-		let prevPos = params.cameraProps.startPosition.z + 1.0 * stopStep;
-		let pos = params.cameraProps.startPosition.z + 2.0 * stopStep;
-		let length = prevPos - pos;
+		let pos = params.stopsZPositionArray[2];
+		let prevPos = params.stopsZPositionArray[1];
 
-		const billboardPlane = new PlaneGeometry(40.0, 20.0, 10.0);
+		addIntermediateObject('./assets/layout-img/mining/after/cit-1.png',
+			prevPos, pos, 0.2, 1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/cit-2.png',
+			prevPos, pos, 0.2, -1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/gallery/1.png',
+			prevPos, pos, 0.3, 1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/gallery/2.png',
+			prevPos, pos, 0.45, -1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/gallery/3.png',
+			prevPos, pos, 0.6, 1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/gallery/4.png',
+			prevPos, pos, 0.7, -1.0);
+		addIntermediateObject('./assets/layout-img/mining/after/gallery/5.png',
+			prevPos, pos, 0.8, 1.0);
+	}
+
+	function addIntermediateObject(picSrc, prevPos, nextPos, place, side) {
+		//side == 1 for right and -1 for left
+		const billboardPlane = new PlaneGeometry(params.billboard.width, params.billboard.height, 2.0);
 		let loader = new TextureLoader();
-		let billboardMaterial;
-		
-		//cit1
-		billboardMaterial = new MeshBasicMaterial({
-			map: loader.load('./assets/layout-img/mining/after/cit-1.png', function (texture) {
+		let billboardMaterial = new MeshBasicMaterial({
+			map: loader.load(picSrc, function (texture) {
 				texture.minFilter = LinearFilter;
 			}),
 			transparent: true,
 			opacity: 0.0
 		});
+
+		let length = prevPos - nextPos;
 		intermidiateObjects.push(new Mesh(billboardPlane, billboardMaterial));
-		intermidiateObjects[0].position.z = prevPos - length * 0.4;
-		intermidiateObjects[0].position.x = 30.0;
-		intermidiateObjects[0].position.y = 15.0;
-		intermidiateObjects[0].rotation.y = -0.5;
-		scene.add(intermidiateObjects[0]);
-		//cit2
-		billboardMaterial = new MeshBasicMaterial({
-			map: loader.load('./assets/layout-img/mining/after/cit-2.png', function (texture) {
-				texture.minFilter = LinearFilter;
-			}),
-			transparent: true,
-			opacity: 0.0
-		});
-		intermidiateObjects.push(new Mesh(billboardPlane, billboardMaterial));
-		intermidiateObjects[1].position.z = prevPos - length * 0.4;
-		intermidiateObjects[1].position.x = -30.0;
-		intermidiateObjects[1].position.y = 15.0;
-		intermidiateObjects[1].rotation.y = 0.5;
-		scene.add(intermidiateObjects[1]);
-		//galary1
-		billboardMaterial = new MeshBasicMaterial({
-			map: loader.load('./assets/layout-img/mining/after/gallery/1.png', function (texture) {
-				texture.minFilter = LinearFilter;
-			}),
-			transparent: true,
-			opacity: 0.0
-		});
-		intermidiateObjects.push(new Mesh(billboardPlane, billboardMaterial));
-		intermidiateObjects[2].position.z = prevPos - length * 0.55;
-		intermidiateObjects[2].position.x = 30.0;
-		intermidiateObjects[2].position.y = 15.0;
-		intermidiateObjects[2].rotation.y = -0.5;
-		scene.add(intermidiateObjects[2]);
-		//galary2
-		billboardMaterial = new MeshBasicMaterial({
-			map: loader.load('./assets/layout-img/mining/after/gallery/2.png', function (texture) {
-				texture.minFilter = LinearFilter;
-			}),
-			transparent: true,
-			opacity: 0.0
-		});
-		intermidiateObjects.push(new Mesh(billboardPlane, billboardMaterial));
-		intermidiateObjects[3].position.z = prevPos - length * 0.75;
-		intermidiateObjects[3].position.x = -30.0;
-		intermidiateObjects[3].position.y = 15.0;
-		intermidiateObjects[3].rotation.y = 0.5;
-		scene.add(intermidiateObjects[3]);	
+		let index = intermidiateObjects.length - 1;
+		intermidiateObjects[index].position.z = prevPos - length * place;
+		intermidiateObjects[index].position.x = side * params.billboard.xPosition;
+		intermidiateObjects[index].position.y = params.billboard.yPosition;
+		intermidiateObjects[index].rotation.y = - side * params.billboard.yAngle;
+		scene.add(intermidiateObjects[index]);
 	}
 
 	function animate() {
@@ -43357,7 +43335,8 @@
 			camera.position.z += step;
 		}
 
-		let visibilityRadius = 300.0;
+		let visibilityRadius = 220.0;
+		let minVisibilityRadius = 130.0;
 		//for intermid objs opacity
 		for (let index = 0; index < intermidiateObjects.length; index++) {
 			const element = intermidiateObjects[index];
@@ -43365,6 +43344,8 @@
 			if (distance < visibilityRadius)
 				element.material.opacity = 1.0 - distance / visibilityRadius;
 			else element.material.opacity = 0.0;
+			if (distance < minVisibilityRadius)
+				element.material.opacity = 1.0;
 		}
 
 		/*
@@ -43398,13 +43379,11 @@
 
 		//stop cam on stop
 		if (!params.cameraProps.isMovingForward) return;
-		let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
-
+		
 		//stops
-		let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
 		for (let stops = 1; stops < params.stopsCount; stops++){
-			let pos = params.cameraProps.startPosition.z + stops * stopStep;
-			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+			let pos = params.stopsZPositionArray[stops];
+			let prevPos = params.stopsZPositionArray[stops - 1];
 			//for stop
 			if (camera.position.z > pos && camera.position.z < prevPos &&
 				camera.position.z - 50.0 < pos)
@@ -43422,11 +43401,11 @@
 
 			//for intermediate
 			if (camera.position.z > pos && camera.position.z < prevPos &&
-				camera.position.z < pos + 200.0 && camera.position.z > pos + 160.0 &&
+				camera.position.z < pos + 250.0 && camera.position.z > pos + 200.0 &&
 				stops != 1)
 			{
 				params.isWheelStepEnding = true;
-				params.cameraProps.nextPosition = pos + 150.0;
+				params.cameraProps.nextPosition = pos + 190.0;
 				params.cameraProps.isSceneActive = false;
 				showIntermediateLayout();
 			}		
@@ -43434,12 +43413,9 @@
 	}
 
 	function changeNavMap() {
-		let maxZPosition = params.cameraProps.maxZPosition + params.railway.forwardLength;
-		//stops
-		let stopStep = (maxZPosition - params.cameraProps.startPosition.z) / (params.stopsCount - 1);
 		for (let stops = 1; stops < params.stopsCount; stops++){
-			let pos = params.cameraProps.startPosition.z + stops * stopStep;
-			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+			let pos = params.stopsZPositionArray[stops];
+			let prevPos = params.stopsZPositionArray[stops - 1];
 
 			//for items
 			if (camera.position.z <= pos + 20.0) {
@@ -43462,8 +43438,8 @@
 		let points = [-0.24, 4.24, 8.75, 13.24, 17.75, 22.24];
 		
 		for (let stops = 1; stops < params.stopsCount; stops++) {
-			let pos = params.cameraProps.startPosition.z + stops * stopStep;
-			let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
+			let pos = params.stopsZPositionArray[stops];
+			let prevPos = params.stopsZPositionArray[stops - 1];
 			
 			if (camera.position.z < prevPos && camera.position.z > pos) {
 				let top = points[stops - 1] + 0.24 + 3.7 * (prevPos - camera.position.z) / (prevPos - pos);
