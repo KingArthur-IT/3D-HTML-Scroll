@@ -1,10 +1,6 @@
 import * as THREE from 'three';
-//import { PropertyBinding, RepeatWrapping } from 'three';
 import { Line2, LineGeometry, LineMaterial } from 'three-fatline';
-
-document.getElementsByClassName('hamburger')[0].addEventListener("click", function () {
-	this.classList.toggle("is-active");	
-})
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 //scene
 let canvas, camera, scene, light, renderer;
@@ -254,6 +250,8 @@ class App {
 		camera.lookAt(0, params.cameraProps.startPosition.y,
 			camera.position.z - params.cameraProps.visibilityLength);
 		animate();
+
+		miniCanvasInit();
 	}
 }
 
@@ -974,5 +972,49 @@ function showIntermediateLayout() {
 	}, 100);	
 }
 
+//mini canvas models
+function miniCanvasInit() {
+	const miniCanvas = document.getElementsByClassName('city-finale__canvas-item')[0];
+	const miniScene = new THREE.Scene();
+	miniScene.background = new THREE.Color( 0xffffff );
+	const miniCamera = new THREE.PerspectiveCamera(40.0, 1.0, 0.1, 5000);
+	miniCamera.position.set(1000, 0, 0);
+	miniCamera.lookAt(0.0, 0.0, 0.0);
+	
+	const miniLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+	miniLight.position.set( 0, 200, 0 );
+	miniScene.add(miniLight);
+	
+	const miniLight2 = new THREE.DirectionalLight( 0xffffff );
+	miniLight2.position.set( 0, 200, 100 );
+	miniLight2.castShadow = true;
+	miniLight2.shadow.camera.top = 180;
+	miniLight2.shadow.camera.bottom = -100;
+	miniLight2.shadow.camera.left = -120;
+	miniLight2.shadow.camera.right = 120;
+	//miniScene.add( miniLight2 );
+
+	// model
+	const fbxLoader = new FBXLoader();
+	fbxLoader.load( './assets/models/bridge.fbx', function ( object ) {
+		object.traverse( function ( child ) {
+			if ( child.isMesh ) {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		});
+		object.position.set(0.0, 0.0, 0.0);
+		object.scale.set(100.0, 100.0, 100.0);
+		miniScene.add( object );
+	} );
+
+	//renderer
+	let miniRenderer = new THREE.WebGLRenderer({ canvas: miniCanvas, alpha: true, antialias: true });
+	miniRenderer.shadowMap.enabled = true;
+	
+	miniRenderer.render(miniScene, miniCamera);
+
+	//animate();
+}
 
 export default App;

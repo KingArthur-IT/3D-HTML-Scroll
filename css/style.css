@@ -44,7 +44,7 @@ body {
   background: radial-gradient(#fff 0%, #c4c4c4 100%);
 }
 
-canvas {
+#canvas {
   min-width: 100vw;
   min-height: 100vh;
 }
@@ -1007,4 +1007,73 @@ button {
 .intermediate__design3 {
   right: -1.5rem;
   top: 3rem;
+}
+
+.city-finale {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 8rem 5rem 0rem 3rem;
+  opacity: 1;
+  -webkit-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  position: absolute;
+  top: 0;
+}
+.city-finale__title {
+  font-size: 3.25rem;
+  line-height: 3rem;
+  width: 40rem;
+  position: relative;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.city-finale__text {
+  font-size: 1.63rem;
+  line-height: 1.88rem;
+  width: 40rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.city-finale__canvas-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.city-finale__canvas-item {
+  width: 15rem;
+  height: 15rem;
+  border: 1px solid red;
+  margin-right: 1.5rem;
+}
+.city-finale__design-left {
+  top: -1rem;
+  left: 2rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  z-index: -1;
+}
+.city-finale__design-bottom {
+  width: 19.5rem;
+  right: 1.5rem;
+  bottom: 0rem;
+  z-index: -1;
+}
+.city-finale__design-right {
+  bottom: -1.5rem;
+  right: 0rem;
+  z-index: -1;
 }/*# sourceMappingURL=style.css.map */

@@ -1,3 +1,8 @@
+
+document.getElementsByClassName('hamburger')[0].addEventListener("click", function () {
+	this.classList.toggle("is-active");	
+})
+
 //Intro screen behavior
 var firstScreenScroolCount = 0;
 var animationDuration = 500;
