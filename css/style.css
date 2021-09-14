@@ -1010,9 +1010,7 @@ button {
 }
 
 .city-finale {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: none;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -1024,7 +1022,7 @@ button {
       -ms-flex-align: center;
           align-items: center;
   padding: 8rem 5rem 0rem 3rem;
-  opacity: 1;
+  opacity: 0;
   -webkit-transition: all 0.5s ease-in;
   transition: all 0.5s ease-in;
   position: absolute;
@@ -1056,7 +1054,6 @@ button {
 .city-finale__canvas-item {
   width: 15rem;
   height: 15rem;
-  border: 1px solid red;
   margin-right: 1.5rem;
 }
 .city-finale__design-left {
@@ -1076,4 +1073,69 @@ button {
   bottom: -1.5rem;
   right: 0rem;
   z-index: -1;
+}
+
+.popup-wrapper {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+}
+
+.popup-background {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  opacity: 0.9;
+}
+
+.popup {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  left: 25%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.popup__img {
+  width: 100%;
+  opacity: 1;
+}
+.popup__caption {
+  height: 3rem;
+  background: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.popup__design {
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1.5rem;
+}
+.popup__text {
+  font-size: 1.06rem;
+  line-height: 1.31rem;
+}
+.popup__close {
+  width: 1.5rem;
+  height: 1.5rem;
+  right: 1.5rem;
+  top: 1.5rem;
+  position: absolute;
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,43 @@
+.popup-wrapper
+    display: none
+    width: 100vw
+    height: 100vh
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 20
+.popup-background
+    width: 100vw
+    height: 100vh
+    background: #000
+    opacity: 0.9
+.popup
+    position: absolute
+    display: flex
+    flex-direction: column
+    left: 25%
+    transform: translateX(-50%)
+    top: 50%
+    transform: translateY(-50%)
+    &__img
+        width: 100%
+        opacity: 1.0
+    &__caption
+        height: 3rem
+        background: #fff
+        display: flex
+        align-items: center
+    &__design
+        width: 3rem
+        height: 3rem
+        margin-right: 1.5rem
+    &__text
+        font-size: 1.06rem
+        line-height: 1.31rem
+    &__close
+        width: 1.5rem
+        height: 1.5rem
+        right: 1.5rem
+        top: 1.5rem
+        position: absolute
+        cursor: pointer

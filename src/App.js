@@ -1,9 +1,12 @@
 import * as THREE from 'three';
 import { Line2, LineGeometry, LineMaterial } from 'three-fatline';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 //scene
 let canvas, camera, scene, light, renderer;
+let raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
 //for line
 let posArrayLeft = [],
 	posArrayRight = [];
@@ -14,7 +17,7 @@ let railMtl, betweenRailMtl,
 let params = {
 	sceneWidth: 850,
 	sceneHeight: 450,
-	bgColor: 0xdedede,
+	bgColor: 0xd5d5d5,
 	cameraProps: {
 		visibilityLength: 4000,
 		startPosition: new THREE.Vector3(0.0, 13.0, 2000.0),
@@ -41,7 +44,7 @@ let params = {
 	wheelStep: -300.0,
 	isWheelStepEnding: false,
 	terrain: {
-		color: 0xcccccc,
+		color: 0xe5e5e5,
 		gridColor: 0xffffff,
 		width: 1500,
 		height: 5000,
@@ -245,6 +248,7 @@ class App {
 
 		//events
 		window.addEventListener('mousemove', onMouseMove, false);
+		window.addEventListener('mousedown', onMouseDown, false);
 		window.addEventListener('wheel', onScroll, false);
 
 		camera.lookAt(0, params.cameraProps.startPosition.y,
@@ -262,6 +266,26 @@ function onMouseMove(e) {
 	let hk = params.cameraProps.rotationAmplitude * (e.y - h * 0.5) / h;
 	camera.position.x = wk;
 	camera.position.y = params.cameraProps.startPosition.y + hk;
+
+	//for raycaster
+	pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+	pointer.y = - (e.clientY / window.innerHeight) * 2 + 1;
+	
+}
+
+function onMouseDown() {
+	raycaster.setFromCamera( pointer, camera );
+	const intersects = raycaster.intersectObjects( scene.children );
+	if (intersects.length > 0 && params.cameraProps.isSceneActive) {
+		let objName = intersects[0].object.name;
+		if (objName != '' && scene.getObjectByName(objName).material.opacity > 0) {
+			document.getElementsByClassName('popup-wrapper')[0].style.display = 'block';
+			document.getElementsByClassName('popup__img')[0].src='./assets/layout-img/' + objName;
+
+			params.cameraProps.isSceneActive = false;
+		}
+	}
+
 }
 
 function onScroll(e) {
@@ -270,7 +294,7 @@ function onScroll(e) {
 	}
 	
 	if (document.getElementsByClassName('canvas-wrapper')[0].style.display == '' || 
-		document.getElementsByClassName('transition')[0].style.display == '')
+		document.getElementsByClassName('transition')[0].style.opacity == '')
 		return;
 	
 	if (!params.cameraProps.isSceneActive) return;
@@ -440,122 +464,78 @@ function createClouds() {
 	}
 }
 
-function newRails(scrollStep) {
-	scene.remove(curveLeft);
-	scene.remove(curveRight);
-	lineGeometryLeft = new LineGeometry();
-	lineGeometryRight = new LineGeometry();
-
-	let zPos 	= posArrayLeft[posArrayLeft.length - 1] + scrollStep;
-	let x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
-	posArrayLeft.push(x, 0.0, zPos);
-	posArrayRight.push(x + params.railway.roadWidth, 0.0, zPos);
-
-	lineGeometryLeft.setPositions(posArrayLeft);
-	lineGeometryRight.setPositions(posArrayRight);
-	curveLeft = new Line2(lineGeometryLeft, railMtl);
-	curveRight = new Line2(lineGeometryRight, railMtl);
-	scene.add(curveLeft);
-	scene.add(curveRight);
-
-	//шпалы
-	zPos 	= posArrayLeft[posArrayLeft.length - 1];
-	x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
-	let lineGeometry = new LineGeometry();
-	let pos = [x + params.railway.middleOffset, 0.0, zPos,
-			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, zPos];
-	lineGeometry.setPositions(pos);
-	let line = new Line2(lineGeometry, betweenRailMtl);
-	scene.add(line);
-
-	zPos = posArrayLeft[posArrayLeft.length - 1] + 0.5 * scrollStep;
-	x = params.railway.sinAmplitude * Math.sin(zPos * params.railway.sinPhase);
-	lineGeometry = new LineGeometry();
-	pos = [x + params.railway.middleOffset, 0.0, zPos,
-			x + params.railway.roadWidth - params.railway.middleOffset, 0.0, zPos];
-	lineGeometry.setPositions(pos);
-	line = new Line2(lineGeometry, betweenRailMtl);
-	scene.add(line);
-}
-
 function createIntermidiateElements() {
-	/*
-	for (let stops = 1; stops < params.stopsCount; stops++){
-		let pos = params.cameraProps.startPosition.z + stops * stopStep;
-		let prevPos = params.cameraProps.startPosition.z + (stops - 1) * stopStep;
-	}*/
 	//after 1st stop
 	let pos = params.stopsZPositionArray[2];
 	let prevPos = params.stopsZPositionArray[1]
 
 	addIntermediateObject('./assets/layout-img/mining/after/cit-1.png',
-		prevPos, pos, 0.22, 1.0);
+		prevPos, pos, 0.22, 1.0, '');
 	addIntermediateObject('./assets/layout-img/mining/after/cit-2.png',
-		prevPos, pos, 0.22, -1.0);
+		prevPos, pos, 0.22, -1.0, '');
 	addIntermediateObject('./assets/layout-img/mining/after/cit-3.png',
-		prevPos, pos, 0.38, 1.0);
+		prevPos, pos, 0.38, 1.0, '');
 	addIntermediateObject('./assets/layout-img/mining/after/gallery/1.png',
-		prevPos, pos, 0.4, -1.0);
+		prevPos, pos, 0.4, -1.0, 'mining/after/gallery/1.png');
 	addIntermediateObject('./assets/layout-img/mining/after/gallery/2.png',
-		prevPos, pos, 0.5, 1.0);
+		prevPos, pos, 0.5, 1.0, 'mining/after/gallery/2.png');
 	addIntermediateObject('./assets/layout-img/mining/after/gallery/3.png',
-		prevPos, pos, 0.6, -1.0);
+		prevPos, pos, 0.6, -1.0, 'mining/after/gallery/3.png');
 	addIntermediateObject('./assets/layout-img/mining/after/gallery/4.png',
-		prevPos, pos, 0.7, 1.0);
+		prevPos, pos, 0.7, 1.0, 'mining/after/gallery/4.png');
 	addIntermediateObject('./assets/layout-img/mining/after/gallery/5.png',
-		prevPos, pos, 0.8, -1.0);
+		prevPos, pos, 0.8, -1.0, 'mining/after/gallery/5.png');
 	
 	//after 2nd stop
 	pos = params.stopsZPositionArray[3];
 	prevPos = params.stopsZPositionArray[2]
 
 	addIntermediateObject('./assets/layout-img/fire-river/after/cit-1.png',
-		prevPos, pos, 0.24, 1.0);
+		prevPos, pos, 0.24, 1.0, '');
 	addIntermediateObject('./assets/layout-img/fire-river/after/cit-2.png',
-		prevPos, pos, 0.24, -1.0);
+		prevPos, pos, 0.24, -1.0, '');
 	addIntermediateObject('./assets/layout-img/fire-river/after/gallery/1.png',
-		prevPos, pos, 0.33, 1.0);
+		prevPos, pos, 0.33, 1.0, 'fire-river/after/gallery/1.png');
 	addIntermediateObject('./assets/layout-img/fire-river/after/gallery/2.png',
-		prevPos, pos, 0.4, -1.0);
+		prevPos, pos, 0.4, -1.0, 'fire-river/after/gallery/2.png');
 	addIntermediateObject('./assets/layout-img/fire-river/after/gallery/3.png',
-		prevPos, pos, 0.5, 1.0);
+		prevPos, pos, 0.5, 1.0, 'fire-river/after/gallery/3.png');
 	addIntermediateObject('./assets/layout-img/fire-river/after/gallery/4.png',
-		prevPos, pos, 0.6, -1.0);
+		prevPos, pos, 0.6, -1.0, 'fire-river/after/gallery/4.png');
 	addIntermediateObject('./assets/layout-img/fire-river/after/gallery/5.png',
-		prevPos, pos, 0.7, 1.0);
+		prevPos, pos, 0.7, 1.0, 'fire-river/after/gallery/5.png');
 	addIntermediateObject('./assets/layout-img/fire-river/after/gallery/6.png',
-		prevPos, pos, 0.8, -1.0);
+		prevPos, pos, 0.8, -1.0, 'fire-river/after/gallery/6.png');
 	
 	//after 3rd stop
 	pos = params.stopsZPositionArray[4];
 	prevPos = params.stopsZPositionArray[3]
 
 	addIntermediateObject('./assets/layout-img/steel/after/gallery/1.png',
-		prevPos, pos, 0.2, 1.0);
+		prevPos, pos, 0.2, 1.0, 'steel/after/gallery/1.png');
 	addIntermediateObject('./assets/layout-img/steel/after/cit-2.png',
-		prevPos, pos, 0.3, -1.0);
+		prevPos, pos, 0.3, -1.0, '');
 	addIntermediateObject('./assets/layout-img/steel/after/cit-3.png',
-		prevPos, pos, 0.3, 1.0);
+		prevPos, pos, 0.3, 1.0, '');
 	addIntermediateObject('./assets/layout-img/steel/after/gallery/4.png',
-		prevPos, pos, 0.4, -1.0);
+		prevPos, pos, 0.4, -1.0, 'steel/after/gallery/4.png');
 	addIntermediateObject('./assets/layout-img/steel/after/cit-5.png',
-		prevPos, pos, 0.5, 1.0);
+		prevPos, pos, 0.5, 1.0, '');
 	addIntermediateObject('./assets/layout-img/steel/after/cit-6.png',
-		prevPos, pos, 0.5, -1.0);
+		prevPos, pos, 0.5, -1.0, '');
 	addIntermediateObject('./assets/layout-img/steel/after/gallery/7.png',
-		prevPos, pos, 0.6, 1.0);
+		prevPos, pos, 0.6, 1.0, 'steel/after/gallery/7.png');
 	addIntermediateObject('./assets/layout-img/steel/after/gallery/8.png',
-		prevPos, pos, 0.7, -1.0);
+		prevPos, pos, 0.7, -1.0, 'steel/after/gallery/8.png');
 	addIntermediateObject('./assets/layout-img/steel/after/gallery/9.png',
-		prevPos, pos, 0.75, 1.0);
+		prevPos, pos, 0.75, 1.0, 'steel/after/gallery/9.png');
 	addIntermediateObject('./assets/layout-img/steel/after/cit-10.png',
-		prevPos, pos, 0.8, -1.0);
+		prevPos, pos, 0.8, -1.0, '');
 	addIntermediateObject('./assets/layout-img/steel/after/gallery/11.png',
-		prevPos, pos, 0.85, 1.0);
-	
+		prevPos, pos, 0.85, 1.0, 'steel/after/gallery/11.png');	
 }
 
-function addIntermediateObject(picSrc, prevPos, nextPos, place, side) {
+function addIntermediateObject(picSrc, prevPos, nextPos, place, side, name) {
 	//side == 1 for right and -1 for left
 	const billboardPlane = new THREE.PlaneGeometry(params.billboard.width, params.billboard.height, 2.0);
 	let loader = new THREE.TextureLoader();
@@ -574,6 +554,7 @@ function addIntermediateObject(picSrc, prevPos, nextPos, place, side) {
 	intermidiateObjects[index].position.x = side * params.billboard.xPosition;
 	intermidiateObjects[index].position.y = params.billboard.yPosition;
 	intermidiateObjects[index].rotation.y = - side * params.billboard.yAngle;
+	intermidiateObjects[index].name = name;
 	scene.add(intermidiateObjects[index]);
 }
 
@@ -673,7 +654,6 @@ function MoveCamera() {
 			camera.position.z < pos + 250.0 && camera.position.z > pos + 200.0 &&
 			stops != 1)
 		{
-			console.log('show')
 			params.isWheelStepEnding = true;
 			params.cameraProps.nextPosition = pos + 190.0;
 			params.cameraProps.isSceneActive = false;
@@ -796,7 +776,17 @@ function closeLayout() {
 //2. show
 function showLayout() {
 	let stop = params.currentStop - 1;
-	if (stop == 4) return; //for last stop
+	//for last stop
+	if (stop == 4) {
+		if (document.getElementsByClassName('city-finale')[0].style.opacity > 0.0)
+			return;
+		document.getElementsByClassName('city-finale')[0].style.display = "flex";
+		setTimeout(() => {
+			document.getElementsByClassName('city-finale')[0].style.opacity = "1.0";
+			document.getElementsByClassName('city-finale')[0].style.zIndex = "10";
+		}, 100);
+		return;
+	}; 
 	if (document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity > 0.0)
 		return;
 	document.getElementsByClassName('threeD-layout')[3 * stop].style.display = "flex";
@@ -975,46 +965,71 @@ function showIntermediateLayout() {
 //mini canvas models
 function miniCanvasInit() {
 	const miniCanvas = document.getElementsByClassName('city-finale__canvas-item')[0];
+	canvas.setAttribute('width', 	document.documentElement.clientWidth);
+	canvas.setAttribute('height', 	document.documentElement.clientHeight);
+	
 	const miniScene = new THREE.Scene();
-	miniScene.background = new THREE.Color( 0xffffff );
+	miniScene.background = new THREE.Color( 0xcccccc );
+	
 	const miniCamera = new THREE.PerspectiveCamera(40.0, 1.0, 0.1, 5000);
 	miniCamera.position.set(1000, 0, 0);
 	miniCamera.lookAt(0.0, 0.0, 0.0);
 	
-	const miniLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+	const miniLight = new THREE.AmbientLight( 0xffffff, 1.0 );
 	miniLight.position.set( 0, 200, 0 );
 	miniScene.add(miniLight);
-	
+
+	const geometry = new THREE.BoxGeometry( 10, 10, 10 );
+	const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+	const cube = new THREE.Mesh( geometry, material );
+	miniScene.add( cube ); 
+	/*
 	const miniLight2 = new THREE.DirectionalLight( 0xffffff );
 	miniLight2.position.set( 0, 200, 100 );
 	miniLight2.castShadow = true;
 	miniLight2.shadow.camera.top = 180;
 	miniLight2.shadow.camera.bottom = -100;
 	miniLight2.shadow.camera.left = -120;
-	miniLight2.shadow.camera.right = 120;
+	miniLight2.shadow.camera.right = 120;*/
 	//miniScene.add( miniLight2 );
 
 	// model
-	const fbxLoader = new FBXLoader();
-	fbxLoader.load( './assets/models/bridge.fbx', function ( object ) {
-		object.traverse( function ( child ) {
-			if ( child.isMesh ) {
-				child.castShadow = true;
-				child.receiveShadow = true;
-			}
-		});
-		object.position.set(0.0, 0.0, 0.0);
-		object.scale.set(100.0, 100.0, 100.0);
-		miniScene.add( object );
-	} );
+	
+	let Obj = new THREE.Object3D();
+	let mtlLoader = new MTLLoader();
+	mtlLoader.setPath('./assets/models/');
 
+	//load patient body
+	mtlLoader.load('bridge.mtl', function (materials) {
+		materials.preload();
+		let objLoader = new OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('./assets/models/');
+		objLoader.load('bridge.obj', function (object) {
+			//object.scale.set(0.1,0.1,0.1)
+			//object.position.set(0.0,0.0,0.0)
+			//object.rotation.setFromVector3(objectsParams.bovie.rotation);
+			Obj.add(object);
+			miniScene.add(object);
+		});
+	});
 	//renderer
 	let miniRenderer = new THREE.WebGLRenderer({ canvas: miniCanvas, alpha: true, antialias: true });
 	miniRenderer.shadowMap.enabled = true;
 	
 	miniRenderer.render(miniScene, miniCamera);
 
-	//animate();
+	//miniAnimate();
 }
 
+function miniAnimate() {
+	requestAnimationFrame(miniAnimate);
+	renderer.render(miniScene, miniCamera);
+}
+
+//CLOSE POPUP	
+document.getElementsByClassName('popup__close')[0].addEventListener("click", function () {
+	document.getElementsByClassName('popup-wrapper')[0].style.display = 'none';
+	params.cameraProps.isSceneActive = true;
+})
 export default App;
