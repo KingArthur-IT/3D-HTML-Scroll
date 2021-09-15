@@ -41,7 +41,7 @@ let params = {
 	},
 	wheelScrollingStep: 5.0,
 	currentWheelScrollingStep: 5.0,
-	wheelStep: -300.0,
+	wheelStep: -100.0,
 	isWheelStepEnding: false,
 	terrain: {
 		color: 0xe5e5e5,
@@ -243,17 +243,17 @@ class App {
 
 		//visual nav map 
 		document.getElementsByClassName('visual-nav__item')[0].style.background = params.styles.orangeColor;
-		
+		//clickable nav map
 		for (let index = 2; index < 7; index++) {
 			document.getElementsByClassName('visual-nav__item')[index - 1].addEventListener('mousedown', () => {
 				closeLayout();
 				camera.position.z = params.stopsZPositionArray[index - 1];
 				params.currentStop = index - 1;
 				changeNavMap();
-				params.cameraProps.isSceneActive = false;
 				setTimeout(() => {
 					showLayout();
 				}, 1500);
+				params.cameraProps.isSceneActive = false;
 			});
 		}
 		
@@ -273,7 +273,6 @@ class App {
 }
 
 function goToCurrentStop(e) {
-	console.log(e)
 	camera.position.z = params.stopsZPositionArray[num - 1];
 	params.currentStop = num;
 	//closeLayout();
@@ -594,10 +593,8 @@ function animate() {
 
 function MoveCamera() {
 	if (params.isWheelStepEnding) {
-		let distToEnd = params.cameraProps.isMovingForward ?
-			camera.position.z - params.cameraProps.nextPosition :
-			params.cameraProps.nextPosition - camera.position.z;
-		camera.position.z -= distToEnd * 0.05;
+		let distToEnd = camera.position.z - params.cameraProps.nextPosition;
+		camera.position.z = camera.position.z - distToEnd * 0.05;
 	}
 	else {
 		let oneScroll = params.currentWheelScrollingStep;
@@ -621,49 +618,34 @@ function MoveCamera() {
 			element.material.opacity = 1.0;
 	}
 
-	/*
-	//is scroll ending
-	if ((camera.position.z - 50 <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-		(camera.position.z + 50 >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
-	) params.isWheelStepEnding = true;
-	else
-		params.isWheelStepEnding = false;
-
-	//move cam
-	if (!params.isWheelStepEnding)
-		camera.position.z += step;
-	else {
-		let distToEnd = params.cameraProps.isMovingForward ?
-			camera.position.z - params.cameraProps.nextPosition :
-			params.cameraProps.nextPosition - camera.position.z;
-		camera.position.z += step * distToEnd * 0.01;	
-	}
-*/
-	
-
-	/*
-	//stop moving?
-	if ((camera.position.z <= params.cameraProps.nextPosition && params.cameraProps.isMovingForward) ||
-		(camera.position.z >= params.cameraProps.nextPosition && !params.cameraProps.isMovingForward)
-	) {
-		params.cameraProps.isMoving = false;
-		params.isWheelStepEnding = false;
-	}*/
-
 	//stop cam on stop
-	if (!params.cameraProps.isMovingForward) return;
+	//if (!params.cameraProps.isMovingForward) return;
 	
 	//stops
 	for (let stops = 1; stops < params.stopsCount; stops++){
-		let pos = params.stopsZPositionArray[stops];
-		let prevPos = params.stopsZPositionArray[stops - 1]
+		let pos;
+		let prevPos;
+		if (params.cameraProps.isMovingForward) {
+			pos = params.stopsZPositionArray[stops];
+			prevPos = params.stopsZPositionArray[stops - 1];
+		}
+		else {
+			pos = params.stopsZPositionArray[stops - 1];
+			prevPos = params.stopsZPositionArray[stops];
+		}
 		//for stop
-		if (camera.position.z > pos && camera.position.z < prevPos &&
-			camera.position.z - 50.0 < pos)
+		if (
+			(camera.position.z > pos && camera.position.z < prevPos
+			&& (camera.position.z - 20.0 < pos) && params.cameraProps.isMovingForward)
+			||
+			(camera.position.z < pos && camera.position.z > prevPos
+			&& (camera.position.z + 20.0 > pos) && !params.cameraProps.isMovingForward)
+		)	
 		{
 			params.isWheelStepEnding = true;
 			params.cameraProps.nextPosition = pos;
 			params.cameraProps.isSceneActive = false;
+			console.log()
 			showLayout();
 		}
 		if (Math.abs(camera.position.z - pos) < 1.0 || 
@@ -738,7 +720,8 @@ function RotateCamera() {
 //---3d layout behavior---
 //1. close
 document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
-    let classNames = ["model-wrapper", "stop-info", "stop-section__", "person-item", "hamburger", "intermediate__"];
+	let classNames = ["model-wrapper", "stop-info", "stop-section__", "person-item", "hamburger",
+		"intermediate__", "visual-nav__"];
     let classList = e.target.className;
     let isClickOnEmptySpace = true;
     for (let i = 0; i < classNames.length; i++){
@@ -752,12 +735,15 @@ document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
 		Math.abs(camera.rotation.y) < 0.15 && //front face 
 		!params.cameraProps.isMoving //cam is not moving
 	)
+	{
 		closeLayout();
+		params.cameraProps.isSceneActive = true;
+	}
 })
 
 function closeLayout() {
-	let stop = params.currentStop - 1;
-	if (stop < 4)
+	//let stop = params.currentStop - 1;
+	for (let stop = 0; stop < 4; stop ++)
 	{
 		//front face
 		document.getElementsByClassName('threeD-layout')[3 * stop].style.opacity = "0.0";  
@@ -773,16 +759,14 @@ function closeLayout() {
 		document.getElementsByClassName('rightFace')[stop].style.top = "-5rem";
 	}
 	//intermediate
-	if (stop > 0 && stop < 5) {
+	for (let stop = 1; stop < 5; stop ++) {
 		document.getElementsByClassName('intermediate')[stop - 1].style.opacity = "0.0";
 		document.getElementsByClassName('intermediate')[stop - 1].style.zIndex = "0";
 		document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "0";
 	}
 	
-
-	params.cameraProps.isSceneActive = true;
 	setTimeout(() => {
-		if (stop < 4) {
+		for (let stop = 0; stop < 4; stop ++){
 			document.getElementsByClassName('frontFace')[stop].style.top = "9.0rem";
 			document.getElementsByClassName('leftFace')[stop].style.top = "6.5rem";
 			document.getElementsByClassName('rightFace')[stop].style.top = "9.0rem";
@@ -790,7 +774,7 @@ function closeLayout() {
 			document.getElementsByClassName('threeD-layout')[3 * stop + 1].style.display = "none";
 			document.getElementsByClassName('threeD-layout')[3 * stop + 2].style.display = "none";
 		}
-		if (stop > 0 && stop < 5) {
+		for (let stop = 1; stop < 5; stop ++) {
 				document.getElementsByClassName('intermediate')[stop - 1].style.paddingTop = "8rem";
 				document.getElementsByClassName('intermediate')[stop - 1].style.display = "none";
 			}
@@ -800,6 +784,21 @@ function closeLayout() {
 //2. show
 function showLayout() {
 	let stop = params.currentStop - 1;
+	for (let stops = 1; stops < params.stopsCount; stops++) {
+		let pos = params.stopsZPositionArray[stops];
+		let prevPos = params.stopsZPositionArray[stops - 1]
+		if (camera.position.z < prevPos && camera.position.z > pos)
+		{
+			stop = stops - 1;
+			params.currentStop = stop;
+			if (!params.cameraProps.isMovingForward)
+			{
+				stop--;
+				params.currentStop--;
+			}
+			
+		}
+	}
 	//for last stop
 	if (stop == 4) {
 		if (document.getElementsByClassName('city-finale')[0].style.opacity > 0.0)
