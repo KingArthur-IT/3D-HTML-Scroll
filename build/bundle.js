@@ -44602,6 +44602,19 @@
 			//visual nav map 
 			document.getElementsByClassName('visual-nav__item')[0].style.background = params.styles.orangeColor;
 			
+			for (let index = 2; index < 7; index++) {
+				document.getElementsByClassName('visual-nav__item')[index - 1].addEventListener('mousedown', () => {
+					closeLayout();
+					camera.position.z = params.stopsZPositionArray[index - 1];
+					params.currentStop = index - 1;
+					changeNavMap();
+					params.cameraProps.isSceneActive = false;
+					setTimeout(() => {
+						showLayout();
+					}, 1500);
+				});
+			}
+			
 			renderer.render(scene, camera);
 
 			//events
@@ -44632,18 +44645,19 @@
 	}
 
 	function onMouseDown() {
-		raycaster.setFromCamera( pointer, camera );
-		const intersects = raycaster.intersectObjects( scene.children );
-		if (intersects.length > 0 && params.cameraProps.isSceneActive) {
-			let objName = intersects[0].object.name;
-			if (objName != '' && scene.getObjectByName(objName).material.opacity > 0) {
-				document.getElementsByClassName('popup-wrapper')[0].style.display = 'block';
-				document.getElementsByClassName('popup__img')[0].src='./assets/layout-img/' + objName;
+		if (params.cameraProps.isSceneActive) {
+			raycaster.setFromCamera(pointer, camera);
+			const intersects = raycaster.intersectObjects(scene.children);
+			if (intersects.length > 0 && params.cameraProps.isSceneActive) {
+				let objName = intersects[0].object.name;
+				if (objName != '' && scene.getObjectByName(objName).material.opacity > 0) {
+					document.getElementsByClassName('popup-wrapper')[0].style.display = 'block';
+					document.getElementsByClassName('popup__img')[0].src = './assets/layout-img/' + objName;
 
-				params.cameraProps.isSceneActive = false;
+					params.cameraProps.isSceneActive = false;
+				}
 			}
 		}
-
 	}
 
 	function onScroll(e) {

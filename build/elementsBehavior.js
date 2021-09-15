@@ -71,15 +71,20 @@ function scrollToSecondScreen(delta) {
     }
     //5th trigger - start 3d scene
     if (firstScreenScroolCount == 5) {
-        document.getElementsByClassName('intro')[0].style.opacity = 0.0;
-        document.getElementsByClassName('canvas-wrapper')[0].style.opacity = 1.0;
-        document.getElementsByClassName('canvas-wrapper')[0].style.display = 'block';
-        setTimeout(() => {
-            document.getElementsByClassName('intro')[0].style.display = 'none';
-            document.getElementsByClassName('transition')[0].style.opacity = '0.0';
-            setTimeout(() => {
-                document.getElementsByClassName('transition')[0].style.display = 'none';
-            }, 5000);
-        }, 1500);
+        goToScene();
     }
+}
+
+function goToScene() {
+    document.getElementsByClassName('intro')[0].style.opacity = 0.0;
+    document.getElementsByClassName('canvas-wrapper')[0].style.opacity = 1.0;
+    document.getElementsByClassName('canvas-wrapper')[0].style.display = 'block';
+    setTimeout(() => {
+        document.getElementsByClassName('intro')[0].style.display = 'none';
+        document.getElementsByClassName('transition')[0].style.opacity = '1.0';
+        document.getElementsByClassName('transition')[0].style.opacity = '0.0';
+        setTimeout(() => {
+            document.getElementsByClassName('transition')[0].style.display = 'none';
+        }, 5000);
+    }, 1500);
 }
