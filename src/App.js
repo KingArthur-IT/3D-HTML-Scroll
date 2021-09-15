@@ -18,6 +18,7 @@ let params = {
 	sceneWidth: 850,
 	sceneHeight: 450,
 	bgColor: 0xd5d5d5,
+	bgSrc: './assets/img/bg.png',
 	cameraProps: {
 		visibilityLength: 4000,
 		startPosition: new THREE.Vector3(0.0, 13.0, 2000.0),
@@ -27,16 +28,17 @@ let params = {
 		isMovingForward: true,
 		nextPosition: 0,
 		isSceneActive: true,
-		targetAngle: 0
+		targetAngle: 0,
+		firstStepAutoScroll: true
 	},
 	railway: {
-		width: 2.0, //px
+		width: 1.5, //px
 		color: 0xf3f3f3,
 		forwardLength: 200,
 		sinAmplitude: 3.0,
 		sinPhase: 0.01,
 		middleOffset: -0.15,
-		roadWidth: 2.0,
+		roadWidth: 1.25,
 		railwaySleeperFrequency: 2.0,
 	},
 	wheelScrollingStep: 5.0,
@@ -44,14 +46,14 @@ let params = {
 	wheelStep: -100.0,
 	isWheelStepEnding: false,
 	terrain: {
-		color: 0xe5e5e5,
+		color: 0xececec,
 		gridColor: 0xffffff,
-		width: 1500,
+		width: 2500,
 		height: 5000,
 		segmentsCount: 400,
 		xRotation: -Math.PI / 2,
 		yPosition: -3.0,
-		smoothing: 300
+		smoothing: 900
 	},
 	cloud: {
 		src: './assets/img/cloud.png',
@@ -192,6 +194,13 @@ class App {
 		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
 		renderer.setClearColor(params.bgColor);
 		renderer.shadowMap.enabled = true;
+
+		//Load background texture
+		let bgLoader = new THREE.TextureLoader();
+		bgLoader.load(params.bgSrc, function (texture) {
+			texture.minFilter = THREE.LinearFilter;
+			//scene.background = texture;
+		});
 		
 		//материалы к рельсам
 		railMtl = new LineMaterial({
@@ -252,8 +261,11 @@ class App {
 				changeNavMap();
 				setTimeout(() => {
 					showLayout();
-				}, 1500);
+				}, 1000);
 				params.cameraProps.isSceneActive = false;
+				camera.rotation.y = 0.0;
+				params.cameraProps.targetAngle = 0.0;
+				RotateCamera();
 			});
 		}
 		
@@ -270,15 +282,6 @@ class App {
 
 		miniCanvasInit();
 	}
-}
-
-function goToCurrentStop(e) {
-	camera.position.z = params.stopsZPositionArray[num - 1];
-	params.currentStop = num;
-	//closeLayout();
-	showLayout();
-	changeNavMap();
-	params.cameraProps.isSceneActive = false;
 }
 
 function onMouseMove(e) {    
@@ -311,14 +314,23 @@ function onMouseDown() {
 	}
 }
 
-function onScroll(e) {
-	if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-		scrollToSecondScreen(e.deltaY);
-	}
+function onScroll(e) {	
+	scrollToSecondScreen(e.deltaY);
 	
 	if (document.getElementsByClassName('canvas-wrapper')[0].style.display == '' || 
 		document.getElementsByClassName('transition')[0].style.opacity == '')
 		return;
+
+	console.log(params.cameraProps.isSceneActive, params.cameraProps.isMoving)
+	//close layer on stop by scroll
+	if (!params.cameraProps.isSceneActive && //scene is not active
+		Math.abs(camera.rotation.y) < 0.15 && //front face 
+		!params.cameraProps.isMoving //cam is not moving
+	)
+	{
+		closeLayout();
+		params.cameraProps.isSceneActive = true;
+	}
 	
 	if (!params.cameraProps.isSceneActive) return;
 	let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
@@ -336,32 +348,17 @@ function createLandspape() {
 	const planeGeometry = new THREE.PlaneBufferGeometry(
 		params.terrain.width, params.terrain.height,
 		params.terrain.segmentsCount * 2.0, params.terrain.segmentsCount);
-	//let terainMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.color });
-	
-	//const loader = new THREE.TextureLoader();
-	const terainMaterial = new THREE.MeshLambertMaterial({
-		/*
-		map: loader.load('./assets/img/grid.png', function (texture) {
-				texture.minFilter = THREE.LinearFilter;
-				texture.repeat.set(400, 500),
-				texture.wrapS = texture.wrapT = RepeatWrapping
-		}),*/
+
+	const terainMaterial = new THREE.MeshPhongMaterial({
 		color: params.terrain.color,
 		transparent: true
 	});
 
-	let terrain = new THREE.Mesh( planeGeometry, terainMaterial );
+	let terrain = new THREE.Mesh(planeGeometry, terainMaterial);
+	terrain.receiveShadow = true;
 	terrain.rotation.x = params.terrain.xRotation;
 	terrain.position.y = params.terrain.yPosition;
 	scene.add(terrain);
-	// Create grid of the terrain
-	/*
-	let terainGridMaterial = new THREE.MeshLambertMaterial({ color: params.terrain.gridColor, wireframe: true });
-	let terrainGrid = new THREE.Mesh( planeGeometry, terainGridMaterial );
-	terrainGrid.rotation.x = params.terrain.xRotation;
-	terrainGrid.position.y = params.terrain.yPosition;
-	scene.add(terrainGrid);
-	*/
 	//terain transorm
 	let perlin = new Perlin();
 	let smoothing = params.terrain.smoothing;
@@ -389,9 +386,7 @@ function createLandspape() {
 			pointVertices.push(vertices[i], vertices[i + 2] + params.terrain.yPosition, -vertices[i + 1]);
 	}
 	terrain.geometry.attributes.position.needsUpdate = true;
-	//terrainGrid.geometry.attributes.position.needsUpdate = true;
 	terrain.geometry.computeVertexNormals();
-	//terrainGrid.geometry.computeVertexNormals();
 
 	geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(pointVertices), 3 ) );
 	let particles = new THREE.Points(geometry, material);
@@ -582,6 +577,14 @@ function addIntermediateObject(picSrc, prevPos, nextPos, place, side, name) {
 }
 
 function animate() {
+	//for moving from start to 1st stop
+	if (document.getElementsByClassName('transition')[0].style.opacity == '0'
+		&& params.currentStop == 1 && params.cameraProps.firstStepAutoScroll) {
+		camera.position.z -= 3.0;
+		changeNavMap();
+		params.cameraProps.nextPosition = params.stopsZPositionArray[1];
+		params.cameraProps.isMoving = true;
+	}
 	if (params.cameraProps.isMoving) {
 		MoveCamera();
 		changeNavMap();
@@ -645,7 +648,6 @@ function MoveCamera() {
 			params.isWheelStepEnding = true;
 			params.cameraProps.nextPosition = pos;
 			params.cameraProps.isSceneActive = false;
-			console.log()
 			showLayout();
 		}
 		if (Math.abs(camera.position.z - pos) < 1.0 || 
@@ -795,8 +797,7 @@ function showLayout() {
 			{
 				stop--;
 				params.currentStop--;
-			}
-			
+			}			
 		}
 	}
 	//for last stop
@@ -1057,7 +1058,7 @@ document.getElementsByClassName('popup__close')[0].addEventListener("click", fun
 })
 
 //menu
-function goToScene() {
+function goToScene(num) {
     document.getElementsByClassName('intro')[0].style.opacity = 0.0;
     document.getElementsByClassName('canvas-wrapper')[0].style.opacity = 1.0;
     document.getElementsByClassName('canvas-wrapper')[0].style.display = 'block';
@@ -1069,6 +1070,23 @@ function goToScene() {
             document.getElementsByClassName('transition')[0].style.display = 'none';
         }, 5000);
     }, 1500);
+
+	params.cameraProps.firstStepAutoScroll = false;
+	camera.position.z = params.stopsZPositionArray[num];
+	params.currentStop = num;
+	closeLayout();
+	changeNavMap();
+	setTimeout(() => {
+		showLayout();
+		params.cameraProps.isSceneActive = false;
+		params.cameraProps.isMoving = false;
+	}, 2000);
 }
+
+document.getElementsByClassName('goToScene')[0].addEventListener('mousedown', () => {goToScene(1);})
+document.getElementsByClassName('goToScene')[1].addEventListener('mousedown', () => {goToScene(2);})
+document.getElementsByClassName('goToScene')[2].addEventListener('mousedown', () => {goToScene(3);})
+document.getElementsByClassName('goToScene')[3].addEventListener('mousedown', () => {goToScene(4);})
+document.getElementsByClassName('goToScene')[4].addEventListener('mousedown', () => {goToScene(5);})
 
 export default App;

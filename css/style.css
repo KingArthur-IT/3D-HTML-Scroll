@@ -1139,4 +1139,13 @@ button {
   top: 1.5rem;
   position: absolute;
   cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  height: 200px;
+  min-width: 200px;
+  background: #fff;
+  bottom: 0;
+  left: 0;
 }/*# sourceMappingURL=style.css.map */
