@@ -73,6 +73,25 @@ let params = {
 	}
 };
 let intermidiateObjects = []
+const imageCaptions = [
+	{ name: 'mining/after/gallery/1.png', caption: 'Самоходная буровая установка в «Шерегешской» шахте ЕВРАЗ ЗСМК'	},
+	{ name: 'mining/after/gallery/2.png', caption: 'Северный карьер Качканарского горно-обогатительного рудника'	},
+	{ name: 'mining/after/gallery/3.png', caption: 'Очистка руды на Качканарском горно-обогатительном комбинате'	},
+	{ name: 'mining/after/gallery/4.png', caption: 'Центр управления на Качканарском горно-обогатительном комбинате'	},
+	{ name: 'mining/after/gallery/5.png', caption: 'Склад кокса на Качканарском горно-обогатительном комбинате'	},
+	{ name: 'fire-river/after/gallery/1.png', caption: ''	},
+	{ name: 'fire-river/after/gallery/2.png', caption: ''	},
+	{ name: 'fire-river/after/gallery/3.png', caption: ''	},
+	{ name: 'fire-river/after/gallery/4.png', caption: ''	},
+	{ name: 'fire-river/after/gallery/5.png', caption: ''	},
+	{ name: 'fire-river/after/gallery/6.png', caption: ''	},
+	{ name: 'steel/after/gallery/1.png', caption: ''	},
+	{ name: 'steel/after/gallery/4.png', caption: ''	},
+	{ name: 'steel/after/gallery/7.png', caption: ''	},
+	{ name: 'steel/after/gallery/8.png', caption: ''	},
+	{ name: 'steel/after/gallery/9.png', caption: ''	},
+	{ name: 'steel/after/gallery/11.png', caption: ''	},
+]
 
 class Perlin {
     constructor() {
@@ -303,7 +322,12 @@ function onMouseDown() {
 			if (objName != '' && scene.getObjectByName(objName).material.opacity > 0) {
 				document.getElementsByClassName('popup-wrapper')[0].style.display = 'block';
 				document.getElementsByClassName('popup__img')[0].src = './assets/layout-img/' + objName;
-
+				let textContent = '';
+				imageCaptions.forEach(element => {
+					if (element.name == objName)
+						textContent = element.caption;
+				});
+				document.getElementsByClassName('popup__text')[0].textContent = textContent;
 				params.cameraProps.isSceneActive = false;
 			}
 		}
@@ -625,17 +649,12 @@ function MoveCamera() {
 		camera.position.z += step;
 	}
 
-	let visibilityRadius = 220.0;
-	let minVisibilityRadius = 130.0;
+	let visibilityRadius = 100.0;
 	//for intermid objs opacity
 	for (let index = 0; index < intermidiateObjects.length; index++) {
 		const element = intermidiateObjects[index];
 		let distance = Math.abs(camera.position.z - element.position.z);
-		if (distance < visibilityRadius)
-			element.material.opacity = 1.0 - distance / visibilityRadius;
-		else element.material.opacity = 0.0;
-		if (distance < minVisibilityRadius)
-			element.material.opacity = 1.0;
+		element.material.opacity = 1.0 - Math.abs(distance - visibilityRadius) / visibilityRadius;
 	}
 
 	//stop cam on stop
