@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import { Line2, LineGeometry, LineMaterial } from 'three-fatline';
 
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-
 //scene
 let canvas, camera, scene, light, renderer;
 let raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
@@ -22,7 +19,7 @@ let params = {
 	cameraProps: {
 		visibilityLength: 4000,
 		startPosition: new THREE.Vector3(0.0, 13.0, 2000.0),
-		maxZPosition: -2000.0,
+		maxZPosition: -3700.0,
 		rotationAmplitude: 3.0,
 		isMoving: false,
 		isMovingForward: true,
@@ -49,7 +46,7 @@ let params = {
 		color: 0xececec,
 		gridColor: 0xffffff,
 		width: 2500,
-		height: 5000,
+		height: 8000,
 		segmentsCount: 400,
 		xRotation: -Math.PI / 2,
 		yPosition: -3.0,
@@ -66,7 +63,7 @@ let params = {
 	},
 	stopsCount: 6,
 	currentStop: 1,
-	stopsZPositionArray: [2000, 1400, 400, -500, -1000, -1700],
+	stopsZPositionArray: [2000, 1400, 400, -1000, -3000, -3700],
 	billboard: {
 		width: 40.0,
 		height: 20.0,
@@ -320,6 +317,12 @@ function onScroll(e) {
 		document.getElementsByClassName('transition')[0].style.opacity == '')
 		return;
 
+	//for last stop
+	if (document.getElementsByClassName('city-finale')[0].style.opacity > 0 && e.deltaY < 0) {
+		document.getElementsByClassName('city-finale')[0].style.opacity = 0.0;
+		document.getElementsByClassName('city-finale')[0].style.display = 'none';
+	}
+	
 	//close layer on stop by scroll
 	if (!params.cameraProps.isSceneActive && //scene is not active
 		Math.abs(camera.rotation.y) < 0.15 && //front face 
@@ -330,6 +333,7 @@ function onScroll(e) {
 		params.cameraProps.isSceneActive = true;
 	}
 	
+	changeFinalLayout(e.deltaY);
 	if (!params.cameraProps.isSceneActive) return;
 	let wheelStep = Math.sign(e.deltaY) * params.wheelStep;
 	if (camera.position.z + wheelStep < params.cameraProps.startPosition.z &&
@@ -339,8 +343,6 @@ function onScroll(e) {
 		params.cameraProps.nextPosition = camera.position.z + wheelStep;
 		params.currentWheelScrollingStep = params.wheelScrollingStep;
 	}
-
-	changeFinalLayout(e.deltaY);
 }
 
 function createLandspape() {
@@ -395,7 +397,7 @@ function createLandspape() {
 
 function createClouds() {
 	const positions = [{'x': -142.3, 'y': -590.4},
-						{'x': 49.0, 'y': -368.18204414654247},
+						{'x': 49.0, 'y': -368.18},
 						{'x': 31.0, 'y': -937.74},
 						{'x': 283.3, 'y': -1986.4},
 						{'x': -463.5, 'y': -285.0},
@@ -422,7 +424,7 @@ function createClouds() {
 						{ 'x': 218.3, 'y': -173.0 },
 						{'x': -612.9, 'y':-1486.41},
 						{'x': 243.6, 'y': -643.58},
-						{'x': -598.6, 'y':-601.0},
+						{'x': -598.6, 'y':1.0},
 						{'x': 590.9, 'y':-394.5},
 						{'x': -576.9, 'y':-384.3},
 						{'x': 107.5, 'y': -70.4},
@@ -451,8 +453,23 @@ function createClouds() {
 						{ 'x': 405.8, 'y': -2500.5 },
 						{ 'x': 718.3, 'y': -3250.0 },
 						{'x': -612.9, 'y':-2800.41},
-						{'x': 243.6, 'y': -3200.58},
-						{'x': -598.6, 'y':-3200.0}]
+						{'x': 243.6, 'y': 3200.58},
+						{ 'x': -598.6, 'y': 2800.0 },
+						{ 'x': 0.0, 'y': 2250.0 },
+						{'x': 107.5, 'y': 2500.4},
+						{'x': 699.2, 'y':2500.13},
+						{'x': -29.8, 'y': 2400.47},
+						{'x': 170.3, 'y': 2700.7 },
+						{ 'x': -204.1, 'y': 4600.0 },
+	 					{'x': 516.4, 'y': 5067.0 },
+						{'x': 800.6, 'y': 3000.19},
+						{'x': -59.7, 'y': 2800.04},
+						{'x': 384.3, 'y':-2800.827},
+						{ 'x': 405.8, 'y': 7500.5 },
+						{ 'x': 718.3, 'y': 3250.0 },
+						{'x': -612.9, 'y':-2800.41},
+						{'x': 243.6, 'y': 13200.58},
+						{'x': 8.6, 'y':10200.0}]
 	const cloudGometry = new THREE.BoxGeometry(200, 200, 200, 10, 10, 10);
 	const cloudLoader = new THREE.TextureLoader();
 	const nullMaterial = new THREE.MeshBasicMaterial({
@@ -744,25 +761,38 @@ document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
 })
 
 function changeFinalLayout(delta) {
-	if (!params.cameraProps.isSceneActive) return;
-
-	if (delta > 0) {
+	if (delta > 0) { //forward
 		if (document.getElementsByClassName('city-finale')[0].style.opacity > 0) {
 			document.getElementsByClassName('city-finale')[0].style.opacity = 0;
 			document.getElementsByClassName('citate-finale')[0].style.display = 'block';
-			setTimeout(() => {
-				document.getElementsByClassName('citate-finale')[0].style.opacity = '1.0';
-			}, 1000);
+			document.getElementsByClassName('citate-finale')[0].style.opacity = '1.0';
+			params.cameraProps.isSceneActive = false;
 			return;
 		}
 
 		if (document.getElementsByClassName('citate-finale')[0].style.opacity > 0) {
 			document.getElementsByClassName('citate-finale')[0].style.opacity = 0;
 			document.getElementsByClassName('finale-cta')[0].style.display = 'flex';
-			setTimeout(() => {
-				document.getElementsByClassName('finale-cta')[0].style.opacity = '1.0';
-			}, 1000);
+			document.getElementsByClassName('finale-cta')[0].style.opacity = '1.0';
 		}
+	}
+	else { //go back
+		if (document.getElementsByClassName('citate-finale')[0].style.opacity > 0) {
+			document.getElementsByClassName('citate-finale')[0].style.opacity = 0;
+			document.getElementsByClassName('citate-finale')[0].style.display = 'none';
+			document.getElementsByClassName('city-finale')[0].style.display = 'flex';
+			document.getElementsByClassName('city-finale')[0].style.opacity = '1.0';
+			params.cameraProps.isSceneActive = true;
+			return;
+		}
+
+		if (document.getElementsByClassName('finale-cta')[0].style.opacity > 0) {
+			document.getElementsByClassName('finale-cta')[0].style.opacity = 0;
+			document.getElementsByClassName('finale-cta')[0].style.display = 'none';
+			document.getElementsByClassName('citate-finale')[0].style.display = 'flex';
+			document.getElementsByClassName('citate-finale')[0].style.opacity = '1.0';
+		}
+
 	}
 }
 
@@ -804,6 +834,7 @@ function closeLayout() {
 				document.getElementsByClassName('intermediate')[stop - 1].style.display = "none";
 			}
 	}, 1000);
+
 }
 
 //2. show
@@ -1055,13 +1086,14 @@ for (let index = 0; index < 5; index++) {
         let y = document.getElementsByClassName('city-finale__canvas-item')[index].getBoundingClientRect().y;
         let x = document.getElementsByClassName('city-finale__canvas-item')[index].getBoundingClientRect().x;
 		let xRight = document.getElementsByClassName('city-finale__canvas-item')[index].getBoundingClientRect().right;
+		console.log(x,xRight)
         document.getElementsByClassName('models-popup-wrapper')[0].style.display = "flex";
         document.getElementsByClassName('model-popup-item')[index].style.display = "flex";
         document.getElementsByClassName('model-popup-item')[index].style.top = y + 'px';
         if (index < 3)
             document.getElementsByClassName('model-popup-item')[index].style.left = x + 'px';
         else
-			document.getElementsByClassName('model-popup-item')[index].style.right = xRight + 'px';
+			document.getElementsByClassName('model-popup-item')[index].style.left = x - (xRight - x) + 'px';
 	})
 	
 	document.getElementsByClassName('close-mini-popup')[index].addEventListener('mousedown', () => {

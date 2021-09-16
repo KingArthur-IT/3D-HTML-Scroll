@@ -1367,7 +1367,7 @@ button {
   height: 200px;
   min-width: 200px;
   background: #fff;
-  bottom: 0;
-  left: 0;
+  top: 0;
+  right: 0;
   display: none;
 }/*# sourceMappingURL=style.css.map */

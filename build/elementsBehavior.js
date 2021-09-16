@@ -88,3 +88,12 @@ function goToScene() {
         }, 5000);
     }, 1500);
 }
+
+document.getElementsByClassName('hamburger')[0].addEventListener('mousedown', () => {
+    //body
+    if (document.getElementsByClassName('menu')[0].style.display == 'none' || 
+    document.getElementsByClassName('menu')[0].style.display == '')
+        document.getElementsByClassName('menu')[0].style.display = 'flex';
+    else
+        document.getElementsByClassName('menu')[0].style.display = 'none';
+})
