@@ -42991,7 +42991,7 @@
 			gray50: 'rgba(0, 0, 0, 0.5)'
 		},
 		stopsCount: 6,
-		currentStop: 1,
+		currentStop: 0,
 		stopsZPositionArray: [2000, 1400, 400, -1000, -3000, -3700],
 		billboard: {
 			width: 40.0,
@@ -43396,7 +43396,7 @@
 							{ 'x': 405.8, 'y': 7500.5 },
 							{ 'x': 718.3, 'y': 3250.0 },
 							{'x': -612.9, 'y':-2800.41},
-							{'x': 243.6, 'y': 13200.58},
+							{'x': 243.6, 'y': 3200.58},
 							{'x': 8.6, 'y':10200.0}];
 		const cloudGometry = new BoxGeometry(200, 200, 200, 10, 10, 10);
 		const cloudLoader = new TextureLoader();
@@ -43524,7 +43524,7 @@
 	function animate() {
 		//for moving from start to 1st stop
 		if (document.getElementsByClassName('transition')[0].style.opacity == '0'
-			&& params.currentStop == 1 && params.cameraProps.firstStepAutoScroll) {
+			&& params.currentStop == 0 && params.cameraProps.firstStepAutoScroll) {
 			camera.position.z -= 3.0;
 			changeNavMap();
 			params.cameraProps.nextPosition = params.stopsZPositionArray[1];
