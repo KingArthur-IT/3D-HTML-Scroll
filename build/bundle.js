@@ -44425,7 +44425,7 @@
 		},
 		stopsCount: 6,
 		currentStop: 1,
-		stopsZPositionArray: [2000, 1800, 800, -100, -1100, -1700],
+		stopsZPositionArray: [2000, 1400, 400, -500, -1000, -1700],
 		billboard: {
 			width: 40.0,
 			height: 20.0,
@@ -44638,7 +44638,6 @@
 				camera.position.z - params.cameraProps.visibilityLength);
 			animate();
 
-			miniCanvasInit();
 		}
 	}
 
@@ -44679,7 +44678,6 @@
 			document.getElementsByClassName('transition')[0].style.opacity == '')
 			return;
 
-		console.log(params.cameraProps.isSceneActive, params.cameraProps.isMoving);
 		//close layer on stop by scroll
 		if (!params.cameraProps.isSceneActive && //scene is not active
 			Math.abs(camera.rotation.y) < 0.15 && //front face 
@@ -44699,6 +44697,8 @@
 			params.cameraProps.nextPosition = camera.position.z + wheelStep;
 			params.currentWheelScrollingStep = params.wheelScrollingStep;
 		}
+
+		changeFinalLayout(e.deltaY);
 	}
 
 	function createLandspape() {
@@ -45100,6 +45100,29 @@
 		}
 	});
 
+	function changeFinalLayout(delta) {
+		if (!params.cameraProps.isSceneActive) return;
+
+		if (delta > 0) {
+			if (document.getElementsByClassName('city-finale')[0].style.opacity > 0) {
+				document.getElementsByClassName('city-finale')[0].style.opacity = 0;
+				document.getElementsByClassName('citate-finale')[0].style.display = 'block';
+				setTimeout(() => {
+					document.getElementsByClassName('citate-finale')[0].style.opacity = '1.0';
+				}, 1000);
+				return;
+			}
+
+			if (document.getElementsByClassName('citate-finale')[0].style.opacity > 0) {
+				document.getElementsByClassName('citate-finale')[0].style.opacity = 0;
+				document.getElementsByClassName('finale-cta')[0].style.display = 'flex';
+				setTimeout(() => {
+					document.getElementsByClassName('finale-cta')[0].style.opacity = '1.0';
+				}, 1000);
+			}
+		}
+	}
+
 	function closeLayout() {
 		//let stop = params.currentStop - 1;
 		for (let stop = 0; stop < 4; stop ++)
@@ -45341,65 +45364,6 @@
 		}, 100);	
 	}
 
-	//mini canvas models
-	function miniCanvasInit() {
-		const miniCanvas = document.getElementsByClassName('city-finale__canvas-item')[0];
-		canvas.setAttribute('width', 	document.documentElement.clientWidth);
-		canvas.setAttribute('height', 	document.documentElement.clientHeight);
-		
-		const miniScene = new Scene();
-		miniScene.background = new Color( 0xcccccc );
-		
-		const miniCamera = new PerspectiveCamera(40.0, 1.0, 0.1, 5000);
-		miniCamera.position.set(1000, 0, 0);
-		miniCamera.lookAt(0.0, 0.0, 0.0);
-		
-		const miniLight = new AmbientLight( 0xffffff, 1.0 );
-		miniLight.position.set( 0, 200, 0 );
-		miniScene.add(miniLight);
-
-		const geometry = new BoxGeometry( 10, 10, 10 );
-		const material = new MeshBasicMaterial( {color: 0x00ff00} );
-		const cube = new Mesh( geometry, material );
-		miniScene.add( cube ); 
-		/*
-		const miniLight2 = new THREE.DirectionalLight( 0xffffff );
-		miniLight2.position.set( 0, 200, 100 );
-		miniLight2.castShadow = true;
-		miniLight2.shadow.camera.top = 180;
-		miniLight2.shadow.camera.bottom = -100;
-		miniLight2.shadow.camera.left = -120;
-		miniLight2.shadow.camera.right = 120;*/
-		//miniScene.add( miniLight2 );
-
-		// model
-		
-		let Obj = new Object3D();
-		let mtlLoader = new MTLLoader();
-		mtlLoader.setPath('./assets/models/');
-
-		//load patient body
-		mtlLoader.load('bridge.mtl', function (materials) {
-			materials.preload();
-			let objLoader = new OBJLoader();
-			objLoader.setMaterials(materials);
-			objLoader.setPath('./assets/models/');
-			objLoader.load('bridge.obj', function (object) {
-				//object.scale.set(0.1,0.1,0.1)
-				//object.position.set(0.0,0.0,0.0)
-				//object.rotation.setFromVector3(objectsParams.bovie.rotation);
-				Obj.add(object);
-				miniScene.add(object);
-			});
-		});
-		//renderer
-		let miniRenderer = new WebGLRenderer({ canvas: miniCanvas, alpha: true, antialias: true });
-		miniRenderer.shadowMap.enabled = true;
-		
-		miniRenderer.render(miniScene, miniCamera);
-
-		//miniAnimate();
-	}
 
 	//CLOSE POPUP	
 	document.getElementsByClassName('popup__close')[0].addEventListener("click", function () {
@@ -45438,6 +45402,29 @@
 	document.getElementsByClassName('goToScene')[2].addEventListener('mousedown', () => {goToScene(3);});
 	document.getElementsByClassName('goToScene')[3].addEventListener('mousedown', () => {goToScene(4);});
 	document.getElementsByClassName('goToScene')[4].addEventListener('mousedown', () => {goToScene(5);});
+
+	//mini-popup
+	for (let index = 0; index < 5; index++) {
+		document.getElementsByClassName('city-finale__canvas-item')[index].addEventListener('mousedown', () => {
+			params.cameraProps.isSceneActive = false;
+	        let y = document.getElementsByClassName('city-finale__canvas-item')[index].getBoundingClientRect().y;
+	        let x = document.getElementsByClassName('city-finale__canvas-item')[index].getBoundingClientRect().x;
+			let xRight = document.getElementsByClassName('city-finale__canvas-item')[index].getBoundingClientRect().right;
+	        document.getElementsByClassName('models-popup-wrapper')[0].style.display = "flex";
+	        document.getElementsByClassName('model-popup-item')[index].style.display = "flex";
+	        document.getElementsByClassName('model-popup-item')[index].style.top = y + 'px';
+	        if (index < 3)
+	            document.getElementsByClassName('model-popup-item')[index].style.left = x + 'px';
+	        else
+				document.getElementsByClassName('model-popup-item')[index].style.right = xRight + 'px';
+		});
+		
+		document.getElementsByClassName('close-mini-popup')[index].addEventListener('mousedown', () => {
+			params.cameraProps.isSceneActive = true;
+	        document.getElementsByClassName('models-popup-wrapper')[0].style.display = "none";
+	        document.getElementsByClassName('model-popup-item')[index].style.display = "none";
+	    });
+	}
 
 	const app = new App();
 	app.init();

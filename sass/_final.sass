@@ -25,9 +25,21 @@
         display: flex
         justify-content: space-between
     &__canvas-item
+        position: relative
+        cursor: pointer
         width: 15rem
         height: 15rem
-        margin-right: 1.5rem
+        img
+            width: 100%
+        &__img
+            margin-right: 1.5rem
+            background: #cccccc
+    &__info-icon
+        width: 1.5rem
+        height: 1.5rem
+        position: absolute
+        bottom: 0
+        right: 1.2rem
     &__design-left
         top: -1.0rem
         left: 2.0rem
@@ -43,3 +55,99 @@
         bottom: -1.5rem
         right: 0rem
         z-index: -1
+.citate-finale
+    display: none
+    background: radial-gradient(#fff 0%, $bgColor 100%)
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    &__img
+        width: 50vw
+        position: absolute
+        top: 0
+        right: 0
+    &__wrapper
+        width: 50%
+        display: flex
+        flex-direction: column
+        position: absolute
+        bottom: 0
+        left: 3rem
+    &__title
+        font-size: 3rem
+        line-height: 3.25rem
+        font-weight: normal
+        margin-bottom: 0.65rem
+        z-index: 2
+    &__subtitle
+        font-size: 1.5rem
+        line-height: 1.75rem
+        margin-bottom: 3rem
+        width: 80%
+    &__main-design
+        width: 3.5rem
+        height: 3.5rem
+        top: -0.9rem
+        bottom: -1
+        left: -1rem
+        z-index: 0
+    &__design-red
+        bottom: 0
+        right: 0
+    &__design-orange
+        bottom: 1.5rem
+        right: 1.5rem
+.finale-cta
+    display: none
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    background: #fff
+    &__wrapper
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-items: center
+        width: 75%
+        position: relative
+    &__main-design
+        width: 3.5rem
+        height: 4.2rem
+        top: -0.9rem
+        left: 0.5rem
+        z-index: 0
+    &__title
+        z-index: 2
+        font-size: 3.25rem
+        line-height: 3rem
+        text-align: center
+        font-weight: 500
+        margin-bottom: 1.0rem
+    &__text
+        font-size: 1.16rem
+        line-height: 1.35rem
+        text-align: center
+        margin-bottom: 2rem
+        font-weight: 400
+    &__btn-wrapper
+        position: relative
+    &__btn
+        background: $orange
+        color: #fff
+        font-size: 1.2rem
+        line-height: 1.25rem
+        min-width: 20rem
+        padding: 1rem
+        cursor: pointer
+        &:hover
+            background: $red
+    &__design
+        bottom: -1.5rem
+        right: -1.5rem

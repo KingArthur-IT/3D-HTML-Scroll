@@ -1053,9 +1053,24 @@ button {
           justify-content: space-between;
 }
 .city-finale__canvas-item {
+  position: relative;
+  cursor: pointer;
   width: 15rem;
   height: 15rem;
+}
+.city-finale__canvas-item img {
+  width: 100%;
+}
+.city-finale__canvas-item__img {
   margin-right: 1.5rem;
+  background: #cccccc;
+}
+.city-finale__info-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  bottom: 0;
+  right: 1.2rem;
 }
 .city-finale__design-left {
   top: -1rem;
@@ -1074,6 +1089,142 @@ button {
   bottom: -1.5rem;
   right: 0rem;
   z-index: -1;
+}
+
+.citate-finale {
+  display: none;
+  background: radial-gradient(#fff 0%, #c4c4c4 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.citate-finale__img {
+  width: 50vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.citate-finale__wrapper {
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  bottom: 0;
+  left: 3rem;
+}
+.citate-finale__title {
+  font-size: 3rem;
+  line-height: 3.25rem;
+  font-weight: normal;
+  margin-bottom: 0.65rem;
+  z-index: 2;
+}
+.citate-finale__subtitle {
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+  margin-bottom: 3rem;
+  width: 80%;
+}
+.citate-finale__main-design {
+  width: 3.5rem;
+  height: 3.5rem;
+  top: -0.9rem;
+  bottom: -1;
+  left: -1rem;
+  z-index: 0;
+}
+.citate-finale__design-red {
+  bottom: 0;
+  right: 0;
+}
+.citate-finale__design-orange {
+  bottom: 1.5rem;
+  right: 1.5rem;
+}
+
+.finale-cta {
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+}
+.finale-cta__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 75%;
+  position: relative;
+}
+.finale-cta__main-design {
+  width: 3.5rem;
+  height: 4.2rem;
+  top: -0.9rem;
+  left: 0.5rem;
+  z-index: 0;
+}
+.finale-cta__title {
+  z-index: 2;
+  font-size: 3.25rem;
+  line-height: 3rem;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.finale-cta__text {
+  font-size: 1.16rem;
+  line-height: 1.35rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+.finale-cta__btn-wrapper {
+  position: relative;
+}
+.finale-cta__btn {
+  background: #ED7817;
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1.25rem;
+  min-width: 20rem;
+  padding: 1rem;
+  cursor: pointer;
+}
+.finale-cta__btn:hover {
+  background: #E32112;
+}
+.finale-cta__design {
+  bottom: -1.5rem;
+  right: -1.5rem;
 }
 
 .popup-wrapper {
@@ -1141,6 +1292,76 @@ button {
   cursor: pointer;
 }
 
+.models-popup-wrapper {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+}
+
+.model-popup-item {
+  display: none;
+  height: 15rem;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  width: 40rem;
+}
+.model-popup-item__img {
+  height: 15rem;
+}
+.model-popup-item__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  padding: 1rem;
+}
+.model-popup-item__title {
+  margin-bottom: 0.5rem;
+  font-size: 1.62rem;
+  line-height: 1.65rem;
+}
+.model-popup-item__text {
+  font-size: 1.06rem;
+  line-height: 1.16rem;
+}
+
+.close-mini-popup {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+.popup-squares {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  bottom: 0;
+  right: -0.5rem;
+}
+
 .menu {
   position: absolute;
   height: 200px;
@@ -1148,4 +1369,5 @@ button {
   background: #fff;
   bottom: 0;
   left: 0;
+  display: none;
 }/*# sourceMappingURL=style.css.map */
